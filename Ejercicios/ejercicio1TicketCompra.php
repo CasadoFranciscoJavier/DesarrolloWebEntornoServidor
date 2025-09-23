@@ -6,7 +6,7 @@ Crea un programa que calcule e imprima el ticket de compra mostrando cada produc
 <?php
 
 $productos = array("Pera" => 2, "Pan" => 1, "Agua" => 3);
-$cantidad = array(6, 17, 2);
+$cantidad = array(6, 0, 2);
 $iva = 1.21;
 
 $totalSinIva = 0;
@@ -35,8 +35,8 @@ foreach ($productos as $producto => $precioConIva) {
     $total = $subtotalSinIva + $subtotalIva;
 
     $totalSinIva += $subtotalSinIva;
-
-    echo "<tr>
+    if ($cant !=0) {
+      echo "<tr>
             <td>$producto</td>
             <td>$cant</td>
             <td>" . number_format($precioConIva, 2) . "</td>
@@ -44,6 +44,10 @@ foreach ($productos as $producto => $precioConIva) {
             <td>" . number_format($subtotalIva, 2) . "</td>
             <td>" . number_format($total, 2) . "</td>
           </tr>";
+      
+    }
+
+    
 
     $index++;
 }
