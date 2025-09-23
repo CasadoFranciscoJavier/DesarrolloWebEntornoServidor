@@ -1,0 +1,35 @@
+<!-- Crea un programa PHP que reciba los siguientes datos del usuario:
+ - Nombre (máximo 20 carácteres de longitud)
+ - Edad (entero entre 0 y 130)
+ - Altura en cm (entero entre 50 y 300)
+ - Peso en kg (float entre 20 y 500)
+
+A partir de esos datos, calcula el IMC del usuario y sus pulsaciones máximas.
+
+El script debe validar el tipo de petición http, que los datos enviados existan y que sean válidos -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora IMC</title>
+</head>
+<body>
+    <h1>Calculadora de IMC y Pulsaciones Máximas</h1>
+    <form action="imc.php" method="GET">
+        <label for="nombre">Nombre (máx. 20 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="20" required><br><br>
+
+        <label for="edad">Edad (0 - 130):</label><br>
+        <input type="number" id="edad" name="edad" min="0" max="130" required><br><br>
+
+        <label for="altura">Altura (cm, 50 - 300):</label><br>
+        <input type="number" id="altura" name="altura" min="50" max="300" required><br><br>
+
+        <label for="peso">Peso (kg, 20 - 500):</label><br>
+        <input type="number" id="peso" name="peso" step="0.1" min="20" max="500" required><br><br>
+
+        <button type="submit">Calcular</button>
+    </form>
+</body>
+</html>
