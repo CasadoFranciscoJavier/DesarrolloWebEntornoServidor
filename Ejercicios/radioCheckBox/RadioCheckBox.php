@@ -1,13 +1,18 @@
 <?php
-print_r ($_POST);
+print_r($_POST);
 
 // Función para mostrar alertas en JavaScript 
-function alert($text){
+function alert($text)
+{
     echo "<script> alert('$text') </script>";
 }
 
+
+
+
 // Función para validar string 
-function validarString($variablePOST, $minimo, $maximo){
+function validarString($variablePOST, $minimo, $maximo) {
+ 
     $vacio = empty($_POST[$variablePOST]);
     $valido = false;
     if (!$vacio){
@@ -22,46 +27,52 @@ function validarString($variablePOST, $minimo, $maximo){
 }
 
 // Función para validar número decimal (peso)
-function validarFloat($variablePOST, $minimo, $maximo){
+function validarFloat($variablePOST, $minimo)
+{
     $vacio = empty($_POST[$variablePOST]);
     $valido = false;
-    if (!$vacio){
+    if (!$vacio) {
         $esFloat = filter_var($_POST[$variablePOST], FILTER_VALIDATE_FLOAT);
-        if($esFloat !== false){
-            $valido = ($_POST[$variablePOST] >= $minimo && $_POST[$variablePOST] <= $maximo);
+        if ($esFloat !== false) {
+            $valido = ($_POST[$variablePOST] >= $minimo);
         }
     }
-    if($vacio){
+    if ($vacio) {
         alert("$variablePOST está vacío");
-    } else if(!$esFloat){
+    } else if (!$esFloat) {
         alert("$variablePOST debe ser un número decimal");
-    } else if(!$valido){
-        alert("$variablePOST está fuera de rango ($minimo - $maximo)");
+    } else if (!$valido) {
+        echo "<script>
+                alert('El $variablePOST está fuera de rango. Debe ser superior a $minimo kg.');
+                window.location.href = 'radioCheckBox.html';
+            </script>";
+        exit;
     }
     return $valido;
 }
 
 // Función para validar selección (radio/checkBox) 
-function validarSeleccion($variablePOST){
+function validarSeleccion($variablePOST)
+{
     $vacio = empty($_POST[$variablePOST]);
-    if($vacio){
+    if ($vacio) {
         alert("Debes seleccionar $variablePOST");
     }
     return !$vacio;
 }
 
-//============================= main //=============================
+//============================= main =============================
 
 // Validaciones principales 
 $todoValido = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $todoValido = validarString("nombre", 1, 20)
-               && validarString("apellido", 1, 20)
-               && validarSeleccion("edad")
-               && validarFloat("peso", 20, 500)
-               && validarSeleccion("sexo")
-               && validarSeleccion("estado_civil");
-   
+        && validarString("apellido", 1, 20)
+        && validarSeleccion("edad")
+        && validarFloat("peso", 0)
+        && validarSeleccion("sexo")
+        && validarSeleccion("estado_civil");
+
     if ($todoValido) {
         $nombre = htmlspecialchars($_POST["nombre"]);
         $apellido = htmlspecialchars($_POST["apellido"]);
@@ -70,18 +81,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sexo = ($_POST["sexo"]);
         $estado_civil = ($_POST["estado_civil"]);
         $aficiones = isset($_POST["aficiones"]) ? $_POST["aficiones"] : "";
-        
+
         if (!empty($aficiones)) {
-            $lista_aficiones = "<ul>";
+            $lista_aficiones = "<ol>";
             foreach ($aficiones as $aficion) {
-                $lista_aficiones .= "<li>" .($aficion) . "</li>";
+                $lista_aficiones .= "<li>" . ($aficion) . "</li>";
             }
-            $lista_aficiones .= "</ul>";
+            $lista_aficiones .= "</ol>";
         } else {
             $lista_aficiones = "<p>No seleccionaste ninguna afición.</p>";
         }
     }
-}else {
+} else {
     // Si la solicitud no es de tipo POST, muestra una alerta
     alert("El método usado no es POST");
 }
@@ -89,10 +100,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Datos personales recibidos</title>
 </head>
+
 <body>
     <div class="contenedor">
         <h1><?php echo $nombre . " " . $apellido; ?></h1>
@@ -104,3 +117,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php echo $lista_aficiones; ?>
     </div>
 </body>
+
+
+
+<style>
+    body {
+        background: #f3f6f9;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #333;
+    }
+
+    .contenedor {
+        background: #fff;
+        max-width: 420px;
+        margin: 40px auto;
+        padding: 32px 28px 24px 28px;
+        border-radius: 14px;
+        box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+        border: 1px solid #e3e8ee;
+    }
+
+    h1 {
+        text-align: center;
+        color: #4a6fa5;
+        margin-bottom: 24px;
+        font-weight: 600;
+    }
+
+    label {
+        color: #4a6fa5;
+        font-weight: 500;
+    }
+
+    p {
+        margin: 12px 0;
+        font-size: 1.08em;
+    }
+
+    ul {
+        margin-top: 10px;
+        margin-bottom: 0;
+        padding-left: 22px;
+    }
+
+    li {
+        margin-bottom: 4px;
+    }
+</style>
+
+</html>
