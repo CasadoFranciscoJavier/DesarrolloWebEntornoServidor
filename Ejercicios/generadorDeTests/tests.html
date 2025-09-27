@@ -1,0 +1,119 @@
+<!-- Desarrolla un programa que genere tests de práctica con los siguientes requisitos:
+
+tests.html:
+Crea un formulario que incluya:
+
+Un menú desplegable para seleccionar la asignatura del test.
+Un campo de entrada numérico para indicar la cantidad de preguntas a incluir (máximo 5 preguntas).
+tests.php:
+Este archivo debe:
+
+Generar un test aleatorio basándose en la asignatura seleccionada y la cantidad de preguntas especificada.
+Las preguntas deben extraerse de un repositorio de preguntas predefinido en el código como un map o matriz (10 preguntas disponibles por cada asignatura).
+procesarTest.php Este archivo debe:
+
+Procesar las respuestas del usuario a los tests y asignarle una nota del 0 al 10 mostrando la cantidad de preguntas adecrtadas y falladas. -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Tests</title>
+</head>
+<body>
+    <h1>Generador de Tests</h1>
+    <form action="RadioCheckBox.php" method="POST">
+        <label for="nombre">Nombre (máx. 20 caracteres):</label><br>
+        <input id="nombre" name="nombre" maxlength="20" type="text" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 20 caracteres):</label><br>
+        <input type="text" id="apellido" name="apellido" type="text" maxlength="20" required><br><br>
+
+        <label for="asignatura">Selecciona Asignatura:</label><br>
+        <select id="asignatura" name="asignatura" required>
+            <option value="Nada"></option>
+            <option value="Despliegue-de-Aplicaciones-Web">Despliegue-de-Aplicaciones-Web</option>
+            <option value="Diseno-de-Interfaces-Web ">Diseno-de-Interfaces-Web </option>
+            <option value="WordPress">WordPress</option>
+            <option value="Desarrollo-Web-Entorno-Servidor ">Desarrollo-Web-Entorno-Servidor </option>
+            <option value="Desarrollo-Web-Entorno-Cliente  ">Desarrollo-Web-Entorno-Cliente  </option>
+        </select><br><br>
+
+        <label for="preguntas">Selecciona total de preguntas para el tests(1 - 5): (kg):</label><br>
+        <input type="number" id="preguntas" name="preguntas" min="1" max="5" required><br><br>
+
+    </form>
+</body>
+</html>
+
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>
