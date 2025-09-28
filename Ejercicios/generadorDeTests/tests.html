@@ -22,25 +22,29 @@ Procesar las respuestas del usuario a los tests y asignarle una nota del 0 al 10
 </head>
 <body>
     <h1>Generador de Tests</h1>
-    <form action="RadioCheckBox.php" method="POST">
+    <form action="tests.php" method="POST">
         <label for="nombre">Nombre (máx. 20 caracteres):</label><br>
         <input id="nombre" name="nombre" maxlength="20" type="text" required><br><br>
 
         <label for="apellidos">Apellidos (máx. 20 caracteres):</label><br>
-        <input type="text" id="apellido" name="apellido" type="text" maxlength="20" required><br><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="20" required><br><br>
 
         <label for="asignatura">Selecciona Asignatura:</label><br>
         <select id="asignatura" name="asignatura" required>
             <option value="Nada"></option>
-            <option value="Despliegue-de-Aplicaciones-Web">Despliegue-de-Aplicaciones-Web</option>
-            <option value="Diseno-de-Interfaces-Web ">Diseno-de-Interfaces-Web </option>
+            <option value="Despliegue de Aplicaciones Web">Despliegue de Aplicaciones Web</option>
+            <option value="Diseno de Interfaces Web">Diseno de Interfaces Web</option>
             <option value="WordPress">WordPress</option>
-            <option value="Desarrollo-Web-Entorno-Servidor ">Desarrollo-Web-Entorno-Servidor </option>
-            <option value="Desarrollo-Web-Entorno-Cliente  ">Desarrollo-Web-Entorno-Cliente  </option>
+            <option value="Desarrollo Web Entorno Servidor">Desarrollo Web Entorno Servidor</option>
+            <option value="Desarrollo Web Entorno Cliente">Desarrollo Web Entorno Cliente</option>
         </select><br><br>
 
-        <label for="preguntas">Selecciona total de preguntas para el tests(1 - 5): (kg):</label><br>
+        <label for="preguntas">Selecciona total de preguntas para el tests(1 - 5):</label><br>
         <input type="number" id="preguntas" name="preguntas" min="1" max="5" required><br><br>
+         <br><br>
+
+        <button type="submit">Enviar</button>
+        <button type="reset">Borrar</button>
 
     </form>
 </body>
