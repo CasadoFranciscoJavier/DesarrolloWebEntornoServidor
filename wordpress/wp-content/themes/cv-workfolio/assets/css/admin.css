@@ -1,0 +1,12 @@
+.about-left-image img{
+  width: 100% !important;
+}
+.award-box {
+    position: absolute !important;
+    top: 50%  !important;
+    transform: translateY(-50%)  !important;
+    right: -60px  !important;
+}
+.about-left{
+  position: relative !important;
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "title": "Coral Reef",
+  "version": 2,
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "color": "#ffffff",
+          "name": "Base",
+          "slug": "base"
+        },
+        {
+          "color": "#2c3e50",
+          "name": "Contrast",
+          "slug": "contrast"
+        },
+        {
+          "color": "#f39c12",
+          "name": "Primary",
+          "slug": "primary"
+        },
+        {
+          "color": "#f1c40f",
+          "name": "Secondary",
+          "slug": "secondary"
+        },
+        {
+          "color": "#e67e22",
+          "name": "Tertiary",
+          "slug": "tertiary"
+        }
+      ]
+    }
+  }
+}

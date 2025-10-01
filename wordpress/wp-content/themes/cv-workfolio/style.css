@@ -1,0 +1,339 @@
+/*
+Theme Name: CV Workfolio
+Theme URI: https://www.titanthemes.net/products/free-cv-wordpress-theme
+Author: Titan Themes
+Author URI: https://www.titanthemes.net/
+Description: The CV Workfolio WordPress Theme is a thoughtfully crafted solution for creating an impactful online presence. Designed for professionals, freelancers, and creatives, it simplifies the process of building a standout digital portfolio. Whether you’re showcasing work samples, presenting a resume portfolio, or curating a project portfolio, this theme adapts seamlessly to various career paths. Ideal for photographers, designers, developers, and writers, it enables you to display achievements, projects, and career milestones in a visually compelling layout. With its modern design and user-friendly interface, the theme supports portfolio goals like job applications, client acquisition, and career advancement. Built for personalization, the CV Workfolio WordPress Theme includes versatile tools for portfolio presentation. Customizable portfolio layouts, interactive visuals, and sleek typography enhance the creative showcase of professional work samples. It supports multimedia formats like video, audio, and image galleries, making it a robust choice for content creators and marketing professionals. With optimized performance and responsive design, your online portfolio remains accessible and stunning across devices. The CV Workfolio WordPress Theme goes beyond aesthetics, offering practical benefits like SEO-friendly architecture and fast loading speeds. Ideal for recruiters and consultants seeking professional presentation, this WordPress theme redefines how career portfolios are built and presented in the digital space.
+Requires at least: 6.1
+Tested up to: 6.8
+Requires PHP: 7.2
+Version: 2.6
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+Text Domain: cv-workfolio
+Tags: grid-layout, one-column,  two-columns, left-sidebar, right-sidebar, wide-blocks, block-patterns, custom-background, custom-colors, custom-menu, custom-logo, editor-style, block-styles, featured-images, footer-widgets, full-width-template, rtl-language-support, sticky-post, style-variations, theme-options, threaded-comments, translation-ready,, blog, news, portfolio
+*/
+
+
+span.dashicons.dashicons-email,span.dashicons.dashicons-phone {
+    color: var(--wp--preset--color--primary);
+    margin-right: 10px;
+}
+span.dashicons.dashicons-phone {
+    transform: rotate(90deg);
+}
+.about-left-image img{
+  width: 100%;
+}
+.about-left{
+  position: relative;
+}
+.award-box {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -60px;
+}
+.home .homepage-header {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  background: transparent !important;
+}
+.homepage-header-column{
+  gap:0px !important;
+}
+.contact-gap{
+  gap:0px;
+}
+.wp-header-search-social ul {
+  gap:0px !important;
+}
+.wp-header-search-social li a{
+  color: #fff !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  border-right: 1px solid #fff;
+}
+.menu-box ul li a:hover{
+  color: var(--wp--preset--color--primary) !important;
+}
+.wp-header-search-social li a:hover svg{
+  fill: var(--wp--preset--color--primary) !important;
+}
+.wp-header-search-social li:last-child a{
+  border-right: 0px;
+  padding-right: 0px !important;
+}
+.homepage-header:after {
+  content: "";
+  width: 11%;
+  height: 49px;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  background: #ffffff;
+}
+.contact-gap .wp-block-image img {
+  vertical-align: baseline;
+}
+.mail-box{
+  gap:10px !important;
+}
+.menu-box{
+  margin-top: 0 !important;
+  padding: 12px 0;
+}
+.wp-site-blocks{
+	padding: 0 !important;
+}
+.slider-banner {
+  gap: 40px;
+}
+.slide-img {
+  position: absolute;
+  right: 0px;
+  bottom: 6%;
+}
+.slider-img img{
+  width: 100%;
+  height: 575px;
+}
+.counter-box {
+  border-radius: 10px;
+}
+.is-head-menu li a:hover {
+  text-decoration: none;
+}
+.slider-banner{
+  gap:0px !important;
+}
+footer.wp-block-template-part {
+  margin-top: 0;
+}
+@media screen and (max-width: 781px) {
+  .home .homepage-header{
+    position: relative;
+    background: #434343 !important;
+  }
+  .about-content{
+    padding-left: 0px !important;
+    text-align: center;
+  }
+  .contact-box{
+    padding-left: 0px !important;
+  }
+  .banner-section{
+    min-height: 400px !important;
+  }
+  .small-image{
+    width: 100%;
+  }
+  .banner-btn{
+    justify-content: center;
+  }
+  .slider-banner h2{
+    font-size: 20px !important;
+  }
+  .about-btn{
+    justify-content: center;
+  }
+  .slider-banner p{
+    text-align: center;
+  }
+  .award-box {
+    position: relative;
+    right: 0px;
+    top: 0px !important;
+    margin-top: 20px !important;
+    transform: none;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 800px) {
+	.header-area .wp-container-core-buttons-layout-1.wp-container-core-buttons-layout-1 {
+		justify-content: center;
+	}
+  .homepage-header:after{
+    display: none;
+  }
+  .single-image figure{
+    width: 100% !important;
+  }
+  .slider-banner{
+    text-align: center;
+  }
+  .mail-box{
+    justify-content: center !important;
+    margin-bottom: 10px !important;
+  }
+  .menu-box {
+    justify-content: center;
+    display: flex;
+  }
+  .admin-bar .wp-block-navigation__responsive-container-close {
+    color: #000;
+    top:15px;
+  }
+  .slider-banner {
+    gap: 20px;
+  }
+  .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation__container{
+    justify-content: center !important;
+  }
+	.homepage-header{
+    position: static;
+    width: 100%;
+    text-align: center;
+  	}
+	.homepage-header .wp-header-search-social{
+		justify-content: center;
+	}
+  .single-image figure{
+    width: 100% !important;
+  }
+}
+@media screen and (min-width: 801px) and (max-width: 1020px) {
+  .about-content p{
+    font-size: 12px !important;
+  }
+  .about-content h3{
+    font-size: 19px !important;
+  }
+  .contact-gap{
+    gap:0px;
+  }
+  .is-about-boxs{
+    flex-basis: 30% !important;
+  }
+  .about-small-image{
+    flex-basis: 20% !important;
+  }
+  .about-left-image img{
+    height: 500px;
+    object-fit: cover;
+  }
+  .wp-header-search-social ul {
+    gap:0px !important;
+  }
+  .wp-header-search-social li a {
+    color: #fff !important;
+    padding-left: 2px !important;
+    padding-right: 7px !important;
+    border-right: 1px solid #fff;
+  }
+  .contact-gap p {
+    font-size: 10px !important;
+  }
+  .homepage-header-column{
+    max-width: 90% !important;
+  }
+  .footer-widgets{
+    max-width: 90% !important;
+  }
+  .menu-box{
+    flex-basis: 70% !important;
+  }
+}
+@media screen and (min-width: 1021px) and (max-width: 1200px) {
+  .is-about-boxs{
+    flex-basis: 30% !important;
+  }
+  .about-small-image{
+    flex-basis: 20% !important;
+  }
+  .about-content h3 {
+    font-size: 22px !important;
+  }
+  .about-content p {
+    font-size: 13px !important;
+  }
+
+  .about-left-image img{
+    height: 400px;
+    object-fit: cover;
+  }
+  .wp-header-search-social li a {
+    color: #fff !important;
+    padding-left: 2px !important;
+    padding-right: 7px !important;
+    border-right: 1px solid #fff;
+  }
+  .contact-gap p {
+    font-size: 12px !important;
+  }
+}
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+figure.wp-block-post-featured-image img {
+    height: 180px;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+figure.wp-block-post-featured-image img {
+    height: 120px;
+  }
+}
+.wc-block-mini-cart.wp-block-woocommerce-mini-cart {
+    display: none;
+}
+
+/*back to top*/
+.wp-block-button.scroll-to-top .wp-block-button__link.wp-element-button {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  display: inline-block;
+  z-index: 1;
+  text-indent: -5000px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.089);
+  display: none;
+  padding: 0;
+  margin-top: 0;
+}
+
+.wp-block-button.scroll-to-top .wp-block-button__link.wp-element-button:after {
+  content: "";
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  -webkit-mask-image: url(assets/images/up-arrow.svg);
+  mask-image: url(assets/images/up-arrow.svg);
+  mask-repeat: no-repeat;
+  mask-position: center center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+  position: absolute;
+  display: inline-block;
+  left: 0;
+  top: 0;
+}
+
+/* Blog Section */
+.news-section .news-box .wp-block-post-excerpt__excerpt{
+  color: #000000;
+}
+.news-heading-box .news-small-title{
+  width: max-content;
+}
+.news-section .news-heading-box{
+  gap: 0;
+}
+.news-section .news-box .wp-block-post:hover .wp-block-post-title a{
+  color: var(--wp--preset--color--primary);
+}
+.news-section .news-heading-box{
+  gap: 0;
+}
+.recent-btn a {
+  background: var(--wp--preset--color--primary);
+  padding: 10px 12px;
+  border-radius: 5px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+.recent-btn a:hover{
+  background: #000;
+}
