@@ -3,10 +3,10 @@
 
 $asignaturas_siglas = [
     "Despliegue de Aplicaciones Web" => "DAW",
-    "Diseño de Interfaces Web" => "DIW",
+    "Diseno de Interfaces Web" => "DIW",
     "WordPress" => "WP", 
     "Desarrollo Web Entorno Servidor" => "DWES",
-    "Inglés" => "ING",
+    "Ingles" => "ING",
     "Desarrollo Web Entorno Cliente" => "DWEC",
     "IPE II" => "IPE",
     "Proyecto" => "PROY",
@@ -23,7 +23,7 @@ $coloresAsignaturas = [
     "IPE" => "#FFFFB3",  // Amarillo claro
     "PROY" => "#D9D9D9", // Gris claro
     "ING" => "#B3FFFF",  // Cian claro
-    "RECREO" => "#A0E0A0",  // Verde pastel para recreo
+    "RECREO" => "#0fd60fff",  // Verde pastel para recreo
     "" => "#FFFFFF"      // Blanco por defecto (hueco libre)
 ];
 
@@ -34,7 +34,7 @@ $calendarioAsignaturas = [
         "JUEVES" => ["12:00-13:00"], 
         "total_horas" => 2.0,
     ],
-    "Diseño de Interfaces Web" => [
+    "Diseno de Interfaces Web" => [
         "LUNES" => ["11:00-12:30"], 
         "MARTES" => ["10:00-11:00"], 
         "JUEVES" => ["13:00-14:30"], 
@@ -71,18 +71,3 @@ $calendarioAsignaturas = [
         "total_horas" => 2.0, 
     ],
 ];
-
-
-
-
-
-$bloques_tiempo = [
-    "08:00-08:30", "08:30-09:00", "09:00-09:30", "09:30-10:00", 
-    "10:00-10:30", 
-    "10:30-11:00", 
-    "11:00-11:30", 
-    "11:30-12:00", "12:00-12:30", "12:30-13:00",
-    "13:00-13:30", "13:30-14:00", "14:00-14:30", 
-    "14:30-15:00", "15:00-15:30" 
-];
-$dias_semana = ["LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES"];
