@@ -23,7 +23,7 @@ $coloresAsignaturas = [
     "IPE" => "#FFFFB3",  // Amarillo claro
     "PROY" => "#D9D9D9", // Gris claro
     "ING" => "#B3FFFF",  // Cian claro
-    "RECREO" => "#0fd60fff",  // Verde pastel para recreo
+    "RECREO" => "#0fd60fff",  // Verde para recreo
     "" => "#FFFFFF"      // Blanco por defecto (hueco libre)
 ];
 
