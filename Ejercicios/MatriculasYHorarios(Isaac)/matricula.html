@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Matricula</title>
+</head>
+<body>
+
+    <h1>Matricula</h1>
+
+    <form action="procesarMatricula.php" method="POST">
+        <label> 
+            <input type="checkbox" name="asignaturas[]" value="Ingles">
+            Inglés
+        </label>
+
+        <label> 
+            <input type="checkbox" name="asignaturas[]" value="DAW">
+            DAW
+        </label>
+
+        <label> 
+            <input type="checkbox" name="asignaturas[]" value="DIW">
+            DIW
+        </label>
+
+        <label> 
+            <input type="checkbox" name="asignaturas[]" value="DWEC">
+            DWEC
+        </label>
+
+        <label> 
+            <input type="checkbox" name="asignaturas[]" value="DWES">
+            DWES
+        </label>
+
+        <label> 
+            <input type="checkbox" name="asignaturas[]" value="IPE_II">
+            IPE II
+        </label>
+
+        <label> 
+            <input type="checkbox" name="asignaturas[]" value="Proyecto">
+            Proyecto
+        </label>
+
+        <label> 
+            <input type="checkbox" name="asignaturas[]" value="Optativa">
+            Optativa
+        </label>
+
+        <br><br>
+
+
+        <input type="submit">
+    </form>
+    
+</body>
+
+    <style>
+        /* Aquí va TODO tu CSS, incluyendo las mejoras que te di.
+           Lo omito aquí por brevedad, pero debe ir en esta sección <style>
+           o en un archivo .css externo. */
+
+        body {
+            background: #f3f6f9;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        form {
+            background: #fff;
+            max-width: 650px; /* Ancho ajustado para mejor visualización */
+            margin: 40px auto;
+            padding: 32px 28px 24px 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+            border: 1px solid #e3e8ee;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a6fa5;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        /* Estilo general para las etiquetas de campos de texto */
+        label:not(.checkbox-label) { /* Aplicar a etiquetas que no sean de checkbox */
+            color: #4a6fa5;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            border: 1px solid #bfc9d9;
+            border-radius: 6px;
+            background: #f7fafd;
+            font-size: 1em;
+            transition: border 0.2s;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border: 1.5px solid #7ea1c4;
+            outline: none;
+        }
+
+        /* Contenedor principal para todos los checkboxes */
+        .checkbox-group {
+            display: flex; /* Usa flexbox para distribuir los items */
+            flex-wrap: wrap; /* Permite que los items pasen a la siguiente línea */
+            gap: 15px 25px; /* Espacio vertical y horizontal entre los items */
+            margin-bottom: 20px;
+            justify-content: flex-start; /* Alinea los items al inicio */
+        }
+
+        /* Contenedor para cada checkbox individual y su etiqueta */
+        .checkbox-item {
+            display: flex; /* Flexbox para alinear el input y el label */
+            align-items: center; /* Alineación vertical centrada */
+            cursor: pointer;
+            user-select: none;
+            padding: 8px 12px; /* Área de clic más grande */
+            border: 1px solid #bfc9d9;
+            border-radius: 6px;
+            background-color: #f7fafd;
+            transition: all 0.2s ease;
+            min-width: 250px; /* Ancho mínimo para cada item para mejor distribución */
+            box-sizing: border-box;
+        }
+
+        .checkbox-item:hover {
+            background-color: #e6f0f8;
+            border-color: #7ea1c4;
+        }
+
+        /* Estilo del input checkbox nativo (visualización) */
+        .checkbox-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #7ea1c4;
+            border-radius: 4px;
+            margin-right: 10px; /* Espacio entre el checkbox y el texto */
+            cursor: inherit; /* Hereda el cursor de su padre (.checkbox-item) */
+            position: relative;
+            outline: none;
+            background-color: #fff;
+            flex-shrink: 0;
+        }
+
+        /* Estilo cuando el checkbox está seleccionado */
+        .checkbox-item input[type="checkbox"]:checked {
+            background-color: #7ea1c4;
+            border-color: #7ea1c4;
+        }
+
+        /* El pseudo-elemento para el icono de check */
+        .checkbox-item input[type="checkbox"]:checked::before {
+            content: '\2713'; /* Símbolo de check (✓) */
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Estilo de la etiqueta de texto que acompaña al checkbox */
+        .checkbox-item .checkbox-label { /* Usamos una clase específica para evitar conflictos */
+            color: #333;
+            font-weight: normal;
+            margin-bottom: 0;
+            display: block; /* Ocupa el espacio restante en el flex item */
+            line-height: 1.3; /* Mejor legibilidad si el texto es largo */
+        }
+
+
+        button[type="submit"],
+        button[type="reset"] {
+            background: #7ea1c4;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            margin-right: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button[type="submit"]:hover,
+        button[type="reset"]:hover {
+            background: #4a6fa5;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 25px;
+        }
+    </style>
+</html>
