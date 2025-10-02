@@ -1,0 +1,232 @@
+<!-- Ejercicio:
+Desarrollar un programa en PHP que permita al usuario seleccionar las asignaturas que desea matricularse mediante casillas de verificación (checkboxes). 
+Una vez que el usuario seleccione las asignaturas y haga clic en el botón "Enviar", el programa debe mostrarle la siguiente información:
+
+Horario de clases:
+
+Mostrar el horario detallado de cada asignatura seleccionada.
+Por ejemplo, si el usuario elige "Matemáticas" e "Historia", el programa debe indicar el día y la hora en que se imparte cada asignatura.
+Total de horas semanales:
+
+Calcular y mostrar el número total de horas de clase que suman las asignaturas seleccionadas en una semana.
+Bonus avanzado:
+El programa debe mostrar el horario en una tabla que sea fácil de leer, usando colores para diferenciar las asignaturas.
+ Cada fila de la tabla representa un bloque de tiempo y cada columna representa un día de la semana. El color de fondo de cada celda cambia según la asignatura para que 
+ se pueda visualizar fácilmente el horario. -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Selección Asignatura</title>
+    <style>
+        /* Aquí va TODO tu CSS, incluyendo las mejoras que te di.
+           Lo omito aquí por brevedad, pero debe ir en esta sección <style>
+           o en un archivo .css externo. */
+
+        body {
+            background: #f3f6f9;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        form {
+            background: #fff;
+            max-width: 650px; /* Ancho ajustado para mejor visualización */
+            margin: 40px auto;
+            padding: 32px 28px 24px 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+            border: 1px solid #e3e8ee;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a6fa5;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        /* Estilo general para las etiquetas de campos de texto */
+        label:not(.checkbox-label) { /* Aplicar a etiquetas que no sean de checkbox */
+            color: #4a6fa5;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            border: 1px solid #bfc9d9;
+            border-radius: 6px;
+            background: #f7fafd;
+            font-size: 1em;
+            transition: border 0.2s;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border: 1.5px solid #7ea1c4;
+            outline: none;
+        }
+
+        /* Contenedor principal para todos los checkboxes */
+        .checkbox-group {
+            display: flex; /* Usa flexbox para distribuir los items */
+            flex-wrap: wrap; /* Permite que los items pasen a la siguiente línea */
+            gap: 15px 25px; /* Espacio vertical y horizontal entre los items */
+            margin-bottom: 20px;
+            justify-content: flex-start; /* Alinea los items al inicio */
+        }
+
+        /* Contenedor para cada checkbox individual y su etiqueta */
+        .checkbox-item {
+            display: flex; /* Flexbox para alinear el input y el label */
+            align-items: center; /* Alineación vertical centrada */
+            cursor: pointer;
+            user-select: none;
+            padding: 8px 12px; /* Área de clic más grande */
+            border: 1px solid #bfc9d9;
+            border-radius: 6px;
+            background-color: #f7fafd;
+            transition: all 0.2s ease;
+            min-width: 250px; /* Ancho mínimo para cada item para mejor distribución */
+            box-sizing: border-box;
+        }
+
+        .checkbox-item:hover {
+            background-color: #e6f0f8;
+            border-color: #7ea1c4;
+        }
+
+        /* Estilo del input checkbox nativo (visualización) */
+        .checkbox-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #7ea1c4;
+            border-radius: 4px;
+            margin-right: 10px; /* Espacio entre el checkbox y el texto */
+            cursor: inherit; /* Hereda el cursor de su padre (.checkbox-item) */
+            position: relative;
+            outline: none;
+            background-color: #fff;
+            flex-shrink: 0;
+        }
+
+        /* Estilo cuando el checkbox está seleccionado */
+        .checkbox-item input[type="checkbox"]:checked {
+            background-color: #7ea1c4;
+            border-color: #7ea1c4;
+        }
+
+        /* El pseudo-elemento para el icono de check */
+        .checkbox-item input[type="checkbox"]:checked::before {
+            content: '\2713'; /* Símbolo de check (✓) */
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Estilo de la etiqueta de texto que acompaña al checkbox */
+        .checkbox-item .checkbox-label { /* Usamos una clase específica para evitar conflictos */
+            color: #333;
+            font-weight: normal;
+            margin-bottom: 0;
+            display: block; /* Ocupa el espacio restante en el flex item */
+            line-height: 1.3; /* Mejor legibilidad si el texto es largo */
+        }
+
+
+        button[type="submit"],
+        button[type="reset"] {
+            background: #7ea1c4;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            margin-right: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button[type="submit"]:hover,
+        button[type="reset"]:hover {
+            background: #4a6fa5;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selección Asignatura</h1>
+    
+    <form action="matricula.php" method="POST">
+        <label for="nombre">Nombre (máx. 20 caracteres):</label><br>
+        <input id="nombre" name="nombre" maxlength="20" type="text" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 20 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="20" required><br><br>
+        
+        <label>Selecciona Asignatura:</label><br>
+        <div class="checkbox-group">
+            <div class="checkbox-item">
+                <input type="checkbox" id="Despliegue_de_Aplicaciones_Web" name="asignatura[]" value="Despliegue de Aplicaciones Web" >
+                <label for="Despliegue_de_Aplicaciones_Web" class="checkbox-label">Despliegue de Aplicaciones Web</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="Diseno_de_Interfaces_Web" name="asignatura[]" value="Diseno de Interfaces Web">
+                <label for="Diseno_de_Interfaces_Web" class="checkbox-label">Diseno de Interfaces Web</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="WordPress_asignatura" name="asignatura[]" value="WordPress">
+                <label for="WordPress_asignatura" class="checkbox-label">WordPress</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="Desarrollo_Web_Entorno_Servidor" name="asignatura[]" value="Desarrollo Web Entorno Servidor">
+                <label for="Desarrollo_Web_Entorno_Servidor" class="checkbox-label">Desarrollo Web Entorno Servidor</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="ingles" name="asignatura[]" value="Ingles">
+                <label for="ingles" class="checkbox-label">Ingles</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="Desarrollo_Web_Entorno_Cliente" name="asignatura[]" value="Desarrollo Web Entorno Cliente">
+                <label for="Desarrollo_Web_Entorno_Cliente" class="checkbox-label">Desarrollo Web Entorno Cliente</label>
+            </div><div class="checkbox-item">
+                <input type="checkbox" id="IPE_II" name="asignatura[]" value="IPE II">
+                <label for="IPE_II" class="checkbox-label">IPE II</label>
+            </div><div class="checkbox-item">
+                <input type="checkbox" id="Proyecto" name="asignatura[]" value="Proyecto">
+                <label for="Proyecto" class="checkbox-label">Proyecto</label>
+            </div>
+        </div>
+        <br>
+        
+        <div class="button-group">
+            <button type="submit">Enviar</button>
+            <button type="reset">Borrar</button>
+        </div>
+    </form>
+</body>
+</html>
