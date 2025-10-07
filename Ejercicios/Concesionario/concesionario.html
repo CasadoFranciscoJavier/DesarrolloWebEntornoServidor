@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Concesionario</title>
+</head>
+<body>
+    <h1>Concesionario</h1>
+    <form action="Concesionario.php" method="POST">
+       
+
+        <label>Modelo:</label><br>
+        <input type="radio" id="compacto" name="modelo" value="Compacto" required>
+        <label for="compacto">Compacto</label>
+        <input type="radio" id="SUV" name="modelo" value="Sedan">
+        <label for="sedan">Sedán</label><br><br>
+        <input type="radio" id="SUV" name="modelo" value="SUV">
+        <label for="SUV">SUV</label><br><br>
+
+        <label>Motor:</label><br>
+        <input type="radio" id="gasolina" name="motor" value="Gasolina 1.6L" required>
+        <label for="gasolina">Gasolina 1.6L</label>
+        <input type="radio" id="diesel" name="motor" value="Diesel 2.0L">
+        <label for="diesel">Diesel 2.0L</label>
+        <input type="radio" id="electrico" name="motor" value="Eléctrico 75 kWh">
+        <label for="electrico">Eléctrico 75 kWh</label><br><br>
+
+        <label>Color:</label><br>
+        <input type="radio" id="blanco" name="color" value="Blanco" required>
+        <label for="blanco">Blanco</label>
+        <input type="radio" id="negro" name="color" value="Negro" required>
+        <label for="negro">Negro</label>
+        <input type="radio" id="azul" name="color" value="Azul metálico" required>
+        <label for="azul">Azul metálico</label>
+        <input type="radio" id="rojo" name="color" value="Rojo" required>
+        <label for="rojo">Rojo</label><br><br>
+
+        <label>Equipamiento:</label><br>
+        <input type="radio" id="basico" name="equipamiento" value="Básico" required>
+        <label for="basico">Básico</label>
+        <input type="radio" id="confort" name="equipamiento" value="Confort" required>
+        <label for="confort">Confort</label>
+        <input type="radio" id="premium" name="equipamiento" value="Premium" required>
+        <label for="premium">Premium</label><br><br>
+       
+        <label>Llantas:</label><br>
+        <input type="radio" id="16" name="llantas" value="16" required>
+        <label for="16">16" Aleación</label>
+        <input type="radio" id="18" name="llantas" value="18" required>
+        <label for="18">18" Aleación</label>
+        <input type="radio" id="20" name="llantas" value="20" required>
+        <label for="20">20" Aleación</label><br><br>
+
+        <label>Accesorios Opcionales:</label><br>
+        <input type="checkbox" id="techo" name="accesorios[]" value="Techo Panorámico">
+        <label for="techo">Techo Panorámico</label>
+        <input type="checkbox" id="asientos" name="accesorios[]" value="Asientos de Cuero">
+        <label for="asientos">Asientos de Cuero</label>
+        <input type="checkbox" id="sonido" name="accesorios[]" value="Sistema de Sonido Premium">
+        <label for="sonido">Sistema de Sonido Premium</label>
+        <input type="checkbox" id="camara" name="accesorios[]" value="Cámara 360º">
+        <label for="camara">Cámara 360º</label>
+        <input type="checkbox" id="paquete_deportivo" name="accesorios[]" value="Paquete Deportivo">
+        <label for="paquete_deportivo">Paquete Deportivo</label>
+        <input type="checkbox" id="crucero" name="accesorios[]" value="Control de Crucero Adaptativo">
+        <label for="crucero">Control de Crucero Adaptativo</label>
+        <input type="checkbox" id="aparcamiento" name="accesorios[]" value="Sensores de Aparcamiento">
+        <label for="aparcamiento">Sensores de Aparcamiento</label>
+        <input type="checkbox" id="maletero" name="accesorios[]" value="Maletero Eléctrico">
+        <label for="maletero">Maletero Eléctrico</label>
+        <br><br>
+
+        <label for="cantidad">Cantidad de Coches: (1-5):</label><br>
+        <input type="number" id="cantidad" name="cantidad" min="1" max="5"  required><br><br>
+
+        <label for="codigo">Código Descuento:</label><br>
+        <input id="codigo" name="codigo"  type="text" optional><br><br>
+
+        <button type="submit">Enviar</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>
