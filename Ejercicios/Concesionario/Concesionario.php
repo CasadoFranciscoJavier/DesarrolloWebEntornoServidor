@@ -88,24 +88,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $llantas = $_POST["llantas"];
         $equipamiento = $_POST["equipamiento"];
         
-        $codigoDescuentoIngresado = isset($_POST["codigo"]) ? trim($_POST["codigo"]) : "";
+        $codigoDescuentoIngresado = isset($_POST["codigo"]) ? ($_POST["codigo"]) : "";
         $accesorios = isset($_POST["accesorios"]) ? $_POST["accesorios"] : []; 
 
-        $precioBaseModelo = $componentes["Modelo"][$modelo] ?? 0;
-        $precioMotor = $componentes["Motor"][$motor] ?? 0;
-        $precioColor = $componentes["Color"][$color] ?? 0;
-        $precioLlantas = $componentes["Llantas"][$llantas] ?? 0;
-        $precioEquipamiento = $componentes["Equipamiento"][$equipamiento] ?? 0;
+        $precioBaseModelo = $componentes["Modelo"][$modelo];
+        $precioMotor = $componentes["Motor"][$motor];
+        $precioColor = $componentes["Color"][$color];
+        $precioLlantas = $componentes["Llantas"][$llantas];
+        $precioEquipamiento = $componentes["Equipamiento"][$equipamiento];
         
         $precioAccesoriosTotal = 0;
         $lista_accesorios = "";
 
         if (!empty($accesorios) && is_array($accesorios)) {
             $lista_accesorios .= "<ul>";
-            foreach ($accesorios as $servicio) {
-                $precioAccesorio = $componentes["Accesorios"][$servicio] ?? 0;
+            foreach ($accesorios as $accesorio) {
+                $precioAccesorio = $componentes["Accesorios"][$accesorio];
                 $precioAccesoriosTotal += $precioAccesorio;
-                $lista_accesorios .= "<li>" . htmlspecialchars($servicio) . " - " . number_format($precioAccesorio, 0, ',', '.') . " €</li>";
+                $lista_accesorios .= "<li>" . htmlspecialchars($accesorio) . " - " . $precioAccesorio . " €</li>";
             }
             $lista_accesorios .= "</ul>";
         } else {
@@ -144,7 +144,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resumen de Compra - Concesionario</title>
-    <style>
+    
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Factura de Pedido</h1>
+        
+        <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $todoValido): ?>
+            
+            <p><strong>Cantidad de Coches:</strong> <?php echo $cantidad; ?></p>
+
+            <h2>Componentes Base</h2>
+            <p><strong>Modelo:</strong> <?php echo htmlspecialchars($modelo); ?> - <?php echo $precioBaseModelo ?> €</p>
+            <p><strong>Motor:</strong> <?php echo htmlspecialchars($motor); ?> - <?php echo $precioMotor ?> €</p>
+            <p><strong>Color:</strong> <?php echo htmlspecialchars($color); ?> - <?php echo $precioColor ?> €</p>
+            <p><strong>Llantas:</strong> <?php echo htmlspecialchars($llantas); ?>" Aleación - <?php echo $precioLlantas ?> €</p>
+            <p><strong>Equipamiento:</strong> <?php echo htmlspecialchars($equipamiento); ?> - <?php echo $precioEquipamiento ?> €</p>
+
+            <h2>Accesorios Extra</h2>
+            <?php echo $lista_accesorios; ?>
+
+            <h2>Presupuesto por Unidad Detallado</h2>
+            <ul>
+                <li><strong>Precio por unidad (Total Componentes):</strong> <?php echo $precioPorUnidad; ?> €</li>
+                <li><strong>Total sin Descuento:</strong> <?php echo $totalSinDescuento; ?> €</li>
+            </ul>
+
+            <div class="total-line">
+                <p><strong>Descuento:</strong> <?php echo $mensajeDescuento; ?></p>
+                <?php if ($descuentoTasa > 0): ?>
+                    <ul>
+                        <li><strong>Descuento Aplicado:</strong> - <?php echo $descuentoAplicado; ?> €</li>
+                        <li><strong>Total con Descuento:</strong> <?php echo $totalConDescuento; ?> €</li>
+                    </ul>
+                <?php endif; ?>
+            </div>
+
+            <div class="total-line">
+                <p><strong>IVA (21%):</strong> + <?php echo $totalIVA; ?> €</p>
+            </div>
+
+            <div class="final-price">
+                <strong>PRECIO FINAL:</strong> <?php echo $precioFinal; ?> €
+            </div>
+
+        <?php elseif ($_SERVER["REQUEST_METHOD"] == "POST"): ?>
+          
+            <p style="color:red; font-weight:bold;">Se encontraron errores en el formulario. Por favor, revisa las alertas y completa todos los campos obligatorios.</p>
+        <?php else: ?>
+            <p>Por favor, envía el formulario de configuración del vehículo para generar la factura.</p>
+        <?php endif; ?>
+    </div>
+</body>
+<style>
       
         body { 
             background: #f3f6f9; 
@@ -184,62 +236,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         .final-price {
             font-size: 1.3em;
-            color: #28a745;
+            color: #ffffffff;
+            background-color: #4a6fa5;
             font-weight: bold;
-            border-top: 2px solid #28a745;
+            border-top: 2px solid #4a6fa5;
+            text-align: center;
             padding-top: 10px;
             margin-top: 15px;
         }
     </style>
-</head>
-<body>
-    <div class="contenedor">
-        <h1>Factura de Pedido</h1>
-        
-        <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $todoValido): ?>
-            
-            <p><strong>Cantidad de Coches:</strong> <?php echo $cantidad; ?></p>
-
-            <h2>Componentes Base</h2>
-            <p><strong>Modelo:</strong> <?php echo htmlspecialchars($modelo); ?> - <?php echo $precioBaseModelo ?> €</p>
-            <p><strong>Motor:</strong> <?php echo htmlspecialchars($motor); ?> - <?php echo $precioMotor ?> €</p>
-            <p><strong>Color:</strong> <?php echo htmlspecialchars($color); ?> - <?php echo $precioColor ?> €</p>
-            <p><strong>Llantas:</strong> <?php echo htmlspecialchars($llantas); ?> - <?php echo $precioLlantas ?> €</p>
-            <p><strong>Equipamiento:</strong> <?php echo htmlspecialchars($equipamiento); ?> - <?php echo $precioEquipamiento ?> €</p>
-
-            <h2>Accesorios Extra</h2>
-            <?php echo $lista_accesorios; ?>
-
-            <h2>Presupuesto por Unidad Detallado</h2>
-            <ul>
-                <li><strong>Precio por unidad (Total Componentes):</strong> <?php echo $precioPorUnidad; ?> €</li>
-                <li><strong>Total sin Descuento:</strong> <?php echo $totalSinDescuento; ?> €</li>
-            </ul>
-
-            <div class="total-line">
-                <p><strong>Descuento:</strong> <?php echo $mensajeDescuento; ?></p>
-                <?php if ($descuentoTasa > 0): ?>
-                    <ul>
-                        <li><strong>Descuento Aplicado:</strong> - <?php echo $descuentoAplicado; ?> €</li>
-                        <li><strong>Total con Descuento (Base Imponible):</strong> <?php echo $totalConDescuento; ?> €</li>
-                    </ul>
-                <?php endif; ?>
-            </div>
-
-            <div class="total-line">
-                <p><strong>IVA (21%):</strong> + <?php echo $totalIVA; ?> €</p>
-            </div>
-
-            <div class="final-price">
-                <strong>PRECIO FINAL:</strong> <?php echo $precioFinal; ?> €
-            </div>
-
-        <?php elseif ($_SERVER["REQUEST_METHOD"] == "POST"): ?>
-          
-            <p style="color:red; font-weight:bold;">Se encontraron errores en el formulario. Por favor, revisa las alertas y completa todos los campos obligatorios.</p>
-        <?php else: ?>
-            <p>Por favor, envía el formulario de configuración del vehículo para generar la factura.</p>
-        <?php endif; ?>
-    </div>
-</body>
 </html>
