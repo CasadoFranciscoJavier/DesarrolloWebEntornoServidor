@@ -1,48 +1,50 @@
 <?php
-require_once "bbddConcesionario.php"; 
+require_once "bbddConcesionario.php";
 
 function alert($text)
 {
-    echo "<script> alert('$text') </script>";
+    echo "<script> alert('$text');window.location.href = 'concesionario.html'; </script>";
 }
 
 // Función para validar string 
-function validarString($variablePOST, $minimo, $maximo) {
-    
+function validarString($variablePOST, $minimo, $maximo)
+{
+
     $vacio = empty($_POST[$variablePOST]);
     $valido = false;
-    if (!$vacio){
+    if (!$vacio) {
         $valido = (strlen($_POST[$variablePOST]) >= $minimo && strlen($_POST[$variablePOST]) <= $maximo);
     }
-    if($vacio){
+    if ($vacio) {
         alert("$variablePOST está vacío");
-    } else if(!$valido){
+    } else if (!$valido) {
         alert("$variablePOST fuera de rango (longitud entre $minimo y $maximo)");
     }
     return $valido;
 }
 
 // Función para validar entero
-function validarInt($variablePOST, $minimo, $maximo){
-    
+function validarInt($variablePOST, $minimo, $maximo)
+{
+
     $vacio = empty($_POST[$variablePOST]);
     $valido = false;
-    $esEntero = false; 
+    $esEntero = false;
 
-    if (!$vacio){
+    if (!$vacio) {
         $esEntero = filter_var($_POST[$variablePOST], FILTER_VALIDATE_INT);
 
-        if($esEntero !== false){
-            $valido = ( ($_POST[$variablePOST] >= $minimo )
-                     && ($_POST[$variablePOST] <= $maximo ) );
+        if ($esEntero !== false) {
+            $valido = (($_POST[$variablePOST] >= $minimo)
+                && ($_POST[$variablePOST] <= $maximo));
         }
     }
-    
-    if($vacio){
+
+    if ($vacio) {
         alert("$variablePOST está vacío");
-    } else if($esEntero === false){
+    } else if ($esEntero == false) {
         alert("$variablePOST debe ser un número entero");
-    } else if(!$valido){
+    } else if (!$valido) {
         alert("$variablePOST fuera de rango (entre $minimo y $maximo)");
     }
 
@@ -70,7 +72,7 @@ $totalIVA = 0;
 $precioFinal = 0;
 $mensajeDescuento = "";
 $lista_accesorios = "";
-$descuentoTasa = 0; 
+$descuentoTasa = 0;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $todoValido = validarInt("cantidad", 1, 5)
@@ -87,16 +89,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $color = $_POST["color"];
         $llantas = $_POST["llantas"];
         $equipamiento = $_POST["equipamiento"];
-        
+
         $codigoDescuentoIngresado = isset($_POST["codigo"]) ? ($_POST["codigo"]) : "";
-        $accesorios = isset($_POST["accesorios"]) ? $_POST["accesorios"] : []; 
+        $accesorios = isset($_POST["accesorios"]) ? $_POST["accesorios"] : [];
 
         $precioBaseModelo = $componentes["Modelo"][$modelo];
         $precioMotor = $componentes["Motor"][$motor];
         $precioColor = $componentes["Color"][$color];
         $precioLlantas = $componentes["Llantas"][$llantas];
         $precioEquipamiento = $componentes["Equipamiento"][$equipamiento];
-        
+
         $precioAccesoriosTotal = 0;
         $lista_accesorios = "";
 
@@ -132,26 +134,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $totalConDescuento = $totalSinDescuento - $descuentoAplicado;
         $totalIVA = $totalConDescuento * $IVA_PORCENTAJE;
         $precioFinal = $totalConDescuento + $totalIVA;
-
-      
     }
+} else {
+    alert("Pero no toques, Por qué tocas?!");
 }
+
+
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resumen de Compra - Concesionario</title>
-    
+
 </head>
+
 <body>
     <div class="contenedor">
         <h1>Factura de Pedido</h1>
-        
+
         <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $todoValido): ?>
-            
+
             <p><strong>Cantidad de Coches:</strong> <?php echo $cantidad; ?></p>
 
             <h2>Componentes Base</h2>
@@ -189,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
         <?php elseif ($_SERVER["REQUEST_METHOD"] == "POST"): ?>
-          
+
             <p style="color:red; font-weight:bold;">Se encontraron errores en el formulario. Por favor, revisa las alertas y completa todos los campos obligatorios.</p>
         <?php else: ?>
             <p>Por favor, envía el formulario de configuración del vehículo para generar la factura.</p>
@@ -197,52 +203,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </body>
 <style>
-      
-        body { 
-            background: #f3f6f9; 
-            font-family: Arial, sans-serif; 
-            color: #333; 
-            padding: 20px; 
-        }
-        .contenedor { 
-            background: #fff; 
-            max-width: 600px; 
-            margin: 40px auto; 
-            padding: 30px; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-            border: 1px solid #ddd;
-        }
-        h1, h2 { 
-            color: #4a6fa5; 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 5px; 
-            margin-top: 20px;
-        }
-        p, ul {
-            margin: 12px 0;
-            font-size: 1.08em;
-        }
-        li {
-            margin-bottom: 4px;
-        }
-        strong {
-            font-weight: bold;
-        }
-        .total-line {
-            padding: 5px 0;
-            border-top: 1px dashed #ccc;
-            margin-top: 15px;
-        }
-        .final-price {
-            font-size: 1.3em;
-            color: #ffffffff;
-            background-color: #4a6fa5;
-            font-weight: bold;
-            border-top: 2px solid #4a6fa5;
-            text-align: center;
-            padding-top: 10px;
-            margin-top: 15px;
-        }
-    </style>
+    body {
+        background: #f3f6f9;
+        font-family: Arial, sans-serif;
+        color: #333;
+        padding: 20px;
+    }
+
+    .contenedor {
+        background: #fff;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd;
+    }
+
+    h1,
+    h2 {
+        color: #4a6fa5;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+        margin-top: 20px;
+    }
+
+    p,
+    ul {
+        margin: 12px 0;
+        font-size: 1.08em;
+    }
+
+    li {
+        margin-bottom: 4px;
+    }
+
+    strong {
+        font-weight: bold;
+    }
+
+    .total-line {
+        padding: 5px 0;
+        border-top: 1px dashed #ccc;
+        margin-top: 15px;
+    }
+
+    .final-price {
+        font-size: 1.3em;
+        color: #ffffffff;
+        background-color: #4a6fa5;
+        font-weight: bold;
+        border-top: 2px solid #4a6fa5;
+        text-align: center;
+        padding-top: 10px;
+        margin-top: 15px;
+    }
+</style>
+
 </html>
