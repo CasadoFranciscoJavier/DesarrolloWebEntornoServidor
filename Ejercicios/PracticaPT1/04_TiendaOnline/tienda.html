@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tienda Online - Carrito</title>
+</head>
+<body>
+    <h1>Tech Store - Carrito de Compra</h1>
+    <form action="procesarTienda.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="direccion">Dirección de Envío (máx. 100 caracteres):</label><br>
+        <input type="text" id="direccion" name="direccion" maxlength="100" required><br><br>
+
+        <label>Selecciona Productos:</label><br>
+        <input type="checkbox" id="portatil" name="productos[]" value="Portátil Gaming">
+        <label for="portatil">Portátil Gaming (899¬)</label>
+        <input type="number" name="cant_Portátil Gaming" min="1" max="5" value="1"><br>
+
+        <input type="checkbox" id="smartphone" name="productos[]" value="Smartphone 5G">
+        <label for="smartphone">Smartphone 5G (599¬)</label>
+        <input type="number" name="cant_Smartphone 5G" min="1" max="5" value="1"><br>
+
+        <input type="checkbox" id="tablet" name="productos[]" value="Tablet 10&quot;">
+        <label for="tablet">Tablet 10" (349¬)</label>
+        <input type="number" name="cant_Tablet 10&quot;" min="1" max="5" value="1"><br>
+
+        <input type="checkbox" id="auriculares" name="productos[]" value="Auriculares Bluetooth">
+        <label for="auriculares">Auriculares Bluetooth (79¬)</label>
+        <input type="number" name="cant_Auriculares Bluetooth" min="1" max="5" value="1"><br>
+
+        <input type="checkbox" id="smartwatch" name="productos[]" value="Smartwatch">
+        <label for="smartwatch">Smartwatch (199¬)</label>
+        <input type="number" name="cant_Smartwatch" min="1" max="5" value="1"><br>
+
+        <input type="checkbox" id="teclado" name="productos[]" value="Teclado Mecánico">
+        <label for="teclado">Teclado Mecánico (129¬)</label>
+        <input type="number" name="cant_Teclado Mecánico" min="1" max="5" value="1"><br><br>
+
+        <label>Método de Envío:</label><br>
+        <input type="radio" id="estandar" name="envio" value="Envío Estándar (5-7 días)" required>
+        <label for="estandar">Envío Estándar 5-7 días (5¬)</label><br>
+        <input type="radio" id="express" name="envio" value="Envío Express (2-3 días)">
+        <label for="express">Envío Express 2-3 días (12¬)</label><br>
+        <input type="radio" id="premium" name="envio" value="Envío Premium (24h)">
+        <label for="premium">Envío Premium 24h (20¬)</label><br><br>
+
+        <label>Servicios Adicionales (Opcionales):</label><br>
+        <input type="checkbox" id="seguro" name="servicios[]" value="Seguro de Robo y Daños">
+        <label for="seguro">Seguro de Robo y Daños (25¬)</label><br>
+        <input type="checkbox" id="garantia" name="servicios[]" value="Garantía Extendida (2 años)">
+        <label for="garantia">Garantía Extendida 2 años (50¬)</label><br>
+        <input type="checkbox" id="instalacion" name="servicios[]" value="Instalación/Configuración">
+        <label for="instalacion">Instalación/Configuración (40¬)</label><br>
+        <input type="checkbox" id="regalo" name="servicios[]" value="Embalaje Regalo">
+        <label for="regalo">Embalaje Regalo (8¬)</label><br><br>
+
+        <label for="cupon">Cupón de Descuento:</label><br>
+        <input type="text" id="cupon" name="cupon" placeholder="Ej: TECH20"><br><br>
+
+        <button type="submit">Finalizar Compra</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 580px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+    padding: 6px 8px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+    margin-left: 4px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 0.95em;
+    transition: border 0.2s;
+}
+
+input[type="text"],
+input[type="email"] {
+    width: 95%;
+}
+
+input[type="number"] {
+    width: 50px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

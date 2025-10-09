@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Biblioteca - Préstamo de Libros</title>
+</head>
+<body>
+    <h1>Sistema de Préstamos - Biblioteca Municipal</h1>
+    <form action="procesarBiblioteca.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="dni">DNI (8 dígitos + letra):</label><br>
+        <input type="text" id="dni" name="dni" maxlength="9" placeholder="12345678A" required><br><br>
+
+        <label>Tipo de Membresía:</label><br>
+        <input type="radio" id="basica" name="membresia" value="Básica" required>
+        <label for="basica">Básica (5€/mes)</label>
+        <input type="radio" id="premium" name="membresia" value="Premium">
+        <label for="premium">Premium (12€/mes)</label>
+        <input type="radio" id="vip" name="membresia" value="VIP">
+        <label for="vip">VIP (25€/mes)</label><br><br>
+
+        <label for="categoria">Categoría de Libros:</label><br>
+        <select id="categoria" name="categoria" required>
+            <option value="">Selecciona una categoría</option>
+            <option value="Novela">Novela</option>
+            <option value="Ensayo">Ensayo</option>
+            <option value="Ciencia">Ciencia</option>
+            <option value="Historia">Historia</option>
+            <option value="Arte">Arte</option>
+        </select><br><br>
+
+        <label for="cantidad">Cantidad de Libros (1-10):</label><br>
+        <input type="number" id="cantidad" name="cantidad" min="1" max="10" required><br><br>
+
+        <label>Duración del Préstamo:</label><br>
+        <input type="radio" id="7dias" name="duracion" value="7 días" required>
+        <label for="7dias">7 días</label>
+        <input type="radio" id="14dias" name="duracion" value="14 días">
+        <label for="14dias">14 días</label>
+        <input type="radio" id="30dias" name="duracion" value="30 días">
+        <label for="30dias">30 días</label><br><br>
+
+        <label>Servicios Adicionales:</label><br>
+        <input type="checkbox" id="sala" name="servicios[]" value="Reserva de Sala de Estudio">
+        <label for="sala">Reserva de Sala de Estudio (8€)</label><br>
+        <input type="checkbox" id="basedatos" name="servicios[]" value="Acceso a Base de Datos Digital">
+        <label for="basedatos">Acceso a Base de Datos Digital (15€)</label><br>
+        <input type="checkbox" id="tableta" name="servicios[]" value="Préstamo de Tableta Electrónica">
+        <label for="tableta">Préstamo de Tableta Electrónica (20€)</label><br>
+        <input type="checkbox" id="escaneo" name="servicios[]" value="Servicio de Escaneo de Documentos">
+        <label for="escaneo">Servicio de Escaneo de Documentos (5€)</label><br>
+        <input type="checkbox" id="asesoria" name="servicios[]" value="Asesoría de Investigación">
+        <label for="asesoria">Asesoría de Investigación (25€)</label><br><br>
+
+        <label for="codigo">Código de Promoción:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: LIBRO2024"><br><br>
+
+        <button type="submit">Procesar Préstamo</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

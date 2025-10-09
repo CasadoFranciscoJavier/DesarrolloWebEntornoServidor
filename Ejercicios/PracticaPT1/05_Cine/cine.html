@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cine - Reserva de Entradas</title>
+</head>
+<body>
+    <h1>Cineplex - Reserva de Entradas</h1>
+    <form action="procesarCine.php" method="POST">
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+        
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <label for="formato">Formato de Película:</label><br>
+        <select id="formato" name="formato" required>
+            <option value="">Selecciona un formato</option>
+            <option value="2D">2D (8€)</option>
+            <option value="3D">3D (11€)</option>
+            <option value="IMAX">IMAX (15€)</option>
+        </select><br><br>
+        
+        <label>Día de la Semana:</label><br>
+        <input type="radio" id="lun-jue" name="dia" value="Lunes a Jueves" required>
+        <label for="lun-jue">Lunes a Jueves</label><br>
+        <input type="radio" id="viernes" name="dia" value="Viernes">
+        <label for="viernes">Viernes (+15%)</label><br>
+        <input type="radio" id="finde" name="dia" value="Sábado y Domingo">
+        <label for="finde">Sábado y Domingo (+30%)</label><br><br>
+        
+        <label>Sesión:</label><br>
+        <input type="radio" id="matinal" name="sesion" value="Matinal (antes 14:00)" required>
+        <label for="matinal">Matinal (-15%)</label><br>
+        <input type="radio" id="tarde" name="sesion" value="Tarde (14:00-18:00)">
+        <label for="tarde">Tarde</label><br>
+        <input type="radio" id="noche" name="sesion" value="Noche (después 18:00)">
+        <label for="noche">Noche (+10%)</label><br><br>
+        
+        <label for="entradas">Número de Entradas (1-10):</label><br>
+        <input type="number" id="entradas" name="entradas" min="1" max="10" required><br><br>
+        
+        <label>Complementos (Opcionales):</label><br>
+        <input type="checkbox" id="pal-peq" name="complementos[]" value="Palomitas Pequeñas">
+        <label for="pal-peq">Palomitas Pequeñas (4€)</label><br>
+        <input type="checkbox" id="pal-gra" name="complementos[]" value="Palomitas Grandes">
+        <label for="pal-gra">Palomitas Grandes (6€)</label><br>
+        <input type="checkbox" id="ref-peq" name="complementos[]" value="Refresco Pequeño">
+        <label for="ref-peq">Refresco Pequeño (3€)</label><br>
+        <input type="checkbox" id="ref-gra" name="complementos[]" value="Refresco Grande">
+        <label for="ref-gra">Refresco Grande (5€)</label><br>
+        <input type="checkbox" id="combo" name="complementos[]" value="Combo Pareja">
+        <label for="combo">Combo Pareja (12€)</label><br>
+        <input type="checkbox" id="nachos" name="complementos[]" value="Nachos con Queso">
+        <label for="nachos">Nachos con Queso (5€)</label><br><br>
+        
+        <label for="codigo">Código Promocional:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: CINE50"><br><br>
+        
+        <button type="submit">Reservar Entradas</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

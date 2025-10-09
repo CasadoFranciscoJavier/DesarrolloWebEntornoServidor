@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gimnasio - Inscripción</title>
+</head>
+<body>
+    <h1>Gimnasio Fit Center - Inscripción</h1>
+    <form action="procesarGimnasio.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="edad">Edad (18-80 años):</label><br>
+        <input type="number" id="edad" name="edad" min="18" max="80" required><br><br>
+
+        <label>Tipo de Plan:</label><br>
+        <input type="radio" id="basico-mensual" name="plan" value="Plan Básico Mensual" required>
+        <label for="basico-mensual">Plan Básico Mensual (30¬)</label><br>
+        <input type="radio" id="premium-mensual" name="plan" value="Plan Premium Mensual">
+        <label for="premium-mensual">Plan Premium Mensual (50¬)</label><br>
+        <input type="radio" id="basico-trimestral" name="plan" value="Plan Básico Trimestral">
+        <label for="basico-trimestral">Plan Básico Trimestral (75¬)</label><br>
+        <input type="radio" id="premium-trimestral" name="plan" value="Plan Premium Trimestral">
+        <label for="premium-trimestral">Plan Premium Trimestral (135¬)</label><br>
+        <input type="radio" id="anual" name="plan" value="Plan Anual">
+        <label for="anual">Plan Anual (450¬)</label><br><br>
+
+        <label>Clases Grupales (Opcionales):</label><br>
+        <input type="checkbox" id="yoga" name="clases[]" value="Yoga">
+        <label for="yoga">Yoga (15¬/mes)</label><br>
+        <input type="checkbox" id="spinning" name="clases[]" value="Spinning">
+        <label for="spinning">Spinning (20¬/mes)</label><br>
+        <input type="checkbox" id="pilates" name="clases[]" value="Pilates">
+        <label for="pilates">Pilates (18¬/mes)</label><br>
+        <input type="checkbox" id="crossfit" name="clases[]" value="CrossFit">
+        <label for="crossfit">CrossFit (25¬/mes)</label><br>
+        <input type="checkbox" id="zumba" name="clases[]" value="Zumba">
+        <label for="zumba">Zumba (12¬/mes)</label><br>
+        <input type="checkbox" id="box" name="clases[]" value="Box">
+        <label for="box">Box (22¬/mes)</label><br><br>
+
+        <label>Servicios Adicionales (Opcionales):</label><br>
+        <input type="checkbox" id="entrenador" name="servicios[]" value="Entrenador Personal (4 sesiones/mes)">
+        <label for="entrenador">Entrenador Personal - 4 sesiones (80¬/mes)</label><br>
+        <input type="checkbox" id="nutricionista" name="servicios[]" value="Nutricionista (2 consultas/mes)">
+        <label for="nutricionista">Nutricionista - 2 consultas (40¬/mes)</label><br>
+        <input type="checkbox" id="taquilla" name="servicios[]" value="Taquilla Privada">
+        <label for="taquilla">Taquilla Privada (10¬/mes)</label><br>
+        <input type="checkbox" id="piscina" name="servicios[]" value="Acceso a Piscina">
+        <label for="piscina">Acceso a Piscina (15¬/mes)</label><br>
+        <input type="checkbox" id="sauna" name="servicios[]" value="Acceso a Sauna">
+        <label for="sauna">Acceso a Sauna (12¬/mes)</label><br><br>
+
+        <label for="horario">Horario Preferido:</label><br>
+        <select id="horario" name="horario" required>
+            <option value="">Selecciona un horario</option>
+            <option value="Mañana (6:00-14:00)">Mañana (6:00-14:00)</option>
+            <option value="Tarde (14:00-22:00)">Tarde (14:00-22:00)</option>
+            <option value="Todo el día">Todo el día (+20%)</option>
+        </select><br><br>
+
+        <label for="codigo">Código Promocional:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: FITNESS2024"><br><br>
+
+        <button type="submit">Inscribirse</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>
