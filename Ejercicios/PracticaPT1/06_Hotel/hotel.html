@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel - Reserva de Habitaciones</title>
+</head>
+<body>
+    <h1>Sistema de Reservas - Hotel</h1>
+    <form action="procesarHotel.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="dni">DNI (8 dígitos + letra):</label><br>
+        <input type="text" id="dni" name="dni" maxlength="9" placeholder="12345678A" required><br><br>
+
+        <label>Tipo de Habitación:</label><br>
+        <input type="radio" id="individual" name="habitacion" value="Individual" required>
+        <label for="individual">Individual (60¬/noche)</label>
+        <input type="radio" id="doble" name="habitacion" value="Doble">
+        <label for="doble">Doble (90¬/noche)</label>
+        <input type="radio" id="suite" name="habitacion" value="Suite">
+        <label for="suite">Suite (150¬/noche)</label>
+        <input type="radio" id="familiar" name="habitacion" value="Familiar">
+        <label for="familiar">Familiar (120¬/noche)</label><br><br>
+
+        <label for="regimen">Régimen de Comidas:</label><br>
+        <select id="regimen" name="regimen" required>
+            <option value="">Selecciona un régimen</option>
+            <option value="Solo Alojamiento">Solo Alojamiento</option>
+            <option value="Desayuno Incluido">Desayuno Incluido (+15%)</option>
+            <option value="Media Pensión">Media Pensión (+35%)</option>
+            <option value="Pensión Completa">Pensión Completa (+55%)</option>
+        </select><br><br>
+
+        <label for="noches">Número de Noches (1-30):</label><br>
+        <input type="number" id="noches" name="noches" min="1" max="30" required><br><br>
+
+        <label>Servicios Adicionales:</label><br>
+        <input type="checkbox" id="spa" name="servicios[]" value="Spa y Masaje">
+        <label for="spa">Spa y Masaje (45¬)</label><br>
+        <input type="checkbox" id="parking" name="servicios[]" value="Parking Privado">
+        <label for="parking">Parking Privado (15¬)</label><br>
+        <input type="checkbox" id="traslado" name="servicios[]" value="Traslado Aeropuerto">
+        <label for="traslado">Traslado Aeropuerto (30¬)</label><br>
+        <input type="checkbox" id="cuna" name="servicios[]" value="Cuna para Bebé">
+        <label for="cuna">Cuna para Bebé (10¬)</label><br>
+        <input type="checkbox" id="wifi" name="servicios[]" value="Wi-Fi Premium">
+        <label for="wifi">Wi-Fi Premium (8¬)</label><br><br>
+
+        <label for="codigo">Código de Promoción:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: HOTEL20"><br><br>
+
+        <button type="submit">Procesar Reserva</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

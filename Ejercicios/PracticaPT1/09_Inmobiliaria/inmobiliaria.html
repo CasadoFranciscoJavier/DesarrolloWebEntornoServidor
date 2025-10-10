@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inmobiliaria - Alquiler de Propiedades</title>
+</head>
+<body>
+    <h1>Inmobiliaria - Alquiler de Propiedades</h1>
+    <form action="procesarInmobiliaria.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="dni">DNI (8 dígitos + letra):</label><br>
+        <input type="text" id="dni" name="dni" maxlength="9" placeholder="12345678A" required><br><br>
+
+        <label for="propiedad">Tipo de Propiedad:</label><br>
+        <select id="propiedad" name="propiedad" required>
+            <option value="">Selecciona un tipo</option>
+            <option value="Estudio">Estudio (450¬/mes)</option>
+            <option value="Piso 1 Habitación">Piso 1 Habitación (650¬/mes)</option>
+            <option value="Piso 2 Habitaciones">Piso 2 Habitaciones (850¬/mes)</option>
+            <option value="Piso 3 Habitaciones">Piso 3 Habitaciones (1100¬/mes)</option>
+            <option value="Ático">Ático (1400¬/mes)</option>
+        </select><br><br>
+
+        <label>Ubicación:</label><br>
+        <input type="radio" id="centro" name="ubicacion" value="Centro Ciudad" required>
+        <label for="centro">Centro Ciudad (+40%)</label>
+        <input type="radio" id="residencial" name="ubicacion" value="Zona Residencial">
+        <label for="residencial">Zona Residencial</label>
+        <input type="radio" id="afueras" name="ubicacion" value="Afueras">
+        <label for="afueras">Afueras (-25%)</label>
+        <input type="radio" id="mar" name="ubicacion" value="Junto al Mar">
+        <label for="mar">Junto al Mar (+60%)</label><br><br>
+
+        <label>Duración del Contrato:</label><br>
+        <input type="radio" id="mensual" name="duracion" value="Mensual" required>
+        <label for="mensual">Mensual</label>
+        <input type="radio" id="trimestral" name="duracion" value="Trimestral">
+        <label for="trimestral">Trimestral (-5%)</label>
+        <input type="radio" id="semestral" name="duracion" value="Semestral">
+        <label for="semestral">Semestral (-10%)</label>
+        <input type="radio" id="anual" name="duracion" value="Anual">
+        <label for="anual">Anual (-15%)</label><br><br>
+
+        <label>Servicios Incluidos:</label><br>
+        <input type="checkbox" id="garaje" name="servicios[]" value="Plaza de Garaje">
+        <label for="garaje">Plaza de Garaje (80¬)</label><br>
+        <input type="checkbox" id="trastero" name="servicios[]" value="Trastero">
+        <label for="trastero">Trastero (40¬)</label><br>
+        <input type="checkbox" id="piscina" name="servicios[]" value="Piscina Comunitaria">
+        <label for="piscina">Piscina Comunitaria (50¬)</label><br>
+        <input type="checkbox" id="gimnasio" name="servicios[]" value="Gimnasio">
+        <label for="gimnasio">Gimnasio (35¬)</label><br>
+        <input type="checkbox" id="seguridad" name="servicios[]" value="Seguridad 24h">
+        <label for="seguridad">Seguridad 24h (60¬)</label><br><br>
+
+        <label for="codigo">Código de Promoción:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: BIENVENIDA"><br><br>
+
+        <button type="submit">Procesar Alquiler</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

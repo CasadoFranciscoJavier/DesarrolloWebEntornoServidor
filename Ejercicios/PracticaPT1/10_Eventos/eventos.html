@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Organización de Eventos y Catering</title>
+</head>
+<body>
+    <h1>Organización de Eventos y Catering</h1>
+    <form action="procesarEventos.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="dni">DNI (8 dígitos + letra):</label><br>
+        <input type="text" id="dni" name="dni" maxlength="9" placeholder="12345678A" required><br><br>
+
+        <label for="evento">Tipo de Evento:</label><br>
+        <select id="evento" name="evento" required>
+            <option value="">Selecciona un tipo</option>
+            <option value="Boda">Boda (50¬/persona)</option>
+            <option value="Comunión">Comunión (35¬/persona)</option>
+            <option value="Cumpleaños">Cumpleaños (25¬/persona)</option>
+            <option value="Evento Corporativo">Evento Corporativo (40¬/persona)</option>
+            <option value="Conferencia">Conferencia (30¬/persona)</option>
+        </select><br><br>
+
+        <label for="menu">Menú:</label><br>
+        <select id="menu" name="menu" required>
+            <option value="">Selecciona un menú</option>
+            <option value="Menú Básico">Menú Básico (25¬/persona)</option>
+            <option value="Menú Intermedio">Menú Intermedio (40¬/persona)</option>
+            <option value="Menú Premium">Menú Premium (60¬/persona)</option>
+            <option value="Menú Gourmet">Menú Gourmet (85¬/persona)</option>
+        </select><br><br>
+
+        <label for="invitados">Número de Invitados (1-500):</label><br>
+        <input type="number" id="invitados" name="invitados" min="1" max="500" required><br><br>
+
+        <label>Temporada:</label><br>
+        <input type="radio" id="baja" name="temporada" value="Temporada Baja" required>
+        <label for="baja">Temporada Baja (-15%)</label>
+        <input type="radio" id="media" name="temporada" value="Temporada Media">
+        <label for="media">Temporada Media</label>
+        <input type="radio" id="alta" name="temporada" value="Temporada Alta">
+        <label for="alta">Temporada Alta (+30%)</label><br><br>
+
+        <label>Servicios Adicionales:</label><br>
+        <input type="checkbox" id="decoracion" name="servicios[]" value="Decoración Temática">
+        <label for="decoracion">Decoración Temática (300¬)</label><br>
+        <input type="checkbox" id="fotografia" name="servicios[]" value="Fotografía Profesional">
+        <label for="fotografia">Fotografía Profesional (400¬)</label><br>
+        <input type="checkbox" id="dj" name="servicios[]" value="DJ y Sonido">
+        <label for="dj">DJ y Sonido (350¬)</label><br>
+        <input type="checkbox" id="animacion" name="servicios[]" value="Animación Infantil">
+        <label for="animacion">Animación Infantil (200¬)</label><br>
+        <input type="checkbox" id="barra" name="servicios[]" value="Barra Libre">
+        <label for="barra">Barra Libre (15¬/persona)</label><br><br>
+
+        <label for="codigo">Código de Promoción:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: EVENTO20"><br><br>
+
+        <button type="submit">Procesar Evento</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

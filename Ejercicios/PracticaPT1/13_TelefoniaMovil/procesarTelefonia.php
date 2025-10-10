@@ -1,12 +1,12 @@
 <?php
-require_once "bbddHotel.php";
+require_once "bbddTelefonia.php";
 
 function alert($text)
 {
-    echo "<script> alert('$text');window.location.href = 'hotel.html'; </script>";
+    echo "<script> alert('$text');window.location.href = 'telefonia.html'; </script>";
 }
 
-// FunciÛn para validar string
+// Funci√≥n para validar string
 function validarString($variablePOST, $minimo, $maximo)
 {
     $vacio = empty($_POST[$variablePOST]);
@@ -15,14 +15,14 @@ function validarString($variablePOST, $minimo, $maximo)
         $valido = (strlen($_POST[$variablePOST]) >= $minimo && strlen($_POST[$variablePOST]) <= $maximo);
     }
     if ($vacio) {
-        alert("$variablePOST est· vacÌo");
+        alert("$variablePOST est√° vac√≠o");
     } else if (!$valido) {
         alert("$variablePOST fuera de rango (longitud entre $minimo y $maximo)");
     }
     return $valido;
 }
 
-// FunciÛn para validar DNI
+// Funci√≥n para validar DNI
 function validarDNI($dni)
 {
     $vacio = empty($_POST["dni"]);
@@ -38,41 +38,14 @@ function validarDNI($dni)
     }
 
     if ($vacio) {
-        alert("DNI est· vacÌo");
+        alert("DNI est√° vac√≠o");
     } else if (!$valido) {
-        alert("DNI no v·lido (debe tener 8 dÌgitos + 1 letra)");
+        alert("DNI no v√°lido (debe tener 8 d√≠gitos + 1 letra)");
     }
     return $valido;
 }
 
-// FunciÛn para validar entero
-function validarInt($variablePOST, $minimo, $maximo)
-{
-    $vacio = empty($_POST[$variablePOST]);
-    $valido = false;
-    $esEntero = false;
-
-    if (!$vacio) {
-        $esEntero = filter_var($_POST[$variablePOST], FILTER_VALIDATE_INT);
-
-        if ($esEntero !== false) {
-            $valido = (($_POST[$variablePOST] >= $minimo)
-                && ($_POST[$variablePOST] <= $maximo));
-        }
-    }
-
-    if ($vacio) {
-        alert("$variablePOST est· vacÌo");
-    } else if ($esEntero == false) {
-        alert("$variablePOST debe ser un n˙mero entero");
-    } else if (!$valido) {
-        alert("$variablePOST fuera de rango (entre $minimo y $maximo)");
-    }
-
-    return $valido;
-}
-
-// FunciÛn para validar selecciÛn
+// Funci√≥n para validar selecci√≥n
 function validarSeleccion($variablePOST)
 {
     $vacio = empty($_POST[$variablePOST]);
@@ -85,7 +58,12 @@ function validarSeleccion($variablePOST)
 //============================= main =============================
 
 $todoValido = false;
-$precioHabitacion = 0;
+$precioPlan = 0;
+$precioGB = 0;
+$precioBase = 0;
+$descuentoPermanencia = 0;
+$precioBaseDespuesPermanencia = 0;
+$precioConMinutos = 0;
 $precioServicios = 0;
 $subtotal = 0;
 $descuentoAplicado = 0;
@@ -101,25 +79,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $todoValido = validarString("nombre", 2, 30)
         && validarString("apellidos", 2, 40)
         && validarDNI($_POST["dni"])
-        && validarInt("noches", 1, 30)
-        && validarSeleccion("habitacion")
-        && validarSeleccion("regimen");
+        && validarSeleccion("plan")
+        && validarSeleccion("gb")
+        && validarSeleccion("minutos")
+        && validarSeleccion("permanencia");
 
     if ($todoValido) {
         $nombre = htmlspecialchars($_POST["nombre"]);
         $apellidos = htmlspecialchars($_POST["apellidos"]);
         $dni = htmlspecialchars($_POST["dni"]);
-        $noches = (int)$_POST["noches"];
-        $habitacion = $_POST["habitacion"];
-        $regimen = $_POST["regimen"];
+        $plan = $_POST["plan"];
+        $gb = $_POST["gb"];
+        $minutosSeleccionados = $_POST["minutos"];
+        $permanenciaSeleccionada = $_POST["permanencia"];
 
         $codigoPromoIngresado = isset($_POST["codigo"]) ? $_POST["codigo"] : "";
         $serviciosSeleccionados = isset($_POST["servicios"]) ? $_POST["servicios"] : [];
 
         // Calcular precios
-        $precioBaseHabitacion = $habitaciones[$habitacion];
-        $multiplicadorRegimen = $regimenes[$regimen];
-        $precioHabitacion = $precioBaseHabitacion * $multiplicadorRegimen * $noches;
+        $precioPlan = $planes[$plan];
+        $precioGB = $gbAdicionales[$gb];
+        $precioBase = $precioPlan + $precioGB;
+
+        // Aplicar descuento por permanencia
+        $multiplicadorPermanencia = $permanencia[$permanenciaSeleccionada];
+        $descuentoPermanencia = $precioBase * (1 - $multiplicadorPermanencia);
+        $precioBaseDespuesPermanencia = $precioBase * $multiplicadorPermanencia;
+
+        // Aplicar multiplicador de minutos internacionales
+        $multiplicadorMinutos = $minutosInternacionales[$minutosSeleccionados];
+        $precioConMinutos = $precioBaseDespuesPermanencia * $multiplicadorMinutos;
 
         // Procesar servicios adicionales
         $precioServicios = 0;
@@ -128,36 +117,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             foreach ($serviciosSeleccionados as $servicio) {
                 $precioServicio = $servicios[$servicio];
                 $precioServicios += $precioServicio;
-                $lista_servicios .= "<li>" . htmlspecialchars($servicio) . " - " . $precioServicio . " ¨</li>";
+                $lista_servicios .= "<li>" . htmlspecialchars($servicio) . " - " . $precioServicio . " ‚Ç¨/mes</li>";
             }
             $lista_servicios .= "</ul>";
         } else {
-            $lista_servicios = "<p>No seleccionaste ning˙n servicio adicional.</p>";
+            $lista_servicios = "<p>No seleccionaste ning√∫n servicio adicional.</p>";
         }
 
-        // Procesar cÛdigo de promociÛn
+        // Procesar c√≥digo de promoci√≥n
         if (!empty($codigoPromoIngresado)) {
             if (array_key_exists($codigoPromoIngresado, $codigos)) {
                 $descuentoPorcentaje = $codigos[$codigoPromoIngresado];
                 $descuentoTasa = $descuentoPorcentaje / 100;
-                $mensajeDescuento = "CÛdigo PromociÛn: <b>" . htmlspecialchars($codigoPromoIngresado) . "</b> (" . $descuentoPorcentaje . "% aplicado)";
+                $mensajeDescuento = "C√≥digo Promoci√≥n: <b>" . htmlspecialchars($codigoPromoIngresado) . "</b> (" . $descuentoPorcentaje . "% aplicado)";
             } else {
-                $mensajeDescuento = "CÛdigo PromociÛn: No v·lido";
+                $mensajeDescuento = "C√≥digo Promoci√≥n: No v√°lido";
                 $descuentoTasa = 0;
             }
         } else {
-            $mensajeDescuento = "CÛdigo PromociÛn: No ingresado";
+            $mensajeDescuento = "C√≥digo Promoci√≥n: No ingresado";
         }
 
-        // Calcular totales
-        $subtotal = $precioHabitacion + $precioServicios;
+        // Calcular totales (servicios NO se incluyen en descuento)
+        $subtotal = $precioConMinutos;
         $descuentoAplicado = $subtotal * $descuentoTasa;
         $totalConDescuento = $subtotal - $descuentoAplicado;
-        $totalIVA = $totalConDescuento * $IVA_PORCENTAJE;
-        $precioFinal = $totalConDescuento + $totalIVA;
+        $totalIVA = ($totalConDescuento + $precioServicios) * $IVA_PORCENTAJE;
+        $precioFinal = $totalConDescuento + $precioServicios + $totalIVA;
     }
 } else {
-    alert("MÈtodo de solicitud no v·lido");
+    alert("M√©todo de solicitud no v√°lido");
 }
 
 ?>
@@ -168,12 +157,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resumen de Reserva - Hotel</title>
+    <title>Resumen de Contrataci√≥n - Telefon√≠a</title>
 </head>
 
 <body>
     <div class="contenedor">
-        <h1>HOTEL - RESUMEN DE RESERVA</h1>
+        <h1>COMPA√ë√çA DE TELEFON√çA - RESUMEN DE CONTRATACI√ìN</h1>
 
         <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $todoValido): ?>
 
@@ -181,41 +170,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p><strong>Nombre Completo:</strong> <?php echo $nombre . " " . $apellidos; ?></p>
             <p><strong>DNI:</strong> <?php echo $dni; ?></p>
 
-            <h2>HabitaciÛn Reservada</h2>
-            <p><strong>Tipo:</strong> <?php echo htmlspecialchars($habitacion); ?></p>
-            <p><strong>RÈgimen:</strong> <?php echo htmlspecialchars($regimen); ?></p>
-            <p><strong>Noches:</strong> <?php echo $noches; ?></p>
-            <p><strong>Coste habitaciÛn:</strong> <?php echo number_format($precioHabitacion, 2); ?> ¨ (<?php echo $precioBaseHabitacion; ?> ¨ ◊ <?php echo $multiplicadorRegimen; ?> ◊ <?php echo $noches; ?> noches)</p>
+            <h2>Plan Contratado</h2>
+            <p><strong>Plan Base:</strong> <?php echo htmlspecialchars($plan); ?> (<?php echo $precioPlan; ?> ‚Ç¨/mes)</p>
+            <p><strong>GB Adicionales:</strong> <?php echo htmlspecialchars($gb); ?> (<?php echo $precioGB; ?> ‚Ç¨/mes)</p>
+            <p><strong>Precio base:</strong> <?php echo number_format($precioBase, 2); ?> ‚Ç¨ (<?php echo $precioPlan; ?> + <?php echo $precioGB; ?>)</p>
+
+            <?php if ($descuentoPermanencia > 0): ?>
+                <div class="total-line">
+                    <p><strong>Permanencia:</strong> <?php echo htmlspecialchars($permanenciaSeleccionada); ?></p>
+                    <p><strong>Descuento por Permanencia (25%):</strong> - <?php echo number_format($descuentoPermanencia, 2); ?> ‚Ç¨</p>
+                    <p><strong>Precio con permanencia:</strong> <?php echo number_format($precioBaseDespuesPermanencia, 2); ?> ‚Ç¨</p>
+                </div>
+            <?php else: ?>
+                <p><strong>Permanencia:</strong> <?php echo htmlspecialchars($permanenciaSeleccionada); ?></p>
+            <?php endif; ?>
+
+            <p><strong>Minutos Internacionales:</strong> <?php echo htmlspecialchars($minutosSeleccionados); ?></p>
+            <p><strong>Precio con minutos:</strong> <?php echo number_format($precioConMinutos, 2); ?> ‚Ç¨ (<?php echo number_format($precioBaseDespuesPermanencia, 2); ?> √ó <?php echo $multiplicadorMinutos; ?>)</p>
 
             <h2>Servicios Adicionales</h2>
             <?php echo $lista_servicios; ?>
             <?php if ($precioServicios > 0): ?>
-                <p><strong>Total servicios:</strong> <?php echo $precioServicios; ?> ¨</p>
+                <p><strong>Total servicios:</strong> <?php echo number_format($precioServicios, 2); ?> ‚Ç¨/mes</p>
             <?php endif; ?>
 
             <h2>Resumen de Costes</h2>
             <ul>
-                <li><strong>HabitaciÛn:</strong> <?php echo number_format($precioHabitacion, 2); ?> ¨</li>
-                <li><strong>Servicios:</strong> <?php echo $precioServicios; ?> ¨</li>
-                <li><strong>Subtotal:</strong> <?php echo number_format($subtotal, 2); ?> ¨</li>
+                <li><strong>Plan (con minutos):</strong> <?php echo number_format($precioConMinutos, 2); ?> ‚Ç¨</li>
+                <li><strong>Subtotal:</strong> <?php echo number_format($subtotal, 2); ?> ‚Ç¨</li>
             </ul>
 
             <div class="total-line">
                 <p><?php echo $mensajeDescuento; ?></p>
                 <?php if ($descuentoTasa > 0): ?>
                     <ul>
-                        <li><strong>Descuento:</strong> - <?php echo number_format($descuentoAplicado, 2); ?> ¨</li>
-                        <li><strong>Total con descuento:</strong> <?php echo number_format($totalConDescuento, 2); ?> ¨</li>
+                        <li><strong>Descuento:</strong> - <?php echo number_format($descuentoAplicado, 2); ?> ‚Ç¨</li>
+                        <li><strong>Total con descuento:</strong> <?php echo number_format($totalConDescuento, 2); ?> ‚Ç¨</li>
                     </ul>
                 <?php endif; ?>
             </div>
 
             <div class="total-line">
-                <p><strong>IVA (10%):</strong> + <?php echo number_format($totalIVA, 2); ?> ¨</p>
+                <p><strong>Servicios adicionales:</strong> + <?php echo number_format($precioServicios, 2); ?> ‚Ç¨ (no incluido en descuento)</p>
+            </div>
+
+            <div class="total-line">
+                <p><strong>IVA (10%):</strong> + <?php echo number_format($totalIVA, 2); ?> ‚Ç¨</p>
             </div>
 
             <div class="final-price">
-                <strong>TOTAL FINAL:</strong> <?php echo number_format($precioFinal, 2); ?> ¨
+                <strong>TOTAL MENSUAL:</strong> <?php echo number_format($precioFinal, 2); ?> ‚Ç¨
             </div>
 
         <?php elseif ($_SERVER["REQUEST_METHOD"] == "POST"): ?>
@@ -223,7 +227,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p style="color:red; font-weight:bold;">Se encontraron errores en el formulario. Por favor, revisa las alertas y completa todos los campos obligatorios.</p>
 
         <?php else: ?>
-            <p>Por favor, envÌa el formulario de reserva para generar el resumen.</p>
+            <p>Por favor, env√≠a el formulario de contrataci√≥n para generar el resumen.</p>
         <?php endif; ?>
     </div>
 </body>

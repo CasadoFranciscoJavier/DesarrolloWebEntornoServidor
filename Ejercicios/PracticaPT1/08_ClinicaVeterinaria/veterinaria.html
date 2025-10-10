@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clínica Veterinaria - Sistema de Citas</title>
+</head>
+<body>
+    <h1>Clínica Veterinaria - Sistema de Citas</h1>
+    <form action="procesarVeterinaria.php" method="POST">
+
+        <label for="nombre">Nombre del Propietario (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="dni">DNI (8 dígitos + letra):</label><br>
+        <input type="text" id="dni" name="dni" maxlength="9" placeholder="12345678A" required><br><br>
+
+        <label for="servicio">Servicio:</label><br>
+        <select id="servicio" name="servicio" required>
+            <option value="">Selecciona un servicio</option>
+            <option value="Consulta General">Consulta General (35¬)</option>
+            <option value="Vacunación">Vacunación (45¬)</option>
+            <option value="Cirugía Menor">Cirugía Menor (150¬)</option>
+            <option value="Análisis Clínicos">Análisis Clínicos (60¬)</option>
+            <option value="Revisión Dental">Revisión Dental (50¬)</option>
+        </select><br><br>
+
+        <label>Tipo de Mascota:</label><br>
+        <input type="radio" id="perropeq" name="mascota" value="Perro Pequeño" required>
+        <label for="perropeq">Perro Pequeño</label>
+        <input type="radio" id="perrogr" name="mascota" value="Perro Grande">
+        <label for="perrogr">Perro Grande (+30%)</label>
+        <input type="radio" id="gato" name="mascota" value="Gato">
+        <label for="gato">Gato (-10%)</label>
+        <input type="radio" id="otros" name="mascota" value="Otros">
+        <label for="otros">Otros (+10%)</label><br><br>
+
+        <label>Tipo de Cita:</label><br>
+        <input type="radio" id="normal" name="urgencia" value="Cita Normal" required>
+        <label for="normal">Cita Normal</label>
+        <input type="radio" id="urgente" name="urgencia" value="Cita Urgente">
+        <label for="urgente">Cita Urgente (+50%)</label>
+        <input type="radio" id="emergencia" name="urgencia" value="Emergencia 24h">
+        <label for="emergencia">Emergencia 24h (+100%)</label><br><br>
+
+        <label>Servicios Adicionales:</label><br>
+        <input type="checkbox" id="desparasitacion" name="extras[]" value="Desparasitación">
+        <label for="desparasitacion">Desparasitación (20¬)</label><br>
+        <input type="checkbox" id="corte" name="extras[]" value="Corte de Uñas">
+        <label for="corte">Corte de Uñas (15¬)</label><br>
+        <input type="checkbox" id="limpieza" name="extras[]" value="Limpieza de Oídos">
+        <label for="limpieza">Limpieza de Oídos (12¬)</label><br>
+        <input type="checkbox" id="microchip" name="extras[]" value="Microchip">
+        <label for="microchip">Microchip (40¬)</label><br><br>
+
+        <label for="codigo">Código de Promoción:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: MASCOTA10"><br><br>
+
+        <button type="submit">Solicitar Cita</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

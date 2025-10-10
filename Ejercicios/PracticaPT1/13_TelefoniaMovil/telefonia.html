@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Compañía de Telefonía Móvil - Planes y Tarifas</title>
+</head>
+<body>
+    <h1>Compañía de Telefonía Móvil - Contratar Plan</h1>
+    <form action="procesarTelefonia.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="dni">DNI (8 dígitos + letra):</label><br>
+        <input type="text" id="dni" name="dni" maxlength="9" placeholder="12345678A" required><br><br>
+
+        <label for="plan">Plan Base:</label><br>
+        <select id="plan" name="plan" required>
+            <option value="">Selecciona un plan</option>
+            <option value="Plan Básico">Plan Básico (15€/mes)</option>
+            <option value="Plan Estándar">Plan Estándar (25€/mes)</option>
+            <option value="Plan Premium">Plan Premium (40€/mes)</option>
+            <option value="Plan Ilimitado">Plan Ilimitado (60€/mes)</option>
+        </select><br><br>
+
+        <label for="gb">GB Adicionales:</label><br>
+        <select id="gb" name="gb" required>
+            <option value="">Selecciona GB</option>
+            <option value="0 GB">0 GB (0€)</option>
+            <option value="5 GB">5 GB (+5€)</option>
+            <option value="10 GB">10 GB (+9€)</option>
+            <option value="20 GB">20 GB (+15€)</option>
+            <option value="50 GB">50 GB (+30€)</option>
+        </select><br><br>
+
+        <label>Minutos Internacionales:</label><br>
+        <input type="radio" id="sinmin" name="minutos" value="Sin minutos" required>
+        <label for="sinmin">Sin minutos</label>
+        <input type="radio" id="min100" name="minutos" value="100 minutos">
+        <label for="min100">100 minutos (+15%)</label>
+        <input type="radio" id="min300" name="minutos" value="300 minutos">
+        <label for="min300">300 minutos (+30%)</label>
+        <input type="radio" id="minilim" name="minutos" value="Ilimitado">
+        <label for="minilim">Ilimitado (+50%)</label><br><br>
+
+        <label>Permanencia:</label><br>
+        <input type="radio" id="sinperm" name="permanencia" value="Sin Permanencia" required>
+        <label for="sinperm">Sin Permanencia</label>
+        <input type="radio" id="perm24" name="permanencia" value="Permanencia 24 meses">
+        <label for="perm24">Permanencia 24 meses (25% descuento en plan + GB)</label><br><br>
+
+        <label>Servicios Adicionales:</label><br>
+        <input type="checkbox" id="netflix" name="servicios[]" value="Netflix Básico">
+        <label for="netflix">Netflix Básico (8€/mes)</label><br>
+        <input type="checkbox" id="spotify" name="servicios[]" value="Spotify Premium">
+        <label for="spotify">Spotify Premium (10€/mes)</label><br>
+        <input type="checkbox" id="amazon" name="servicios[]" value="Amazon Prime">
+        <label for="amazon">Amazon Prime (5€/mes)</label><br>
+        <input type="checkbox" id="roaming" name="servicios[]" value="Roaming Internacional">
+        <label for="roaming">Roaming Internacional (12€/mes)</label><br>
+        <input type="checkbox" id="seguro" name="servicios[]" value="Seguro de Móvil">
+        <label for="seguro">Seguro de Móvil (7€/mes)</label><br><br>
+
+        <label for="codigo">Código de Promoción:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: TELF10"><br><br>
+
+        <button type="submit">Contratar Plan</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

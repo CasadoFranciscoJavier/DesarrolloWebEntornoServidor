@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Academia de Idiomas - Matriculación</title>
+</head>
+<body>
+    <h1>Academia de Idiomas - Matriculación</h1>
+    <form action="procesarAcademia.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="dni">DNI (8 dígitos + letra):</label><br>
+        <input type="text" id="dni" name="dni" maxlength="9" placeholder="12345678A" required><br><br>
+
+        <label for="curso">Idioma:</label><br>
+        <select id="curso" name="curso" required>
+            <option value="">Selecciona un idioma</option>
+            <option value="Inglés">Inglés (120¬)</option>
+            <option value="Francés">Francés (110¬)</option>
+            <option value="Alemán">Alemán (130¬)</option>
+            <option value="Italiano">Italiano (100¬)</option>
+            <option value="Chino">Chino (150¬)</option>
+        </select><br><br>
+
+        <label>Nivel:</label><br>
+        <input type="radio" id="basico" name="nivel" value="Básico (A1-A2)" required>
+        <label for="basico">Básico (A1-A2)</label>
+        <input type="radio" id="intermedio" name="nivel" value="Intermedio (B1-B2)">
+        <label for="intermedio">Intermedio (B1-B2) (+20%)</label>
+        <input type="radio" id="avanzado" name="nivel" value="Avanzado (C1-C2)">
+        <label for="avanzado">Avanzado (C1-C2) (+40%)</label><br><br>
+
+        <label>Modalidad:</label><br>
+        <input type="radio" id="presencial" name="modalidad" value="Presencial" required>
+        <label for="presencial">Presencial</label>
+        <input type="radio" id="online" name="modalidad" value="Online">
+        <label for="online">Online (-20%)</label>
+        <input type="radio" id="semi" name="modalidad" value="Semi-presencial">
+        <label for="semi">Semi-presencial (-10%)</label><br><br>
+
+        <label>Materiales:</label><br>
+        <input type="checkbox" id="libro" name="materiales[]" value="Libro de Texto">
+        <label for="libro">Libro de Texto (35¬)</label><br>
+        <input type="checkbox" id="cuaderno" name="materiales[]" value="Cuaderno de Ejercicios">
+        <label for="cuaderno">Cuaderno de Ejercicios (15¬)</label><br>
+        <input type="checkbox" id="plataforma" name="materiales[]" value="Acceso Plataforma Digital">
+        <label for="plataforma">Acceso Plataforma Digital (25¬)</label><br>
+        <input type="checkbox" id="kit" name="materiales[]" value="Kit Completo">
+        <label for="kit">Kit Completo (60¬)</label><br><br>
+
+        <label for="codigo">Código de Promoción:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: IDIOMA15"><br><br>
+
+        <button type="submit">Procesar Matrícula</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

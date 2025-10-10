@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agencia de Viajes - Alquiler de Vehículos</title>
+</head>
+<body>
+    <h1>Agencia de Viajes - Alquiler de Vehículos</h1>
+    <form action="procesarAgencia.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="dni">DNI (8 dígitos + letra):</label><br>
+        <input type="text" id="dni" name="dni" maxlength="9" placeholder="12345678A" required><br><br>
+
+        <label for="vehiculo">Tipo de Vehículo:</label><br>
+        <select id="vehiculo" name="vehiculo" required>
+            <option value="">Selecciona un vehículo</option>
+            <option value="Coche Compacto">Coche Compacto (35€/día - 5.5L/100km)</option>
+            <option value="Coche Familiar">Coche Familiar (50€/día - 7.0L/100km)</option>
+            <option value="SUV">SUV (70€/día - 9.5L/100km)</option>
+            <option value="Furgoneta 9 plazas">Furgoneta 9 plazas (85€/día - 11.0L/100km)</option>
+            <option value="Moto">Moto (25€/día - 4.0L/100km)</option>
+        </select><br><br>
+
+        <label for="dias">Días de Alquiler (1-30):</label><br>
+        <input type="number" id="dias" name="dias" min="1" max="30" required><br><br>
+
+        <label>Kilometraje Incluido:</label><br>
+        <input type="radio" id="km100" name="kilometraje" value="100 km/día" required>
+        <label for="km100">100 km/día</label>
+        <input type="radio" id="km200" name="kilometraje" value="200 km/día">
+        <label for="km200">200 km/día (+30%)</label>
+        <input type="radio" id="ilimitado" name="kilometraje" value="Ilimitado">
+        <label for="ilimitado">Ilimitado (+60%)</label><br><br>
+
+        <label for="kmestimados">Kilómetros Estimados a Recorrer (1-3000):</label><br>
+        <input type="number" id="kmestimados" name="kmestimados" min="1" max="3000" required><br><br>
+
+        <label>Seguros y Extras:</label><br>
+        <input type="checkbox" id="basico" name="seguros[]" value="Seguro Básico">
+        <label for="basico">Seguro Básico (5€/día)</label><br>
+        <input type="checkbox" id="todoriesgo" name="seguros[]" value="Seguro a Todo Riesgo">
+        <label for="todoriesgo">Seguro a Todo Riesgo (15€/día)</label><br>
+        <input type="checkbox" id="premium" name="seguros[]" value="Seguro Premium">
+        <label for="premium">Seguro Premium (25€/día)</label><br>
+        <input type="checkbox" id="gps" name="seguros[]" value="GPS Navegador">
+        <label for="gps">GPS Navegador (8€/día)</label><br>
+        <input type="checkbox" id="silla" name="seguros[]" value="Silla Infantil">
+        <label for="silla">Silla Infantil (6€/día)</label><br><br>
+
+        <label for="codigo">Código de Promoción:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: VIAJE10"><br><br>
+
+        <button type="submit">Procesar Alquiler</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>

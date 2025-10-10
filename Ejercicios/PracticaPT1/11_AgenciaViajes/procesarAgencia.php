@@ -1,12 +1,12 @@
 <?php
-require_once "bbddHotel.php";
+require_once "bbddAgencia.php";
 
 function alert($text)
 {
-    echo "<script> alert('$text');window.location.href = 'hotel.html'; </script>";
+    echo "<script> alert('$text');window.location.href = 'viajes.html'; </script>";
 }
 
-// Función para validar string
+// FunciÃ³n para validar string
 function validarString($variablePOST, $minimo, $maximo)
 {
     $vacio = empty($_POST[$variablePOST]);
@@ -15,14 +15,14 @@ function validarString($variablePOST, $minimo, $maximo)
         $valido = (strlen($_POST[$variablePOST]) >= $minimo && strlen($_POST[$variablePOST]) <= $maximo);
     }
     if ($vacio) {
-        alert("$variablePOST está vacío");
+        alert("$variablePOST estÃ¡ vacÃ­o");
     } else if (!$valido) {
         alert("$variablePOST fuera de rango (longitud entre $minimo y $maximo)");
     }
     return $valido;
 }
 
-// Función para validar DNI
+// FunciÃ³n para validar DNI
 function validarDNI($dni)
 {
     $vacio = empty($_POST["dni"]);
@@ -38,14 +38,14 @@ function validarDNI($dni)
     }
 
     if ($vacio) {
-        alert("DNI está vacío");
+        alert("DNI estÃ¡ vacÃ­o");
     } else if (!$valido) {
-        alert("DNI no válido (debe tener 8 dígitos + 1 letra)");
+        alert("DNI no vÃ¡lido (debe tener 8 dÃ­gitos + 1 letra)");
     }
     return $valido;
 }
 
-// Función para validar entero
+// FunciÃ³n para validar entero
 function validarInt($variablePOST, $minimo, $maximo)
 {
     $vacio = empty($_POST[$variablePOST]);
@@ -62,9 +62,9 @@ function validarInt($variablePOST, $minimo, $maximo)
     }
 
     if ($vacio) {
-        alert("$variablePOST está vacío");
+        alert("$variablePOST estÃ¡ vacÃ­o");
     } else if ($esEntero == false) {
-        alert("$variablePOST debe ser un número entero");
+        alert("$variablePOST debe ser un nÃºmero entero");
     } else if (!$valido) {
         alert("$variablePOST fuera de rango (entre $minimo y $maximo)");
     }
@@ -72,7 +72,7 @@ function validarInt($variablePOST, $minimo, $maximo)
     return $valido;
 }
 
-// Función para validar selección
+// FunciÃ³n para validar selecciÃ³n
 function validarSeleccion($variablePOST)
 {
     $vacio = empty($_POST[$variablePOST]);
@@ -85,8 +85,9 @@ function validarSeleccion($variablePOST)
 //============================= main =============================
 
 $todoValido = false;
-$precioHabitacion = 0;
-$precioServicios = 0;
+$precioVehiculo = 0;
+$precioSeguros = 0;
+$costeGasolina = 0;
 $subtotal = 0;
 $descuentoAplicado = 0;
 $totalConDescuento = 0;
@@ -94,70 +95,78 @@ $IVA_PORCENTAJE = 0.10;
 $totalIVA = 0;
 $precioFinal = 0;
 $mensajeDescuento = "";
-$lista_servicios = "";
+$lista_seguros = "";
 $descuentoTasa = 0;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $todoValido = validarString("nombre", 2, 30)
         && validarString("apellidos", 2, 40)
         && validarDNI($_POST["dni"])
-        && validarInt("noches", 1, 30)
-        && validarSeleccion("habitacion")
-        && validarSeleccion("regimen");
+        && validarInt("dias", 1, 30)
+        && validarInt("kmestimados", 1, 3000)
+        && validarSeleccion("vehiculo")
+        && validarSeleccion("kilometraje");
 
     if ($todoValido) {
         $nombre = htmlspecialchars($_POST["nombre"]);
         $apellidos = htmlspecialchars($_POST["apellidos"]);
         $dni = htmlspecialchars($_POST["dni"]);
-        $noches = (int)$_POST["noches"];
-        $habitacion = $_POST["habitacion"];
-        $regimen = $_POST["regimen"];
+        $dias = (int)$_POST["dias"];
+        $kmEstimados = (int)$_POST["kmestimados"];
+        $vehiculo = $_POST["vehiculo"];
+        $kilometrajeSeleccionado = $_POST["kilometraje"];
 
         $codigoPromoIngresado = isset($_POST["codigo"]) ? $_POST["codigo"] : "";
-        $serviciosSeleccionados = isset($_POST["servicios"]) ? $_POST["servicios"] : [];
+        $segurosSeleccionados = isset($_POST["seguros"]) ? $_POST["seguros"] : [];
 
         // Calcular precios
-        $precioBaseHabitacion = $habitaciones[$habitacion];
-        $multiplicadorRegimen = $regimenes[$regimen];
-        $precioHabitacion = $precioBaseHabitacion * $multiplicadorRegimen * $noches;
+        $precioBaseVehiculo = $vehiculos[$vehiculo];
+        $multiplicadorKilometraje = $kilometraje[$kilometrajeSeleccionado];
+        $precioVehiculo = $precioBaseVehiculo * $multiplicadorKilometraje * $dias;
 
-        // Procesar servicios adicionales
-        $precioServicios = 0;
-        if (!empty($serviciosSeleccionados) && is_array($serviciosSeleccionados)) {
-            $lista_servicios .= "<ul>";
-            foreach ($serviciosSeleccionados as $servicio) {
-                $precioServicio = $servicios[$servicio];
-                $precioServicios += $precioServicio;
-                $lista_servicios .= "<li>" . htmlspecialchars($servicio) . " - " . $precioServicio . " ¬</li>";
+        // Calcular coste de gasolina
+        $consumoVehiculo = $consumo[$vehiculo];
+        $litrosNecesarios = ($kmEstimados / 100) * $consumoVehiculo;
+        $costeGasolina = $litrosNecesarios * $PRECIO_GASOLINA;
+
+        // Procesar seguros
+        $precioSeguros = 0;
+        if (!empty($segurosSeleccionados) && is_array($segurosSeleccionados)) {
+            $lista_seguros .= "<ul>";
+            foreach ($segurosSeleccionados as $seguro) {
+                $precioSeguro = $seguros[$seguro];
+                $precioTotal = $precioSeguro * $dias;
+                $precioSeguros += $precioTotal;
+                $lista_seguros .= "<li>" . htmlspecialchars($seguro) . " - " . $precioSeguro . " â‚¬/dÃ­a Ã— " . $dias . " = " . $precioTotal . " â‚¬</li>";
             }
-            $lista_servicios .= "</ul>";
+            $lista_seguros .= "</ul>";
         } else {
-            $lista_servicios = "<p>No seleccionaste ningún servicio adicional.</p>";
+            $lista_seguros = "<p>No seleccionaste ningÃºn seguro o extra.</p>";
         }
 
-        // Procesar código de promoción
+        // Procesar cÃ³digo de promociÃ³n
         if (!empty($codigoPromoIngresado)) {
             if (array_key_exists($codigoPromoIngresado, $codigos)) {
                 $descuentoPorcentaje = $codigos[$codigoPromoIngresado];
                 $descuentoTasa = $descuentoPorcentaje / 100;
-                $mensajeDescuento = "Código Promoción: <b>" . htmlspecialchars($codigoPromoIngresado) . "</b> (" . $descuentoPorcentaje . "% aplicado)";
+                $mensajeDescuento = "CÃ³digo PromociÃ³n: <b>" . htmlspecialchars($codigoPromoIngresado) . "</b> (" . $descuentoPorcentaje . "% aplicado)";
             } else {
-                $mensajeDescuento = "Código Promoción: No válido";
+                $mensajeDescuento = "CÃ³digo PromociÃ³n: No vÃ¡lido";
                 $descuentoTasa = 0;
             }
         } else {
-            $mensajeDescuento = "Código Promoción: No ingresado";
+            $mensajeDescuento = "CÃ³digo PromociÃ³n: No ingresado";
         }
 
-        // Calcular totales
-        $subtotal = $precioHabitacion + $precioServicios;
+        // Calcular totales (la gasolina NO se incluye en el descuento)
+        $subtotal = $precioVehiculo + $precioSeguros;
         $descuentoAplicado = $subtotal * $descuentoTasa;
         $totalConDescuento = $subtotal - $descuentoAplicado;
         $totalIVA = $totalConDescuento * $IVA_PORCENTAJE;
-        $precioFinal = $totalConDescuento + $totalIVA;
+        $precioFinal = $totalConDescuento + $totalIVA + $costeGasolina;
     }
 } else {
-    alert("Método de solicitud no válido");
+    alert("MÃ©todo de solicitud no vÃ¡lido");
 }
 
 ?>
@@ -168,12 +177,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resumen de Reserva - Hotel</title>
+    <title>Resumen de Alquiler - Agencia de Viajes</title>
 </head>
 
 <body>
     <div class="contenedor">
-        <h1>HOTEL - RESUMEN DE RESERVA</h1>
+        <h1>AGENCIA DE VIAJES - RESUMEN DE ALQUILER</h1>
 
         <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $todoValido): ?>
 
@@ -181,41 +190,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p><strong>Nombre Completo:</strong> <?php echo $nombre . " " . $apellidos; ?></p>
             <p><strong>DNI:</strong> <?php echo $dni; ?></p>
 
-            <h2>Habitación Reservada</h2>
-            <p><strong>Tipo:</strong> <?php echo htmlspecialchars($habitacion); ?></p>
-            <p><strong>Régimen:</strong> <?php echo htmlspecialchars($regimen); ?></p>
-            <p><strong>Noches:</strong> <?php echo $noches; ?></p>
-            <p><strong>Coste habitación:</strong> <?php echo number_format($precioHabitacion, 2); ?> ¬ (<?php echo $precioBaseHabitacion; ?> ¬ × <?php echo $multiplicadorRegimen; ?> × <?php echo $noches; ?> noches)</p>
+            <h2>VehÃ­culo Seleccionado</h2>
+            <p><strong>Tipo:</strong> <?php echo htmlspecialchars($vehiculo); ?></p>
+            <p><strong>DÃ­as de alquiler:</strong> <?php echo $dias; ?></p>
+            <p><strong>Kilometraje incluido:</strong> <?php echo htmlspecialchars($kilometrajeSeleccionado); ?></p>
+            <p><strong>Coste vehÃ­culo:</strong> <?php echo number_format($precioVehiculo, 2); ?> â‚¬ (<?php echo $precioBaseVehiculo; ?> â‚¬ Ã— <?php echo $multiplicadorKilometraje; ?> Ã— <?php echo $dias; ?> dÃ­as)</p>
 
-            <h2>Servicios Adicionales</h2>
-            <?php echo $lista_servicios; ?>
-            <?php if ($precioServicios > 0): ?>
-                <p><strong>Total servicios:</strong> <?php echo $precioServicios; ?> ¬</p>
+            <h2>Seguros y Extras</h2>
+            <?php echo $lista_seguros; ?>
+            <?php if ($precioSeguros > 0): ?>
+                <p><strong>Total seguros y extras:</strong> <?php echo number_format($precioSeguros, 2); ?> â‚¬</p>
             <?php endif; ?>
+
+            <h2>Coste de Gasolina Estimado</h2>
+            <p><strong>KilÃ³metros estimados:</strong> <?php echo $kmEstimados; ?> km</p>
+            <p><strong>Consumo del vehÃ­culo:</strong> <?php echo $consumoVehiculo; ?> L/100km</p>
+            <p><strong>Litros necesarios:</strong> <?php echo number_format($litrosNecesarios, 2); ?> L</p>
+            <p><strong>Precio gasolina:</strong> <?php echo $PRECIO_GASOLINA; ?> â‚¬/L</p>
+            <p><strong>Coste gasolina:</strong> <?php echo number_format($costeGasolina, 2); ?> â‚¬</p>
 
             <h2>Resumen de Costes</h2>
             <ul>
-                <li><strong>Habitación:</strong> <?php echo number_format($precioHabitacion, 2); ?> ¬</li>
-                <li><strong>Servicios:</strong> <?php echo $precioServicios; ?> ¬</li>
-                <li><strong>Subtotal:</strong> <?php echo number_format($subtotal, 2); ?> ¬</li>
+                <li><strong>VehÃ­culo:</strong> <?php echo number_format($precioVehiculo, 2); ?> â‚¬</li>
+                <li><strong>Seguros y extras:</strong> <?php echo number_format($precioSeguros, 2); ?> â‚¬</li>
+                <li><strong>Subtotal:</strong> <?php echo number_format($subtotal, 2); ?> â‚¬</li>
             </ul>
 
             <div class="total-line">
                 <p><?php echo $mensajeDescuento; ?></p>
                 <?php if ($descuentoTasa > 0): ?>
                     <ul>
-                        <li><strong>Descuento:</strong> - <?php echo number_format($descuentoAplicado, 2); ?> ¬</li>
-                        <li><strong>Total con descuento:</strong> <?php echo number_format($totalConDescuento, 2); ?> ¬</li>
+                        <li><strong>Descuento:</strong> - <?php echo number_format($descuentoAplicado, 2); ?> â‚¬</li>
+                        <li><strong>Total con descuento:</strong> <?php echo number_format($totalConDescuento, 2); ?> â‚¬</li>
                     </ul>
                 <?php endif; ?>
             </div>
 
             <div class="total-line">
-                <p><strong>IVA (10%):</strong> + <?php echo number_format($totalIVA, 2); ?> ¬</p>
+                <p><strong>IVA (10%):</strong> + <?php echo number_format($totalIVA, 2); ?> â‚¬</p>
+            </div>
+
+            <div class="total-line">
+                <p><strong>Gasolina estimada:</strong> + <?php echo number_format($costeGasolina, 2); ?> â‚¬ (no incluida en descuento)</p>
             </div>
 
             <div class="final-price">
-                <strong>TOTAL FINAL:</strong> <?php echo number_format($precioFinal, 2); ?> ¬
+                <strong>TOTAL FINAL:</strong> <?php echo number_format($precioFinal, 2); ?> â‚¬
             </div>
 
         <?php elseif ($_SERVER["REQUEST_METHOD"] == "POST"): ?>
@@ -223,7 +243,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p style="color:red; font-weight:bold;">Se encontraron errores en el formulario. Por favor, revisa las alertas y completa todos los campos obligatorios.</p>
 
         <?php else: ?>
-            <p>Por favor, envía el formulario de reserva para generar el resumen.</p>
+            <p>Por favor, envÃ­a el formulario de alquiler para generar el resumen.</p>
         <?php endif; ?>
     </div>
 </body>

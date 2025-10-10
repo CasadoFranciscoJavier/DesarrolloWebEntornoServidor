@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Farmacia - Sistema de Pedidos</title>
+</head>
+<body>
+    <h1>Farmacia Online - Sistema de Pedidos</h1>
+    <form action="procesarFarmacia.php" method="POST">
+
+        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
+
+        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
+
+        <label for="dni">DNI (8 dígitos + letra):</label><br>
+        <input type="text" id="dni" name="dni" maxlength="9" placeholder="12345678A" required><br><br>
+
+        <label>Tipo de Cliente:</label><br>
+        <input type="radio" id="sinreceta" name="tipocliente" value="Sin Receta" required>
+        <label for="sinreceta">Sin Receta</label>
+        <input type="radio" id="conreceta" name="tipocliente" value="Con Receta Médica">
+        <label for="conreceta">Con Receta Médica (40% descuento en productos)</label><br><br>
+
+        <h3>Productos - Indica Cantidad (0-20)</h3>
+
+        <label for="prod1">Paracetamol 1g (8.50€):</label><br>
+        <input type="number" id="prod1" name="cantParacetamol" min="0" max="20" value="0" required><br><br>
+
+        <label for="prod2">Ibuprofeno 600mg (6.20€):</label><br>
+        <input type="number" id="prod2" name="cantIbuprofeno" min="0" max="20" value="0" required><br><br>
+
+        <label for="prod3">Amoxicilina (12.00€):</label><br>
+        <input type="number" id="prod3" name="cantAmoxicilina" min="0" max="20" value="0" required><br><br>
+
+        <label for="prod4">Vitamina C (5.50€):</label><br>
+        <input type="number" id="prod4" name="cantVitaminaC" min="0" max="20" value="0" required><br><br>
+
+        <label for="prod5">Crema Hidratante (15.00€):</label><br>
+        <input type="number" id="prod5" name="cantCremaHidratante" min="0" max="20" value="0" required><br><br>
+
+        <label for="envio">Tipo de Envío:</label><br>
+        <select id="envio" name="envio" required>
+            <option value="">Selecciona envío</option>
+            <option value="Recogida en Tienda">Recogida en Tienda (Gratis)</option>
+            <option value="Envío Estándar">Envío Estándar (4.50€)</option>
+            <option value="Envío Express 24h">Envío Express 24h (9.00€)</option>
+            <option value="Envío Urgente">Envío Urgente (15.00€)</option>
+        </select><br><br>
+
+        <label>Servicios Adicionales:</label><br>
+        <input type="checkbox" id="tension" name="servicios[]" value="Medición de Tensión">
+        <label for="tension">Medición de Tensión (3€)</label><br>
+        <input type="checkbox" id="glucosa" name="servicios[]" value="Test de Glucosa">
+        <label for="glucosa">Test de Glucosa (5€)</label><br>
+        <input type="checkbox" id="consulta" name="servicios[]" value="Consulta Farmacéutica">
+        <label for="consulta">Consulta Farmacéutica (8€)</label><br><br>
+
+        <label for="codigo">Código de Promoción:</label><br>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: SALUD10"><br><br>
+
+        <button type="submit">Procesar Pedido</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+</html>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+h3 {
+    color: #4a6fa5;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>
