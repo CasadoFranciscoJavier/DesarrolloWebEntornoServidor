@@ -8,59 +8,59 @@
     <h1>Tech Store - Carrito de Compra</h1>
     <form action="procesarTienda.php" method="POST">
 
-        <label for="nombre">Nombre (m·x. 30 caracteres):</label><br>
+        <label for="nombre">Nombre (m√°x. 30 caracteres):</label><br>
         <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
 
         <label for="email">Email:</label><br>
         <input type="email" id="email" name="email" required><br><br>
 
-        <label for="direccion">DirecciÛn de EnvÌo (m·x. 100 caracteres):</label><br>
+        <label for="direccion">Direcci√≥n de Env√≠o (m√°x. 100 caracteres):</label><br>
         <input type="text" id="direccion" name="direccion" maxlength="100" required><br><br>
 
         <label>Selecciona Productos:</label><br>
-        <input type="checkbox" id="portatil" name="productos[]" value="Port·til Gaming">
-        <label for="portatil">Port·til Gaming (899¨)</label>
-        <input type="number" name="cant_Port·til Gaming" min="1" max="5" value="1"><br>
+        
+        <input type="checkbox" id="portatil" name="productos[]" value="portatil_gaming">
+        <label for="portatil">Port√°til Gaming (899‚Ç¨)</label>
+        <input type="number" name="cant_portatil_gaming" min="1" max="5" value="1"><br>
 
-        <input type="checkbox" id="smartphone" name="productos[]" value="Smartphone 5G">
-        <label for="smartphone">Smartphone 5G (599¨)</label>
-        <input type="number" name="cant_Smartphone 5G" min="1" max="5" value="1"><br>
+        <input type="checkbox" id="smartphone" name="productos[]" value="smartphone_5g">
+        <label for="smartphone">Smartphone 5G (599‚Ç¨)</label>
+        <input type="number" name="cant_smartphone_5g" min="1" max="5" value="1"><br>
 
-        <input type="checkbox" id="tablet" name="productos[]" value="Tablet 10&quot;">
-        <label for="tablet">Tablet 10" (349¨)</label>
-        <input type="number" name="cant_Tablet 10&quot;" min="1" max="5" value="1"><br>
+        <input type="checkbox" id="tablet" name="productos[]" value="tablet_10in">
+        <label for="tablet">Tablet 10" (349‚Ç¨)</label>
+        <input type="number" name="cant_tablet_10in" min="1" max="5" value="1"><br>
 
-        <input type="checkbox" id="auriculares" name="productos[]" value="Auriculares Bluetooth">
-        <label for="auriculares">Auriculares Bluetooth (79¨)</label>
-        <input type="number" name="cant_Auriculares Bluetooth" min="1" max="5" value="1"><br>
+        <input type="checkbox" id="auriculares" name="productos[]" value="auriculares_bt">
+        <label for="auriculares">Auriculares Bluetooth (79‚Ç¨)</label>
+        <input type="number" name="cant_auriculares_bt" min="1" max="5" value="1"><br>
 
-        <input type="checkbox" id="smartwatch" name="productos[]" value="Smartwatch">
-        <label for="smartwatch">Smartwatch (199¨)</label>
-        <input type="number" name="cant_Smartwatch" min="1" max="5" value="1"><br>
+        <input type="checkbox" id="smartwatch" name="productos[]" value="smartwatch">
+        <label for="smartwatch">Smartwatch (199‚Ç¨)</label>
+        <input type="number" name="cant_smartwatch" min="1" max="5" value="1"><br>
 
-        <input type="checkbox" id="teclado" name="productos[]" value="Teclado Mec·nico">
-        <label for="teclado">Teclado Mec·nico (129¨)</label>
-        <input type="number" name="cant_Teclado Mec·nico" min="1" max="5" value="1"><br><br>
-
-        <label>MÈtodo de EnvÌo:</label><br>
-        <input type="radio" id="estandar" name="envio" value="EnvÌo Est·ndar (5-7 dÌas)" required>
-        <label for="estandar">EnvÌo Est·ndar 5-7 dÌas (5¨)</label><br>
-        <input type="radio" id="express" name="envio" value="EnvÌo Express (2-3 dÌas)">
-        <label for="express">EnvÌo Express 2-3 dÌas (12¨)</label><br>
-        <input type="radio" id="premium" name="envio" value="EnvÌo Premium (24h)">
-        <label for="premium">EnvÌo Premium 24h (20¨)</label><br><br>
+        <input type="checkbox" id="teclado" name="productos[]" value="teclado_mecanico">
+        <label for="teclado">Teclado Mec√°nico (129‚Ç¨)</label>
+        <input type="number" name="cant_teclado_mecanico" min="1" max="5" value="1"><br><br>
+        <label>M√©todo de Env√≠o:</label><br>
+        <input type="radio" id="estandar" name="envio" value="Env√≠o Est√°ndar (5-7 d√≠as)" required>
+        <label for="estandar">Env√≠o Est√°ndar 5-7 d√≠as (5‚Ç¨)</label><br>
+        <input type="radio" id="express" name="envio" value="Env√≠o Express (2-3 d√≠as)">
+        <label for="express">Env√≠o Express 2-3 d√≠as (12‚Ç¨)</label><br>
+        <input type="radio" id="premium" name="envio" value="Env√≠o Premium (24h)">
+        <label for="premium">Env√≠o Premium 24h (20‚Ç¨)</label><br><br>
 
         <label>Servicios Adicionales (Opcionales):</label><br>
-        <input type="checkbox" id="seguro" name="servicios[]" value="Seguro de Robo y DaÒos">
-        <label for="seguro">Seguro de Robo y DaÒos (25¨)</label><br>
-        <input type="checkbox" id="garantia" name="servicios[]" value="GarantÌa Extendida (2 aÒos)">
-        <label for="garantia">GarantÌa Extendida 2 aÒos (50¨)</label><br>
-        <input type="checkbox" id="instalacion" name="servicios[]" value="InstalaciÛn/ConfiguraciÛn">
-        <label for="instalacion">InstalaciÛn/ConfiguraciÛn (40¨)</label><br>
+        <input type="checkbox" id="seguro" name="servicios[]" value="Seguro de Robo y Da√±os">
+        <label for="seguro">Seguro de Robo y Da√±os (25‚Ç¨)</label><br>
+        <input type="checkbox" id="garantia" name="servicios[]" value="Garant√≠a Extendida (2 a√±os)">
+        <label for="garantia">Garant√≠a Extendida 2 a√±os (50‚Ç¨)</label><br>
+        <input type="checkbox" id="instalacion" name="servicios[]" value="Instalaci√≥n/Configuraci√≥n">
+        <label for="instalacion">Instalaci√≥n/Configuraci√≥n (40‚Ç¨)</label><br>
         <input type="checkbox" id="regalo" name="servicios[]" value="Embalaje Regalo">
-        <label for="regalo">Embalaje Regalo (8¨)</label><br><br>
+        <label for="regalo">Embalaje Regalo (8‚Ç¨)</label><br><br>
 
-        <label for="cupon">CupÛn de Descuento:</label><br>
+        <label for="cupon">Cup√≥n de Descuento:</label><br>
         <input type="text" id="cupon" name="cupon" placeholder="Ej: TECH20"><br><br>
 
         <button type="submit">Finalizar Compra</button>
@@ -70,6 +70,9 @@
 </html>
 
 <style>
+/* -------------------------------------- */
+/* ESTILOS CSS - Se mantienen sin cambios */
+/* -------------------------------------- */
 body {
     background: #f3f6f9;
     font-family: 'Segoe UI', Arial, sans-serif;

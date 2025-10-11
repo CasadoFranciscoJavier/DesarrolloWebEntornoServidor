@@ -2,59 +2,101 @@
 
 require_once "bbddTienda.php";
 
+$nombres_productos = [
+    "portatil_gaming" => "Port√°til Gaming",
+    "smartphone_5g" => "Smartphone 5G",
+    "tablet_10in" => "Tablet 10\"",
+    "auriculares_bt" => "Auriculares Bluetooth",
+    "smartwatch" => "Smartwatch",
+    "teclado_mecanico" => "Teclado Mec√°nico"
+];
+
+/**
+ * Funci√≥n para mostrar una alerta de JavaScript.
+ * Nota: Debe usarse antes de enviar cualquier contenido HTML.
+ * @param string $text El texto a mostrar en la alerta.
+ */
 function alert($text){
     echo "<script> alert('$text');</script>" ;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
-    $nombre = $_POST["nombre"];
-    $email = $_POST["email"];
-    $direccion = $_POST["direccion"];
-    $envio = $_POST["envio"];
-    $cupon = isset($_POST["cupon"]) ? $_POST["cupon"] : "";
-    $productosSeleccionados = isset($_POST["productos"]) ? $_POST["productos"] : [];
-    $serviciosSeleccionados = isset($_POST["servicios"]) ? $_POST["servicios"] : [];
+    // 1. Obtenci√≥n y saneamiento de datos
+    $nombre = htmlspecialchars($_POST["nombre"] ?? '');
+    $email = htmlspecialchars($_POST["email"] ?? '');
+    $direccion = htmlspecialchars($_POST["direccion"] ?? '');
+    $envio = $_POST["envio"] ?? ''; 
+    $cupon = isset($_POST["cupon"]) ? strtoupper(trim($_POST["cupon"])) : "";
+    $productosSeleccionados = $_POST["productos"] ?? [];
+    $serviciosSeleccionados = $_POST["servicios"] ?? [];
 
+    // 2. Inicializaci√≥n de c√°lculos
     $hayCupon = array_key_exists($cupon, $cupones);
-    $precioEnvio = $envios[$envio];
+    $precioEnvio = $envios[$envio] ?? 0;
     $precioProductos = 0;
     $precioServicios = 0;
 
     $lista_productos = "";
     if (!empty($productosSeleccionados)){
         $lista_productos .= "<ul>";
-        foreach ($productosSeleccionados as $producto) {
-            $precioUnitario = $productos[$producto];
-            $nombreCampo = "cant_" . $producto;
-            $cantidad = isset($_POST[$nombreCampo]) ? (int)$_POST[$nombreCampo] : 1;
-            $precioTotal = $precioUnitario * $cantidad;
-            $precioProductos += $precioTotal;
-            $lista_productos .= "<li>$producto ◊ $cantidad = $precioTotal ¨</li>";
+        foreach ($productosSeleccionados as $clave_producto) {
+            // $clave_producto es la clave limpia (ej: "portatil_gaming")
+
+            // 1. Verificar que la CLAVE existe en la BBDD
+            if (isset($productos[$clave_producto])) { 
+                $precioUnitario = $productos[$clave_producto];
+                
+                // 2. Construir el nombre de campo POST usando la CLAVE limpia
+                $nombreCampo = "cant_" . $clave_producto;
+                
+                // 3. OBTENER LA CANTIDAD. Esto YA NO FALLAR√Å porque la clave es simple.
+                $cantidad = isset($_POST[$nombreCampo]) ? (int)$_POST[$nombreCampo] : 1;
+                
+                // Asegurar que la cantidad es positiva
+                $cantidad = max(1, $cantidad); 
+
+                $precioTotal = $precioUnitario * $cantidad;
+                $precioProductos += $precioTotal;
+                
+                // 4. Obtener el NOMBRE BONITO para la visualizaci√≥n y sanitizarlo
+                $nombre_display = $nombres_productos[$clave_producto] ?? htmlspecialchars($clave_producto); 
+                $nombre_display = htmlspecialchars($nombre_display);
+
+                // Construir la lista con el nombre bonito y la cantidad correcta
+                $lista_productos .= "<li>$nombre_display √ó $cantidad = $precioTotal ‚Ç¨</li>"; 
+            }
         }
         $lista_productos .= "</ul>";
+        
+        if (empty($lista_productos) || $precioProductos == 0) { 
+             $lista_productos = "<p>No se pudieron procesar los productos seleccionados.</p>";
+        }
     } else {
-        $lista_productos = "<p>No seleccionaste ning˙n producto.</p>";
+        $lista_productos = "<p>No seleccionaste ning√∫n producto.</p>";
     }
 
     $lista_servicios = "";
     if (!empty($serviciosSeleccionados)){
         $lista_servicios .= "<ul>";
         foreach ($serviciosSeleccionados as $servicio) {
-            $precioServicio = $servicios[$servicio];
-            $precioServicios += $precioServicio;
-            $lista_servicios .= "<li>$servicio - $precioServicio ¨</li>";
+            $servicio = htmlspecialchars($servicio);
+            if (isset($servicios[$servicio])) {
+                $precioServicio = $servicios[$servicio];
+                $precioServicios += $precioServicio;
+                $lista_servicios .= "<li>$servicio - $precioServicio ‚Ç¨</li>"; 
+            }
         }
         $lista_servicios .= "</ul>";
     } else {
-        $lista_servicios = "<p>No seleccionaste ning˙n servicio.</p>";
+        $lista_servicios = "<p>No seleccionaste ning√∫n servicio.</p>";
     }
-
+    
     $subtotal = $precioProductos + $precioEnvio + $precioServicios;
 
     $descuentoAplicado = 0;
     $totalConDescuento = $subtotal;
-    $mensajeCupon = "No ingresado";
+    $mensajeCupon = "No ingresado"; 
 
     if ($hayCupon){
         $porcentajeCupon = $cupones[$cupon];
@@ -63,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $mensajeCupon = "$cupon ($porcentajeCupon% descuento)";
     } else {
         if (!empty($cupon)){
-            $mensajeCupon = "No v·lido";
+            $mensajeCupon = "No v√°lido"; 
         }
     }
 
@@ -71,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $precioFinal = $totalConDescuento + $IVA;
 
 }else{
-    alert("øQuÈ haces usando GET?");
+    alert("¬øQu√© haces usando GET?");
 }
 
 ?>
@@ -82,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConfirmaciÛn - Tech Store</title>
+    <title>Confirmaci√≥n - Tech Store</title> 
 </head>
 
 <body>
@@ -94,50 +136,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             <h2>Datos del Cliente</h2>
             <p><strong>Nombre:</strong> <?php echo $nombre; ?></p>
             <p><strong>Email:</strong> <?php echo $email; ?></p>
-            <p><strong>DirecciÛn:</strong> <?php echo $direccion; ?></p>
+            <p><strong>Direcci√≥n:</strong> <?php echo $direccion; ?></p> 
 
             <h2>Productos en el Carrito</h2>
             <?php echo $lista_productos; ?>
-            <p><strong>Total productos:</strong> <?php echo number_format($precioProductos, 2); ?>¨</p>
+            <p><strong>Total productos:</strong> <?php echo number_format($precioProductos, 2); ?>‚Ç¨</p> 
 
-            <h2>MÈtodo de EnvÌo</h2>
-            <p><strong><?php echo $envio; ?></strong> - <?php echo $precioEnvio; ?>¨</p>
+            <h2>M√©todo de Env√≠o</h2>
+            <p><strong><?php echo htmlspecialchars($envio); ?></strong> - <?php echo $precioEnvio; ?>‚Ç¨</p> 
 
             <h2>Servicios Adicionales</h2>
             <?php echo $lista_servicios; ?>
             <?php if ($precioServicios > 0): ?>
-                <p><strong>Total servicios:</strong> <?php echo $precioServicios; ?>¨</p>
+                <p><strong>Total servicios:</strong> <?php echo $precioServicios; ?>‚Ç¨</p> 
             <?php endif; ?>
 
             <div class="total-line">
-                <p><strong>Subtotal:</strong> <?php echo number_format($subtotal, 2); ?>¨</p>
+                <p><strong>Subtotal:</strong> <?php echo number_format($subtotal, 2); ?>‚Ç¨</p> 
             </div>
 
             <div class="total-line">
-                <p><strong>CupÛn:</strong> <?php echo $mensajeCupon; ?></p>
+                <p><strong>Cup√≥n:</strong> <?php echo $mensajeCupon; ?></p> 
                 <?php if ($hayCupon): ?>
                     <ul>
-                        <li><strong>Descuento:</strong> - <?php echo number_format($descuentoAplicado, 2); ?>¨</li>
-                        <li><strong>Total con descuento:</strong> <?php echo number_format($totalConDescuento, 2); ?>¨</li>
+                        <li><strong>Descuento:</strong> - <?php echo number_format($descuentoAplicado, 2); ?>‚Ç¨</li> 
+                        <li><strong>Total con descuento:</strong> <?php echo number_format($totalConDescuento, 2); ?>‚Ç¨</li> 
                     </ul>
                 <?php endif; ?>
             </div>
 
             <div class="total-line">
-                <p><strong>IVA (21%):</strong> + <?php echo number_format($IVA, 2); ?>¨</p>
+                <p><strong>IVA (21%):</strong> + <?php echo number_format($IVA, 2); ?>‚Ç¨</p> 
             </div>
 
             <div class="final-price">
-                <strong>TOTAL FINAL:</strong> <?php echo number_format($precioFinal, 2); ?>¨
+                <strong>TOTAL FINAL:</strong> <?php echo number_format($precioFinal, 2); ?>‚Ç¨ 
             </div>
 
         <?php else: ?>
-            <p>Por favor, envÌa el formulario de compra.</p>
+            <p>Por favor, env√≠a el formulario de compra.</p> 
         <?php endif; ?>
     </div>
 </body>
 
 <style>
+    /* ... (El CSS se mantiene sin cambios ya que no ten√≠a errores de codificaci√≥n) ... */
     body {
         background: #f3f6f9;
         font-family: Arial, sans-serif;

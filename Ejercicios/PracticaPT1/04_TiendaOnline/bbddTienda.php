@@ -1,27 +1,27 @@
 <?php
 
-// Productos disponibles
+// Productos disponibles (Claves estandarizadas)
 $productos = [
-    "Portátil Gaming" => 899,
-    "Smartphone 5G" => 599,
-    "Tablet 10\"" => 349,
-    "Auriculares Bluetooth" => 79,
-    "Smartwatch" => 199,
-    "Teclado Mecánico" => 129
+    "portatil_gaming" => 899,
+    "smartphone_5g" => 599,
+    "tablet_10in" => 349, // Clave estandarizada
+    "auriculares_bt" => 79,
+    "smartwatch" => 199,
+    "teclado_mecanico" => 129
 ];
 
-// Métodos de envío
+// MÃ©todos de envÃ­o (Se mantienen las claves originales ya que ya funcionan)
 $envios = [
-    "Envío Estándar (5-7 días)" => 5,
-    "Envío Express (2-3 días)" => 12,
-    "Envío Premium (24h)" => 20
+    "EnvÃ­o EstÃ¡ndar (5-7 dÃ­as)" => 5,
+    "EnvÃ­o Express (2-3 dÃ­as)" => 12,
+    "EnvÃ­o Premium (24h)" => 20
 ];
 
-// Servicios adicionales
+// Servicios adicionales (Se mantienen las claves originales ya que ya funcionan)
 $servicios = [
-    "Seguro de Robo y Daños" => 25,
-    "Garantía Extendida (2 años)" => 50,
-    "Instalación/Configuración" => 40,
+    "Seguro de Robo y DaÃ±os" => 25,
+    "GarantÃ­a Extendida (2 aÃ±os)" => 50,
+    "InstalaciÃ³n/ConfiguraciÃ³n" => 40,
     "Embalaje Regalo" => 8
 ];
 

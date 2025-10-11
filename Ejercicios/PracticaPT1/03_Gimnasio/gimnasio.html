@@ -2,68 +2,68 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gimnasio - Inscripción</title>
+    <title>Gimnasio - Inscripciï¿½n</title>
 </head>
 <body>
-    <h1>Gimnasio Fit Center - Inscripción</h1>
+    <h1>Gimnasio Fit Center - Inscripciï¿½n</h1>
     <form action="procesarGimnasio.php" method="POST">
 
-        <label for="nombre">Nombre (máx. 30 caracteres):</label><br>
+        <label for="nombre">Nombre (mï¿½x. 30 caracteres):</label><br>
         <input type="text" id="nombre" name="nombre" maxlength="30" required><br><br>
 
-        <label for="apellidos">Apellidos (máx. 40 caracteres):</label><br>
+        <label for="apellidos">Apellidos (mï¿½x. 40 caracteres):</label><br>
         <input type="text" id="apellidos" name="apellidos" maxlength="40" required><br><br>
 
-        <label for="edad">Edad (18-80 años):</label><br>
+        <label for="edad">Edad (18-80 aï¿½os):</label><br>
         <input type="number" id="edad" name="edad" min="18" max="80" required><br><br>
 
         <label>Tipo de Plan:</label><br>
-        <input type="radio" id="basico-mensual" name="plan" value="Plan Básico Mensual" required>
-        <label for="basico-mensual">Plan Básico Mensual (30¬)</label><br>
+        <input type="radio" id="basico-mensual" name="plan" value="Plan Bï¿½sico Mensual" required>
+        <label for="basico-mensual">Plan Bï¿½sico Mensual (30ï¿½)</label><br>
         <input type="radio" id="premium-mensual" name="plan" value="Plan Premium Mensual">
-        <label for="premium-mensual">Plan Premium Mensual (50¬)</label><br>
-        <input type="radio" id="basico-trimestral" name="plan" value="Plan Básico Trimestral">
-        <label for="basico-trimestral">Plan Básico Trimestral (75¬)</label><br>
+        <label for="premium-mensual">Plan Premium Mensual (50ï¿½)</label><br>
+        <input type="radio" id="basico-trimestral" name="plan" value="Plan Bï¿½sico Trimestral">
+        <label for="basico-trimestral">Plan Bï¿½sico Trimestral (75ï¿½)</label><br>
         <input type="radio" id="premium-trimestral" name="plan" value="Plan Premium Trimestral">
-        <label for="premium-trimestral">Plan Premium Trimestral (135¬)</label><br>
+        <label for="premium-trimestral">Plan Premium Trimestral (135ï¿½)</label><br>
         <input type="radio" id="anual" name="plan" value="Plan Anual">
-        <label for="anual">Plan Anual (450¬)</label><br><br>
+        <label for="anual">Plan Anual (450ï¿½)</label><br><br>
 
         <label>Clases Grupales (Opcionales):</label><br>
         <input type="checkbox" id="yoga" name="clases[]" value="Yoga">
-        <label for="yoga">Yoga (15¬/mes)</label><br>
+        <label for="yoga">Yoga (15ï¿½/mes)</label><br>
         <input type="checkbox" id="spinning" name="clases[]" value="Spinning">
-        <label for="spinning">Spinning (20¬/mes)</label><br>
+        <label for="spinning">Spinning (20ï¿½/mes)</label><br>
         <input type="checkbox" id="pilates" name="clases[]" value="Pilates">
-        <label for="pilates">Pilates (18¬/mes)</label><br>
+        <label for="pilates">Pilates (18ï¿½/mes)</label><br>
         <input type="checkbox" id="crossfit" name="clases[]" value="CrossFit">
-        <label for="crossfit">CrossFit (25¬/mes)</label><br>
+        <label for="crossfit">CrossFit (25ï¿½/mes)</label><br>
         <input type="checkbox" id="zumba" name="clases[]" value="Zumba">
-        <label for="zumba">Zumba (12¬/mes)</label><br>
+        <label for="zumba">Zumba (12ï¿½/mes)</label><br>
         <input type="checkbox" id="box" name="clases[]" value="Box">
-        <label for="box">Box (22¬/mes)</label><br><br>
+        <label for="box">Box (22ï¿½/mes)</label><br><br>
 
         <label>Servicios Adicionales (Opcionales):</label><br>
         <input type="checkbox" id="entrenador" name="servicios[]" value="Entrenador Personal (4 sesiones/mes)">
-        <label for="entrenador">Entrenador Personal - 4 sesiones (80¬/mes)</label><br>
+        <label for="entrenador">Entrenador Personal - 4 sesiones (80ï¿½/mes)</label><br>
         <input type="checkbox" id="nutricionista" name="servicios[]" value="Nutricionista (2 consultas/mes)">
-        <label for="nutricionista">Nutricionista - 2 consultas (40¬/mes)</label><br>
+        <label for="nutricionista">Nutricionista - 2 consultas (40ï¿½/mes)</label><br>
         <input type="checkbox" id="taquilla" name="servicios[]" value="Taquilla Privada">
-        <label for="taquilla">Taquilla Privada (10¬/mes)</label><br>
+        <label for="taquilla">Taquilla Privada (10ï¿½/mes)</label><br>
         <input type="checkbox" id="piscina" name="servicios[]" value="Acceso a Piscina">
-        <label for="piscina">Acceso a Piscina (15¬/mes)</label><br>
+        <label for="piscina">Acceso a Piscina (15ï¿½/mes)</label><br>
         <input type="checkbox" id="sauna" name="servicios[]" value="Acceso a Sauna">
-        <label for="sauna">Acceso a Sauna (12¬/mes)</label><br><br>
+        <label for="sauna">Acceso a Sauna (12ï¿½/mes)</label><br><br>
 
         <label for="horario">Horario Preferido:</label><br>
         <select id="horario" name="horario" required>
             <option value="">Selecciona un horario</option>
-            <option value="Mañana (6:00-14:00)">Mañana (6:00-14:00)</option>
+            <option value="MaÃ±ana (6:00-14:00)">MaÃ±ana (6:00-14:00)</option>
             <option value="Tarde (14:00-22:00)">Tarde (14:00-22:00)</option>
-            <option value="Todo el día">Todo el día (+20%)</option>
+            <option value="Todo el dï¿½a">Todo el dï¿½a (+20%)</option>
         </select><br><br>
 
-        <label for="codigo">Código Promocional:</label><br>
+        <label for="codigo">Cï¿½digo Promocional:</label><br>
         <input type="text" id="codigo" name="codigo" placeholder="Ej: FITNESS2024"><br><br>
 
         <button type="submit">Inscribirse</button>

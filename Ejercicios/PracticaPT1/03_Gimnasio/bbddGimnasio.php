@@ -2,9 +2,9 @@
 
 // Planes de gimnasio
 $planes = [
-    "Plan Básico Mensual" => 30,
+    "Plan Bï¿½sico Mensual" => 30,
     "Plan Premium Mensual" => 50,
-    "Plan Básico Trimestral" => 75,
+    "Plan Bï¿½sico Trimestral" => 75,
     "Plan Premium Trimestral" => 135,
     "Plan Anual" => 450
 ];
@@ -30,12 +30,12 @@ $servicios = [
 
 // Recargo por horario
 $horarios = [
-    "Mañana (6:00-14:00)" => 1.0,
+    "MaÃ±ana (6:00-14:00)" => 1.0,
     "Tarde (14:00-22:00)" => 1.0,
-    "Todo el día" => 1.2
+    "Todo el dï¿½a" => 1.2
 ];
 
-// Códigos promocionales
+// Cï¿½digos promocionales
 $codigos = [
     "FITNESS2024" => 15,
     "VERANO20" => 20,
