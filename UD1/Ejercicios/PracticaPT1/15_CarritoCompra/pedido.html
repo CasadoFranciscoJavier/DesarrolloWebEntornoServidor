@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Paso 1: Seleccionar Categoría</title>
+</head>
+<body>
+    <h1>Simulación de Carrito de Compras</h1>
+    <h2>Paso 1: Datos Iniciales</h2>
+
+    <form action="generadorPedido.php" method="POST">
+        
+        <label for="nombre_cliente">Nombre del Cliente:</label><br>
+        <input type="text" id="nombre_cliente" name="nombre_cliente" required><br><br>
+
+        <label for="categoria">Selecciona la Categoría:</label><br>
+        <select id="categoria" name="categoria" required>
+            <option value="">-- Elige una categoría --</option>
+            <option value="electronica">Electrónica</option>
+            <option value="hogar">Hogar</option>
+            <option value="deportes">Deportes</option>
+        </select><br><br>
+
+        <button type="submit">Continuar al Catálogo</button>
+    </form>
+</body>
+</html>
