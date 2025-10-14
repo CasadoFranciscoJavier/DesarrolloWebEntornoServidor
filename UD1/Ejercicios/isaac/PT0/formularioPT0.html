@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de PC Personalizado</title>
+</head>
+<body>
+    <h1>Configuración de PC Personalizado</h1>
+    <form action="procesarPT0.php" method="POST">
+        <h2>Componentes Obligatorios</h2>
+        
+        <fieldset>
+            <legend>Procesador</legend>
+            <input type="radio" name="procesador" value="Intel i5"> Intel i5<br>
+            <input type="radio" name="procesador" value="Intel i7"> Intel i7<br>
+            <input type="radio" name="procesador" value="AMD Ryzen 5"> AMD Ryzen 5<br>
+        </fieldset>
+
+        <fieldset>
+            <legend>Memoria RAM</legend>
+            <input type="radio" name="ram" value="8 GB"> 8 GB<br>
+            <input type="radio" name="ram" value="16 GB"> 16 GB<br>
+            <input type="radio" name="ram" value="32 GB"> 32 GB<br>
+        </fieldset>
+
+        <fieldset>
+            <legend>Disco Duro</legend>
+            <input type="radio" name="disco" value="256 GB SSD"> 256 GB SSD<br>
+            <input type="radio" name="disco" value="512 GB SSD"> 512 GB SSD<br>
+            <input type="radio" name="disco" value="1 TB SSD"> 1 TB SSD<br>
+            <input type="radio" name="disco" value="2 TB HDD"> 2 TB HDD<br>
+        </fieldset>
+
+        <fieldset>
+            <legend>Tarjeta Gráfica</legend>
+            <input type="radio" name="grafica" value="NVIDIA GTX 1650"> NVIDIA GTX 1650<br>
+            <input type="radio" name="grafica" value="NVIDIA RTX 3060"> NVIDIA RTX 3060<br>
+            <input type="radio" name="grafica" value="AMD RX 6600 XT"> AMD RX 6600 XT<br>
+        </fieldset>
+
+        <fieldset>
+            <legend>Fuente de Alimentación</legend>
+            <input type="radio" name="alimentacion" value="500W"> 500W<br>
+            <input type="radio" name="alimentacion" value="650W"> 650W<br>
+            <input type="radio" name="alimentacion" value="750W"> 750W<br>
+        </fieldset>
+
+        <h2>Accesorios Opcionales</h2>
+        <fieldset>
+            <legend>Selecciona Accesorios</legend>
+            <input type="checkbox" name="accesorios[]" value="Teclado Mecanico"> Teclado Mecánico<br>
+            <input type="checkbox" name="accesorios[]" value="Raton Gaming"> Ratón Gaming<br>
+            <input type="checkbox" name="accesorios[]" value="Monitor 24"> Monitor 24"<br>
+            <input type="checkbox" name="accesorios[]" value="Audifonos"> Audífonos<br>
+            <input type="checkbox" name="accesorios[]" value="Impresora"> Impresora<br>
+            <input type="checkbox" name="accesorios[]" value="Webcam"> Webcam<br>
+            <input type="checkbox" name="accesorios[]" value="Alfombrilla RGB"> Alfombrilla RGB<br>
+            <input type="checkbox" name="accesorios[]" value="Altavoces"> Altavoces<br>
+        </fieldset>
+
+        <h2>Detalles del Pedido</h2>
+        <label for="cantidad">Cantidad de Ordenadores (1-10):</label>
+        <input type="number" name="cantidad" id="cantidad" min="1" max="10" value="1" required><br><br>
+
+        <label for="codigo">Código de Descuento (opcional):</label>
+        <input type="text" name="codigo" id="codigo"><br><br>
+
+        <input type="submit" value="Calcular Precio">
+    </form>
+</body>
+</html>

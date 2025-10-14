@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHUETA - Variables de Formulario Compactas (v2)</title>
+</head>
+
+<body>
+    <h1>CHUETA: Estructura de Variables de Formulario (Estilo Compacto)</h1>
+
+    <form action="procesar.php" method="POST"> 
+        
+        <fieldset>
+            <legend>Tipos de Selección (Radio, Checkbox, Select)</legend>
+            
+            <label><b>1. Procesador (radio - una opción):</b></label><br>
+            <label><input name="procesador" value="Intel i5" type="radio" required> Intel i5</label>
+            <label><input name="procesador" value="Intel i7" type="radio"> Intel i7</label>
+            
+            <br><br>
+            
+            <label><b>2. Accesorios (checkbox - varias opciones):</b></label><br>
+            <label><input name="accesorios[]" value="Teclado Mecanico" type="checkbox"> Teclado Mecánico</label>
+            <label><input name="accesorios[]" value="Monitor 24''" type="checkbox" checked> Monitor 24"</label>
+
+            <br><br>
+            
+            <label><b>3. Sistema Operativo (select - desplegable):</b></label><br>
+            <select name="sistema_operativo">
+                <option value="Windows">Windows</option>
+                <option value="Linux" selected>Linux</option>
+                <option value="Mac">macOS</option>
+            </select>
+
+        </fieldset>
+        
+        <fieldset>
+            <legend>Tipos de Input (Texto y Números)</legend>
+
+            <label><b>1. Texto Básico (text):</b></label><br>
+            <input name="nombre_cliente" type="text" placeholder="Ej. Juan Pérez" required><br><br>
+            
+            <label><b>2. Número Entero (number):</b></label><br>
+            <input name="cantidad_entera" type="number" value="1" min="1" max="10"><br><br>
+            
+            <label><b>3. Número Decimal (number con step="0.1"):</b></label><br>
+            <input name="version_decimal" type="number" value="1.0" min="0.1" max="5.0" step="0.1"><br><br>
+            
+            <label><b>4. Email (email):</b></label><br>
+            <input name="email_contacto" type="email" placeholder="ejemplo@correo.com" required><br><br>
+            
+            <label><b>5. Contraseña (password):</b></label><br>
+            <input name="clave_secreta" type="password" minlength="8" placeholder="Mínimo 8 caracteres"><br><br>
+
+        </fieldset>
+        
+        <fieldset>
+            <legend>Otros Tipos Útiles</legend>
+            
+            <label><b>1. Fecha (date):</b></label><br>
+            <input name="fecha_solicitud" type="date"><br><br>
+            
+            <label><b>2. Archivo (file):</b></label><br>
+            <input name="archivo_adjunto" type="file" accept=".pdf, .jpg, .png"><br><br>
+
+            <label><b>3. Área de Texto Grande (textarea):</b></label><br>
+            <textarea name="notas_largas" rows="4" cols="50" placeholder="Escribe aquí notas o comentarios largos..."></textarea>
+        </fieldset>
+
+        <button type="submit">Enviar Configuración</button>
+        <button type="reset">Limpiar Formulario</button>
+
+    </form>
+
+    
+
+    <style>
+        body {
+            background: #f3f6f9;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        form {
+            background: #fff;
+            max-width: 580px;
+            margin: 40px auto;
+            padding: 32px 28px 24px 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+            border: 1px solid #e3e8ee;
+        }
+        
+        fieldset {
+            border: 1px solid #bfc9d9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            font-weight: 600;
+            color: #4a6fa5;
+            padding: 0 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a6fa5;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        label {
+            color: #333; 
+            font-weight: 400;
+            display: inline-block;
+            margin-right: 15px; 
+            margin-bottom: 8px;
+        }
+        
+        label b {
+            color: #4a6fa5; 
+            font-weight: 600;
+            display: block; 
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"] { /* Añado los nuevos tipos de input */
+            padding: 6px 8px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+            margin-left: 4px;
+            border: 1px solid #bfc9d9;
+            border-radius: 6px;
+            background: #f7fafd;
+            font-size: 0.95em;
+            transition: border 0.2s, box-shadow 0.2s;
+            box-sizing: border-box; 
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 95%;
+            max-width: 300px; 
+        }
+        
+        /* Estilo específico para Select y Textarea que se añadieron con CSS inline,
+           se pueden mover aquí para mantener la consistencia si se desea. */
+
+        input[type="number"] {
+            width: 70px; 
+            text-align: center;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="date"]:focus {
+            border: 1.5px solid #7ea1c4;
+            box-shadow: 0 0 5px rgba(126, 161, 196, 0.5);
+            outline: none;
+            background: #fff;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            accent-color: #7ea1c4;
+            margin-right: 6px;
+            transform: scale(1.1); 
+        }
+
+        button[type="submit"],
+        button[type="reset"] {
+            background: #7ea1c4;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            margin-right: 10px;
+            margin-top: 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button[type="submit"]:hover,
+        button[type="reset"]:hover {
+            background: #4a6fa5;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            form {
+                margin: 20px 10px;
+                padding: 20px 15px;
+            }
+            label {
+                display: block;
+                margin-right: 0;
+            }
+            button[type="submit"],
+            button[type="reset"] {
+                display: block;
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+                padding: 12px 22px;
+            }
+        }
+    </style>
+</body>
+
+</html>
