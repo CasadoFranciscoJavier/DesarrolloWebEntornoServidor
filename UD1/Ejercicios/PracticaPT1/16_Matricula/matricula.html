@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Paso 1: Datos de Matrícula</title>
+</head>
+<body>
+    <h1>Sistema de Matrícula Universitaria</h1>
+    <h2>Paso 1: Datos Personales y Curso</h2>
+
+    <form action="generadorMatricula.php" method="POST">
+        
+        <label for="dni">DNI/NIE (Ej: 12345678A):</label><br>
+        <input type="text" id="dni" name="dni" required maxlength="9"><br><br>
+
+        <label for="nombre">Nombre Completo:</label><br>
+        <input type="text" id="nombre" name="nombre" required maxlength="50"><br><br>
+
+        <label for="curso">Selecciona el Curso:</label><br>
+        <select id="curso" name="curso" required>
+            <option value="">-- Elige un Curso --</option>
+            <option value="1_dam">1º Desarrollo de Aplicaciones Multiplataforma (DAM)</option>
+            <option value="2_daw">2º Desarrollo de Aplicaciones Web (DAW)</option>
+            <option value="master_ciber">Máster en Ciberseguridad</option>
+        </select><br><br>
+
+        <label>Tipo de Matrícula:</label><br>
+        <input type="radio" id="primera" name="tipo_matricula" value="primera" required>
+        <label for="primera">Primera Matrícula</label>
+        <input type="radio" id="segunda" name="tipo_matricula" value="segunda">
+        <label for="segunda">Segunda Matrícula o Posterior (Recargo)</label><br><br>
+
+        <button type="submit">Continuar a Asignaturas</button>
+    </form>
+</body>
+</html>
