@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reserva de Viajes - Agencia.html</title>
+</head>
+<body>
+    <h1>Datos personales y Viaje</h1>
+    <form action="procesarViaje.php" method="POST"> 
+        <label for="nombre">Nombre (máx. 20 caracteres):</label><br>
+        <input id="nombre" name="nombre" maxlength="20" type="text" required><br><br>
+
+        <label for="apellido">Apellidos (máx. 20 caracteres):</label><br>
+        <input type="text" id="apellido" name="apellido" maxlength="20" required><br><br>
+
+        <label for="destino">Destino:</label><br>
+        <select id="destino" name="destino" required>
+            <option value="">Selecciona un Destino</option>
+            <option value="Tokio">Tokio</option>
+            <option value="Nueva York">Nueva York</option>
+            <option value="Paris">Paris</option>
+            <option value="Sidney">Sidney</option>
+        </select><br><br>
+
+        <label for="duracion">Duración: (días - máx. 30):</label><br>
+        <input type="number" id="duracion" name="duracion" step="1" min="1" max="30" required><br><br>
+
+        <label>Alojamiento:</label><br>
+        <input type="radio" id="estandar" name="alojamiento" value="estandar" required>
+        <label for="estandar">Estándar</label>
+        <input type="radio" id="lujo" name="alojamiento" value="lujo">
+        <label for="lujo">Lujo</label>
+        <input type="radio" id="hostel" name="alojamiento" value="hostel">
+        <label for="hostel">Hostel</label><br><br>
+
+
+        <label>Servicios Adicionales:</label><br>
+        <input type="checkbox" id="seguro_premium" name="servicios[]" value="Seguro Premium">
+        <label for="seguro_premium">Seguro Premium</label>
+        <input type="checkbox" id="traslados_aeropuerto" name="servicios[]" value="Traslados aeropuerto">
+        <label for="traslados_aeropuerto">Traslados Aeropuerto</label>
+        <input type="checkbox" id="excursion_guiada" name="servicios[]" value="Excursión guiada">
+        <label for="excursion_guiada">Excursión Guiada</label>
+        <input type="checkbox" id="alquiler_coche" name="servicios[]" value="Alquiler de coche">
+        <label for="alquiler_coche">Alquiler de Coche</label>
+        <br><br>
+
+        <button type="submit">Enviar Presupuesto</button>
+        <button type="reset">Borrar</button>
+    </form>
+</body>
+
+<style>
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+}
+
+form {
+    background: #fff;
+    max-width: 690px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+}
+
+h1 {
+    text-align: center;
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-right: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    background: #4a6fa5;
+}
+</style>
+</html>
