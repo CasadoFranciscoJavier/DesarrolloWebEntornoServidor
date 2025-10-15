@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio de Frankeinstein</title>
+</head>
+
+<body>
+    <h1>BIENVENIDO AL LABORATORIO DE FRANKEINSTEIN</h1>
+
+    <form action="procesarMonstruo.php" method="POST"> 
+        
+        <fieldset>
+            <legend>Configura tu Frankenstein</legend>
+
+            <label><b>Repuestos Iniciales:</b></label><br>
+            <label><input name="repuestos[]" value="ojos_gato" type="checkbox"> Ojos Gato</label>
+            <label><input name="repuestos[]" value="manos_campesino" type="checkbox"> Manos Campesino</label>
+            <label><input name="repuestos[]" value="orejas_musico" type="checkbox"> Orejas Campesino</label>
+            <label><input name="repuestos[]" value="dientes_vampiro" type="checkbox"> Dientes Vampiro</label>
+            <label><input name="repuestos[]" value="piel_zombi" type="checkbox"> Piel Zombi</label>
+
+            <br><br>
+            
+            <label><b>Torso:</b></label><br>
+            <label><input name="torsos" value="torso_atleta" type="radio"> Torso atleta</label>
+            <label><input name="torsos" value="torso_gigante" type="radio"> Torso gigante</label>
+            <label><input name="torsos" value="torso_anciano" type="radio"> Torso anciano</label>
+            <label><input name="torsos" value="torso_licantropo" type="radio"> Torso licántropo</label>
+
+            <br><br>
+
+             <label><b>Cerebro:</b></label><br>
+            <label><input name="cerebros" value="genio_loco" type="radio"> Genio loco </label>
+            <label><input name="cerebros" value="poeta_tragico" type="radio"> Poeta trágico </label>
+            <label><input name="cerebros" value="ingeniero_meticuloso" type="radio"> Ingeniero meticuloso</label>
+            <label><input name="cerebros" value="estudiante_somnoliento" type="radio"> Estudiante somnoliento</label>
+
+            <br><br>
+
+             <label><b>Método de reanimación:</b></label><br>
+            <label><input name="reanimacion" value="rayos_tormenta" type="radio"> Rayos tormenta</label>
+            <label><input name="reanimacion" value="pocion_alquimica" type="radio"> Poción alquímica</label>
+            <label><input name="reanimacion" value="ritual_necromantico" type="radio"> Ritual necromántico</label>
+            <label><input name="reanimacion" value="desfibrilador" type="radio"> Desfibrilador</label>
+
+            <br><br>
+
+
+            <label><b>Conservantes Químicos:</b></label><br>
+            <label><input name="conservantes[]" value="formol" type="checkbox"> Formol </label>
+            <label><input name="conservantes[]" value="etanol" type="checkbox"> Etanol</label>
+            <label><input name="conservantes[]" value="nitrogeno_liquido" type="checkbox"> Nitrógeno líquido</label>
+            <label><input name="conservantes[]" value="sales_banio" type="checkbox"> Sales de baño</label>
+            <label><input name="conservantes[]" value="eter" type="checkbox"> Eter</label>
+
+                <br><br>
+
+            <label><b>Número de criaturas:</b></label><br>
+            <input name="cantidad" type="number" value="1" min="1" ><br><br>
+
+            
+          
+
+        <button type="submit">Enviar Configuración</button>
+        <button type="reset">Limpiar Formulario</button>
+
+    </form>
+
+    
+
+    <style>
+        body {
+            background: #f3f6f9;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        form {
+            background: #fff;
+            max-width: 580px;
+            margin: 40px auto;
+            padding: 32px 28px 24px 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+            border: 1px solid #e3e8ee;
+        }
+        
+        fieldset {
+            border: 1px solid #bfc9d9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            font-weight: 600;
+            color: #4a6fa5;
+            padding: 0 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a6fa5;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        label {
+            color: #333; 
+            font-weight: 400;
+            display: inline-block;
+            margin-right: 15px; 
+            margin-bottom: 8px;
+        }
+        
+        label b {
+            color: #4a6fa5; 
+            font-weight: 600;
+            display: block; 
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="number"]{ 
+            padding: 6px 8px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+            margin-left: 4px;
+            border: 1px solid #bfc9d9;
+            border-radius: 6px;
+            background: #f7fafd;
+            font-size: 0.95em;
+            transition: border 0.2s, box-shadow 0.2s;
+            box-sizing: border-box; 
+        }
+
+
+
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            accent-color: #7ea1c4;
+            margin-right: 6px;
+            transform: scale(1.1); 
+        }
+
+        button[type="submit"],
+        button[type="reset"] {
+            background: #7ea1c4;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            margin-right: 10px;
+            margin-top: 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button[type="submit"]:hover,
+        button[type="reset"]:hover {
+            background: #4a6fa5;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            form {
+                margin: 20px 10px;
+                padding: 20px 15px;
+            }
+            label {
+                display: block;
+                margin-right: 0;
+            }
+            button[type="submit"],
+            button[type="reset"] {
+                display: block;
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+                padding: 12px 22px;
+            }
+        }
+    </style>
+</body>
+
+</html>
