@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contratar Maldición - Aquelarre</title>
+</head>
+<body>
+
+    <div>
+        <h1>AQUELARRE DE LA NOCHE 🌙</h1>
+        <form action="procesar_maldicion.php" method="POST">
+
+            <fieldset>
+                <legend>Datos del Contrato</legend>
+                <label for="nombreAquelarre">Nombre Aquelarre:</label><br>
+                <input type="text" id="nombreAquelarre" name="nombreAquelarre" ><br>
+
+                <label for="solicitante">Nombre Solicitante:</label><br>
+                <input type="text" id="solicitante" name="solicitante" ><br>
+
+                <label for="intensidad">Intensidad (1-5 Calaveras):</label><br>
+                <input type="number" id="intensidad" name="intensidad" min="1" max="5" ><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Detalles del Ritual</legend>
+                
+                <p>Tipo de Maldición:</p>
+                <select id="tipoMaldicion" name="tipoMaldicion">
+                    <option value="">-- Selecciona el Tipo --</option>
+                    <option value="Plaga de Sapos">Plaga de Sapos</option>
+                    <option value="Noche Eterna">Noche Eterna</option>
+                    <option value="Voz de Cuervo">Voz de Cuervo</option>
+                </select>
+
+                <p>Duración:</p>
+                <select id="duracionMaldicion" name="duracionMaldicion">
+                    <option value="">-- Selecciona Duración --</option>
+                    <option value="Luna Nueva">Luna Nueva</option>
+                    <option value="Luna Llena">Luna Llena</option>
+                    <option value="Ciclo Completo">Ciclo Completo</option>
+                </select>
+
+                <p>Objetos de Ritual Adicionales (Chequea lo que necesites):</p>
+                <div>
+                    <input type="checkbox" id="pata" name="objetos[]" value="Pata de Conejo"> <label for="pata">Pata de Conejo</label><br>
+                    <input type="checkbox" id="ojo" name="objetos[]" value="Ojo de Tritón"> <label for="ojo">Ojo de Tritón</label><br>
+                    <input type="checkbox" id="veneno" name="objetos[]" value="Vial de Veneno"> <label for="veneno">Vial de Veneno</label><br>
+                    <input type="checkbox" id="caldero" name="objetos[]" value="Caldero de Bronce"> <label for="caldero">Caldero de Bronce</label><br>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Hechizo de Descuento</legend>
+                <label for="codigoHechizo">Código de Hechizo (Opcional):</label><br>
+                <input type="text" id="codigoHechizo" name="codigoHechizo">
+            </fieldset>
+            
+            <button type="submit">Calcular Costo Final</button>
+        </form>
+    </div>
+</body>
+</html>
