@@ -1,37 +1,26 @@
 <?php
-require_once 'Ventana.php';
-class Puerta {
-    // Atributos
-    public $ventana;  // todas las puertas tienen una ventana
-    public $abierta;
-  
 
-    // Constructor
-    // En php no deja poner un constructor por defecto vacçio, por lo que podemos ponerle valores por defecto a los parámetros y así simular un constructor vacío
-    public function __construct($abierta=false) {
-        // Inicializa la ventana como una nueva instancia de Ventana
-        $this->ventana = new Ventana();
-        $this->abierta = $abierta; 
-    }
+require_once "Ventana.php";
 
+class Puerta{
+    private $ventana;
+    private $abierta;
 
-
-    public function abrirCerrar() {
-        $mensaje = "";
-       if ($this->abierta == true) {
+    public function __construct() {
         $this->abierta = false;
-        $mensaje = "...cerrando puerta";
-       } else {
-        $this->abierta = true;
-        $mensaje = "...abriendo puerta";
-         }
-       return $mensaje;
+        $this->ventana = new Ventana;
     }
 
-
-    public function __toString()
-    {
-        return "La puerta está: " . ($this->abierta ? "abierta." : "cerrada.");
+    public function abrirCerrar(){
+        $this->abierta = !$this->abierta;
     }
-       
+
+    public function abrirCerrarVentana(){
+        $this->ventana->abrirCerrar();
+    }
+
+    public function __toString(){
+        return "Puerta " . $this->abierta ? "abierta" : "cerrada"
+              ." | Ventana de la puerta: $this->ventana";
+    }
 }

@@ -1,72 +1,51 @@
 <?php
 
-require_once 'Ventana.php';
-require_once 'Puerta.php';
-class Vehiculo {
-    // Atributos
-    public $numeroDePuertas;
-    public $puertas; // array de Puerta
-    public $tipoMotor;
-    public $potencia;
-    public $etiquetaMedioambiental;
+require_once "Puerta.php";
 
-    // Constructor
-    // En php no deja poner un constructor por defecto vacçio, por lo que podemos ponerle valores por defecto a los parámetros y así simular un constructor vacío
-    public function __construct($numeroDePuertas=0, $puertas=[], $tipoMotor="", $potencia=0, $etiquetaMedioambiental="") {
+class Vehiculo{
+    private $numeroDePuertas;
+    private $puertas;
+    private $tipoMotor; 
+    private $potencia;
+    private $etiquetaMedioambiental;
+    private $arrancado;
+
+    public function __construct($numeroDePuertas = 4, 
+                                $tipoMotor = "Gasolina", 
+                                $potencia = "100CV", 
+                                $etiquetaMedioambiental = null) {
+
         $this->numeroDePuertas = $numeroDePuertas;
-        $this->puertas = $puertas;
+
+        $this->puertas = array_fill(0, $numeroDePuertas, new Puerta);
+
         $this->tipoMotor = $tipoMotor;
         $this->potencia = $potencia;
         $this->etiquetaMedioambiental = $etiquetaMedioambiental;
+        $this->arrancado = false;
     }
 
-  
-
-  
-
-    // Métodos
-    public function encenderApagar() {
-      $encendido = false;
-      $mensaje = "";
-      if ($this->$encendido == "false") {
-          $encendido = true;
-            $mensaje = "Encendiendo vehículo";
-      } else {
-          $encendido = true;
-            $mensaje = "Apagando vehículo";
-      }
+    public function encenderApagar(){
+        $this->arrancado = !$this->arrancado;
     }
 
-     public function cerrarVehiculo() {
-      $cerrado = false;
-      if ($this->$cerrado == "encendido") {
-          $cerrado = "apagado";
-      } else {
-          $cerrado = "encendido";
-      }
-    }
-
-    public function puedeEntrarZBE() {
-        $puedeEntrar = false;
-        if ($this->etiquetaMedioambiental == "C" || $this->etiquetaMedioambiental == "ECO" || $this->etiquetaMedioambiental == "0") {
-            $puedeEntrar = true;
+    public function cerrarVehiculo(){
+        foreach ($this->puertas as $puerta) {
+            $puerta->abrirCerrar();
         }
-        return $puedeEntrar;
+
+        // TO-DO: esta basura no cierra las puertas (si está cerrada las abre)
     }
 
-    public function __toString()
-    // Muestra el Vehículo y el estado de sus puertas (y ventanas)
-    {
-        return "Vehículo con " . $this->numeroDePuertas . " puertas, tipo de motor: " . $this->tipoMotor . ", potencia: " . $this->potencia . " CV, etiqueta medioambiental: " . $this->etiquetaMedioambiental; // siempre debe devolver un string, no podemos usar un echo, tambien podemos usar etiquetas html.
+    public function puedeEntrarZBE(){
+        return ($etiquetaMedioambiental == null ? false : true); // si no tiene etiqueta no puede entrar
     }
 
-    
+    public function __toString(){
+        // TO-DO
+    }
 }
 
+$prueba = new Vehiculo;
 
-// Crear instancia de la clase Vehiculo
-
-
-
-
-
+print_r($prueba);
