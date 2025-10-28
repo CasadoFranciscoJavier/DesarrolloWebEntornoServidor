@@ -15,6 +15,10 @@ class Puerta{
         return $this->abierta;
     }
 
+    public function getVentana(){
+        return $this->ventana;
+    }
+
     public function abrirCerrar(){
         $this->abierta = !$this->abierta;
     }

@@ -7,11 +7,15 @@ class Ventana{
         $this->abierta = false;
     }
 
+    public function getAbierta(){
+        return $this->abierta;
+    }
+
     public function abrirCerrar(){
         $this->abierta = !$this->abierta;
     }
 
     public function __toString(){
-        return "Ventana " . $this->abierta ? "abierta" : "cerrada";
+        return "Ventana " . ($this->abierta ? "abierta" : "cerrada");
     }
 }
