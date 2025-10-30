@@ -3,7 +3,7 @@ session_start();
 require_once 'alert.php';
 
 if (!isset($_SESSION['usuario'])) {
-  alert('No hay sesión activa.', 'login.html', 'info');
+  alert('No hay sesión activa.', 'login.php', 'info');
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cerrar'])) {

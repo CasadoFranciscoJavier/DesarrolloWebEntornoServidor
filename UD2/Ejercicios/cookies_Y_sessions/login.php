@@ -10,7 +10,7 @@ if (isset($_SESSION['usuario']) || isset($_COOKIE['usuario'])) {
     header('Location: bienvenida.php');
     exit;
 }
-
+ 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $password = isset($_POST['password']) ? trim($_POST['password']) : '';
@@ -20,9 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (!isset($usuarios[$email])) {
-        echo $email;
-        echo $password;
-        echo $usuarios[$email];
         alert('El Usuario no está registrado.', 'login.php', 'error');
     }
 
