@@ -1,20 +1,31 @@
 <?php
-
 require_once 'productos.php';
+
+// Leer el carrito de la cookie si existe
+$carrito = [];
+if (isset($_COOKIE['carrito'])) {
+    $carrito = json_decode($_COOKIE['carrito'], true);
+}
 ?>
 
 <link rel="stylesheet" href="style.css">
+
 <h1>Listado de productos</h1>
 
 <form action="procesarCarrito.php" method="POST">
     <?php
-    foreach ($productos as $producto) {
-        echo '<div class="producto" style="display: flex; justify-content: space-between;">';
-        echo htmlspecialchars($producto['nombre']);
-        echo '<input type="number" name="cantidad" min="0" value="0" style="width: 60px;">';
+    foreach ($productos as $codigo => $producto) {
+        // Obtener la cantidad actual del carrito si existe
+        $cantidadActual = isset($carrito[$codigo]) ? $carrito[$codigo] : 0;
+
+
+        echo '<div style="display: flex; justify-content: space-between; ">';
+        echo $producto['nombre'] . ' - ' . $producto['precio'] . '€';
+        echo '<input type="number" name="productos[' . $codigo . ']" min="0" value="' . $cantidadActual . '" style="width: 60px;">';
         echo '</div>';
     }
-    echo '<input type="submit" value="Guardar 🛒">';
-    ?>
-</form>
 
+    ?>
+
+    <input type="submit" value="Guardar 🛒">
+</form>
