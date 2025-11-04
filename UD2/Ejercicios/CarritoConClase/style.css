@@ -1,0 +1,245 @@
+/* ==========================================
+   ESTILO BASE — coherente con respuesta 2
+   ========================================== */
+
+body {
+    background: #f3f6f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container, form {
+    background: #fff;
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(60, 80, 120, 0.08);
+    border: 1px solid #e3e8ee;
+    text-align: center;
+}
+
+/* ==========================================
+   TITULOS Y TEXTOS
+   ========================================== */
+h1, h2, h3 {
+    color: #4a6fa5;
+    margin-bottom: 24px;
+    font-weight: 600;
+    text-align: center;
+}
+
+p {
+    margin-bottom: 16px;
+}
+
+a {
+    color: #4a6fa5;
+    text-decoration: none;
+}
+a:hover {
+    color: #7ea1c4;
+}
+
+/* ==========================================
+   LISTAS Y TABLAS
+   ========================================== */
+ul, ol {
+    text-align: left;
+    margin: 0 0 16px 20px;
+}
+li {
+    margin-bottom: 6px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+}
+th, td {
+    border: 1px solid #e3e8ee;
+    padding: 8px;
+    text-align: left;
+    color: #4a6fa5;
+}
+th {
+    background: #f7fafd;
+}
+
+/* ==========================================
+   FORMULARIOS
+   ========================================== */
+label {
+    color: #4a6fa5;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+/* --- Campos de texto y similares --- */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="date"],
+input[type="time"],
+input[type="url"],
+input[type="tel"],
+input[type="color"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafd;
+    font-size: 1em;
+    transition: border 0.2s;
+    box-sizing: border-box;
+}
+input:focus, select:focus, textarea:focus {
+    border: 1.5px solid #7ea1c4;
+    outline: none;
+}
+
+/* --- Radio y checkbox --- */
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #7ea1c4;
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+/* --- Range --- */
+input[type="range"] {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+/* --- Fieldset --- */
+fieldset {
+    border: 1px solid #bfc9d9;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    text-align: left;
+}
+legend {
+    padding: 0 8px;
+    font-weight: 600;
+    color: #4a6fa5;
+}
+
+/* --- Botones --- */
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+    background: #7ea1c4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    margin-top: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover {
+    background: #4a6fa5;
+}
+
+/* ==========================================
+   ELEMENTOS DE TEXTO
+   ========================================== */
+blockquote {
+    border-left: 4px solid #7ea1c4;
+    padding-left: 12px;
+    color: #555;
+    font-style: italic;
+    margin: 16px 0;
+}
+
+details {
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    border: 1px solid #e3e8ee;
+    border-radius: 6px;
+    background: #f7fafd;
+}
+summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #4a6fa5;
+}
+
+/* ==========================================
+   MULTIMEDIA
+   ========================================== */
+img, video, audio {
+    max-width: 100%;
+    display: block;
+    margin: 10px auto;
+    border-radius: 6px;
+}
+
+figure {
+    margin: 0 0 16px;
+    text-align: center;
+}
+figcaption {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* ==========================================
+   ALERTAS Y UTILIDADES
+   ========================================== */
+.alert {
+    background: #ffe8e8;
+    color: #a94442;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 16px 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* variante éxito: tono verde suave en el mismo estilo */
+.alert.success {
+    background: #e8f8ed;      /* fondo verde muy claro */
+    color: #2f8f4a;           /* texto verde suave */
+    border: 1px solid #cdeed1;/* borde verde claro */
+}
+
+/* variante información: tono azul suave en el mismo estilo */
+.alert.info {
+    background: #eaf3fb;      /* fondo azul muy claro */
+    color: #2f6fa0;           /* texto azul suave */
+    border: 1px solid #d6eaf8;/* borde azul claro */
+}
+
+/* variante error explícita (mantiene tu estilo original) */
+.alert.error {
+    background: #ffe8e8;
+    color: #a94442;
+    border: 1px solid #f5c6cb;
+}
+
+/* utilidades */
+.text-center { text-align: center; }
+.bold { font-weight: 600; }
+.hidden { display: none; }
