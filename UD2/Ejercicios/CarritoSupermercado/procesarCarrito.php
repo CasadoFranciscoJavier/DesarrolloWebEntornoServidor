@@ -6,7 +6,7 @@ $carrito = [];
 if (isset($_POST['productos'])) {
     foreach ($_POST['productos'] as $codigo => $cantidad) {
         if ($cantidad > 0) {
-            $carrito[$codigo] = (int) $cantidad;
+            $carrito[$codigo] = $cantidad;
         }
     }
 }

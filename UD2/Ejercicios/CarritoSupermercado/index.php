@@ -15,7 +15,6 @@ if (isset($_COOKIE['carrito'])) {
 <form action="procesarCarrito.php" method="POST">
     <?php
     foreach ($productos as $codigo => $producto) {
-        // Obtener la cantidad actual del carrito si existe
         $cantidadActual = isset($carrito[$codigo]) ? $carrito[$codigo] : 0;
 
 
