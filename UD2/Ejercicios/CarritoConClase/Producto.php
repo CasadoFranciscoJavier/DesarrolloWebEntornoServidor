@@ -1,8 +1,8 @@
 <?php
 class Producto {
  
-    public $nombre;
-    public $precio;
+    private $nombre;
+    private $precio;
     
 
    
