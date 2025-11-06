@@ -1,35 +1,10 @@
 <?php
-function alert($mensaje, $redirigir, $tipo = 'info')
-{
-    echo "
-        <link rel='stylesheet' href='style.css'>
-        <div class='container'>
-            <div class='alert $tipo'>
-                <p>$mensaje</p>
-            </div>
-        </div>
-        <meta http-equiv='refresh' content='3;url=$redirigir'>
-    ";
-    exit;
-}
+require_once __DIR__ . "/conexion.php";
+require_once __DIR__ . "/model/ProductoModel.php";
+require_once __DIR__ . "/modalConfirm.php";
 
-try {
-    // Crear una nueva conexión PDO
-    $conexion = new PDO("mysql:host=localhost;dbname=tienda", "root", "1234");
-    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-     echo "Conexión exitosa <br>";
-
-} catch (PDOException $e) {
-     echo "Error en la conexión: " . $e->getMessage();
-}
-
-// Preparar la consulta
-$stmt = $conexion->prepare("SELECT * FROM productos");
-$stmt->execute();
-
-// Recuperar los resultados
-$resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$productoModel = new ProductoModel($conexion);
+$productos = $productoModel->obtenerTodos();
 ?>
 
 <!DOCTYPE html>
@@ -39,36 +14,45 @@ $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Lista de productos</title>
     <link rel="stylesheet" href="./css/style.css">
     <script>
-        function confirmarEliminacion(url) {
-            if (confirm("¿Estás seguro de eliminar este producto?")) {
-                window.location.href = url;
-            } else {
-                alert("El producto no fue eliminado.");
-            }
+        function confirmarEliminar(id) {
+            mostrarModal('¿Estás seguro de que deseas eliminar este producto?', 'view/eliminar.php?id=' + id);
         }
+
+         // sin el modal y de manera mas simple sería asi:
+        //     function confirmarEliminar(id) {
+        //         const respuesta = confirm('¿Estás seguro de que deseas eliminar este producto?');
+        //         if (respuesta) {
+        //             window.location.href = 'view/eliminar.php?id=' + id;
+        //         }
+        //     }
     </script>
 </head>
 <body>
+    <div class="container">
+        <h1>Productos disponibles</h1>
 
-    <h1>Productos disponibles</h1>
+        <?php if (empty($productos)): ?>
+            <p>No hay productos registrados.</p>
+        <?php else: ?>
+            <?php foreach ($productos as $producto): ?>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 12px; background: #f7fafd; border-radius: 8px; border: 1px solid #e3e8ee;">
+                    <span style="color: #4a6fa5; font-weight: 500;">
+                        <?php echo htmlspecialchars($producto->getNombre()); ?> -
+                        <strong><?php echo number_format($producto->getPrecio(), 2); ?> €</strong>
+                    </span>
+                    <div>
+                        <button onclick="window.location.href='view/editar.php?id=<?php echo $producto->getId(); ?>'">✏️ </button>
+                        <button onclick="confirmarEliminar(<?php echo $producto->getId(); ?>)">🗑️ </button>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
 
-   
-       <?php
-foreach ($resultado as $fila) {
-    echo "<div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;'>";
-    echo "<span>" . htmlspecialchars($fila['nombre']) . " - " . number_format($fila['precio'], 2) . " €</span>";
-    echo "<div>";
-    echo "<button onclick=\"window.location.href='editar.php?id=" . $fila['id'] . "'\">✏️ Editar</button> ";
-    echo "<button onclick=\"confirmarEliminacion('eliminar.php?id=" . $fila['id'] . "')\">🗑️ Eliminar</button>";
-    echo "</div>";
-    echo "</div>";
-}
-?>
+        <br>
+        <button onclick="window.location.href='view/agregar.php'" style="display: inline-block; margin-top: 16px;">➕ Agregar producto</button>
+        <button onclick="window.location.href='view/buscar.php'" style="display: inline-block; margin-top: 16px;">🔍 Buscar producto por ID</button>
+    </div>
 
-   
-
-    <br>
-    <a href="agregar.php">➕ Agregar producto</a>
-
+  
 </body>
 </html>

@@ -1,3 +1,6 @@
+-- 🗑️ Eliminar la base de datos si existe
+DROP DATABASE IF EXISTS tienda;
+
 -- 🏪 Crear base de datos
 CREATE DATABASE tienda;
 

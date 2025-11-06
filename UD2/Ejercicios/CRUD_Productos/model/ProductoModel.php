@@ -1,45 +1,116 @@
 <?php
 require_once "Producto.php";
-
-try {
-    // Crear una nueva conexión PDO
-    $conexion = new PDO("mysql:host=localhost;dbname=tienda", "root", "1234");
-    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    echo "Conexión exitosa <br>";
-} catch (PDOException $e) {
-    echo "Error en la conexión: " . $e->getMessage();
-}
-
-// Preparar la consulta
-$stmt = $conexion->prepare("SELECT * FROM productos");
-$stmt->execute();
-
-// Recuperar los resultados
-$resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+require_once __DIR__ . "/../conexion.php";
 
 
 
 class ProductoModel
 {
-    private $producto;
+    private $conexion;
     private $lista_productos = [];
 
 
-    public function __construct()
+    public function __construct($conexion)
     {
-        $this->producto = new Producto;
+        $this->conexion = $conexion;
     }
 
 
-    public function obtenerTodos() {}
+  
+    public function obtenerTodos() {
+        $this->lista_productos = [];
 
-    public function obtenerPorId($id) {}
+        $stmt = $this->conexion->prepare("SELECT * FROM productos ORDER BY id ASC");
+        $stmt->execute();
+        $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    public function agregar($producto) {}
+        foreach ($resultado as $producto) {
+            $this->lista_productos[] = new Producto(
+                $producto["id"],
+                $producto["nombre"],
+                $producto["precio"]
+            );
+        }
+
+        return $this->lista_productos;
+    }
+
+  
+    public function obtenerPorId($id) {
+        $producto = null;
+
+        $stmt = $this->conexion->prepare("SELECT * FROM productos WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($resultado) {
+            $producto = new Producto(
+                $resultado["id"],
+                $resultado["nombre"],
+                $resultado["precio"]
+            );
+        }
+
+        return $producto;
+    }
 
 
-    public function actualizar($producto) {}
+    public function agregar($producto) {
+        $resultado = false;
 
-    public function eliminar($producto) {}
+        $nombre = $producto->getNombre();
+        $precio = $producto->getPrecio();
+
+        if (!empty($nombre) && $precio > 0) {
+            $stmt = $this->conexion->prepare("INSERT INTO productos (nombre, precio) VALUES (:nombre, :precio)");
+            $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+            $stmt->bindParam(':precio', $precio);
+
+            if ($stmt->execute()) {
+                $resultado = true;
+            }
+        }
+
+        return $resultado;
+    }
+
+  
+    public function actualizar($producto) {
+        $resultado = false;
+
+        $id = $producto->getId();
+        $nombre = $producto->getNombre();
+        $precio = $producto->getPrecio();
+
+        if (!empty($nombre) && $precio > 0 && $id !== null) {
+            $stmt = $this->conexion->prepare("UPDATE productos SET nombre = :nombre, precio = :precio WHERE id = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+            $stmt->bindParam(':precio', $precio);
+
+            if ($stmt->execute()) {
+                $resultado = true;
+            }
+        }
+
+        return $resultado;
+    }
+
+   
+    public function eliminar($id) {
+        $resultado = false;
+
+        if ($id != null && $id > 0) {
+            $stmt = $this->conexion->prepare("DELETE FROM productos WHERE id = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+            if ($stmt->execute()) {
+                $resultado = true;
+            }
+        }
+
+        return $resultado;
+    }
 }
