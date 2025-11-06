@@ -19,19 +19,27 @@ try {
 }
 
     // Preparar la consulta
-$stmt = $conexion->prepare("SELECT * FROM usuarios WHERE id = :id");
+// $stmt = $conexion->prepare("SELECT * FROM usuarios ");
+// $stmt = $conexion->prepare("SELECT * FROM usuarios  where id=:id");
+$stmt = $conexion->prepare("INSERT INTO USUARIO(NOMBRE, EDAD) VALUES (:nombre, :edad)");
+$nombre = "Javica";
+$edad = 37;
+$stmt->bindParam(':nombre', $nombre);
+$stmt->bindParam(':edad', $edad);
 
 // Enlazar el valor del marcador de posición
-$stmt->bindParam(':id', $id);
+// $stmt->bindParam(':id', $id);  "SELECT * FROM usuarios where id=:id
 
 // Asignar el valor y ejecutar la consulta
-$id = 1;
+$id = 2;
 $stmt->execute();
 
 // Recuperar los resultados
+// si ponemos fetch en vez de fetcAll nos saldrá solo el primer resultado
 $resultado = $stmt->fetchAll();
 foreach ($resultado as $fila) {
-    echo $fila['nombre'];
+    echo $fila['nombre']. "<br>";
+    echo $fila['nombre']. "<br>";
 }
 
 

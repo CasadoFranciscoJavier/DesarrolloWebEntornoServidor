@@ -26,3 +26,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nombre'])) {
     alert('Acceso no válido.', 'cookie.html', 'error');
 }
 ?>
+
+la funcion alert debe funcionar asi, como te pongo aqui, en este ejemplo
