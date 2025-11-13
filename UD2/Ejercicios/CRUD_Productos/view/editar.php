@@ -4,7 +4,9 @@ require_once __DIR__ . "/../alert.php";
 
 $productoModel = new ProductoModel($conexion);
 
-$id = $GET["id"] ?? null;
+$id = isset($_GET["id"]) ? $_GET["id"] : null;
+
+print_r($_GET);
 
 if ($id == null) {
     alert("ID de producto no válido", "../index.php", "error");
