@@ -1,10 +1,13 @@
 <?php
-require_once __DIR__ . "/conexion.php";
-require_once __DIR__ . "/model/ProductoModel.php";
-require_once __DIR__ . "/modalConfirm.php";
 
-$productoModel = new ProductoModel($conexion);
-$productos = $productoModel->obtenerTodos();
+require_once "./model/ProductoModel.php";
+require_once "./model/Producto.php";
+require_once "./modalConfirm.php";
+
+$productoModel = new ProductoModel();
+
+$productos = $productoModel->obtenerTodosProductos();
+
 ?>
 
 <!DOCTYPE html>

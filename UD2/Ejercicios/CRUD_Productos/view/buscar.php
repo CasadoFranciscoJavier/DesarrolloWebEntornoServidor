@@ -1,8 +1,7 @@
 <?php
-require_once __DIR__ . "/../conexion.php";
 require_once __DIR__ . "/../model/ProductoModel.php";
 
-$productoModel = new ProductoModel($conexion);
+$productoModel = new ProductoModel();
 $producto = null;
 $mensaje = "";
 
@@ -10,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
     $id = filter_input(INPUT_POST, "id", FILTER_VALIDATE_INT);
 
     if ($id && $id > 0) {
-        $producto = $productoModel->obtenerPorId($id);
+        $producto = $productoModel->obtenerProductoPorId($id);
 
         if (!$producto) {
             $mensaje = "No se encontró ningún producto con el ID: $id";

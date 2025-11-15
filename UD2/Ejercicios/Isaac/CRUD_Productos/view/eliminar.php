@@ -4,7 +4,6 @@ if (isset($_GET["id"])) {
 
     require_once "../model/ProductoModel.php";
     require_once "../model/Producto.php";
-    require_once "../alert.php";
 
     $productoModel = new ProductoModel();
 
@@ -12,6 +11,6 @@ if (isset($_GET["id"])) {
 
     $productoModel->borrarProductoPorId($id);
 
-    alert("Producto eliminado correctamente", "../index.php", "success");
 }
-?>
+
+header("Location: ../index.php");

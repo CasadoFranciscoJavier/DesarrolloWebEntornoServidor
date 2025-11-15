@@ -1,30 +1,46 @@
 <?php
-require_once __DIR__ . "/../model/ProductoModel.php";
-require_once __DIR__ . "/../alert.php";
 
-$productoModel = new ProductoModel($conexion);
+if (isset($_POST["nombre"])) {
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $_POST["nombre"] ?? "";
-    $precio = $_POST["precio"] ?? 0;
+    require_once "../model/ProductoModel.php";
+    require_once "../model/Producto.php";
+    require_once "../alert.php";
 
-    $nuevoProducto = new Producto(null, $nombre, $precio);
+    $productoModel = new ProductoModel();
 
-    if ($productoModel->agregar($nuevoProducto)) {
+    $nombre = $_POST["nombre"];
+    $precio = $_POST["precio"];
+
+
+
+    $productoValido = $productoModel->buscarProductoExistente($nombre);
+   
+
+
+    if ($productoValido == null) {
+
+        $nuevoProducto = new Producto(null, $nombre, $precio);
+
+        $productoModel->insertarProducto($nuevoProducto);
+
         alert("Producto agregado correctamente", "../index.php", "success");
+
     } else {
-        alert("Error: El nombre no puede estar vacío y el precio debe ser mayor a 0", "./agregar.php", "error");
+        alert("El producto $nombre ya existe", "../index.php", "error");
     }
 }
+
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Agregar Producto</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
     <form method="POST" action="">
         <h1>Agregar Nuevo Producto</h1>
@@ -41,4 +57,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="../index.php">Volver a la lista</a>
     </form>
 </body>
+
 </html>
