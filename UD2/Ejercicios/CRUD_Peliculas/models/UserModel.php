@@ -14,13 +14,14 @@ class UserModel
 
     private function filaUser($fila)
     {
-        if (!$fila) return null;
+        if (!$fila)
+            return null;
 
         $user = new User(
             $fila["id"],
-            $fila["puntuacion"],
-            $fila["usuario_id"],
-            $fila["pelicula_id"]
+            $fila["nombre"],
+            $fila["contrasenia"],
+            $fila["rol"]
         );
 
 
@@ -45,26 +46,22 @@ class UserModel
     }
 
 
-    public function obtenerUsuarioPorId($id)
-    { {
+   public function obtenerUsuarioPorNombre($nombre)
+{
+    try {
+        $conexion = $this->miConector->conectar();
+        $consulta = $conexion->prepare("SELECT * FROM usuarios WHERE nombre = :nombre");
+        $consulta->bindParam(':nombre', $nombre);
+        $consulta->execute();
 
-            try {
-                $conexion = $this->miConector->conectar();
+        $fila = $consulta->fetch();
 
-                $consulta = $conexion->prepare("SELECT * FROM usuarios WHERE id = :id");
-                $consulta->bindParam(':id', $id);
-                $consulta->execute();
-
-                $resultadoConsulta = $consulta->fetch();
-
-                $usuario = $this->filaUser($resultadoConsulta);
-            } catch (PDOException $excepcion) {
-                $usuario = null;
-            }
-
-            return $usuario;
-        }
+        return $this->filaUser($fila);
+    } catch (PDOException $ex) {
+        return null;
     }
+}
+
 
     public function obtenerTodosUsuarios()
     {
@@ -112,7 +109,7 @@ class UserModel
                     rol = :rol
                 WHERE id = :id";
 
-        
+
         $stmt = $conexion->prepare($sql);
 
         $stmt->bindParam(':nombre', $usuario->getNombre());

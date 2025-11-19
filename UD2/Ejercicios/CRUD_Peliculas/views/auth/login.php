@@ -1,18 +1,43 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Formulario Login</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
+<?php
+session_start();
 
-    <form action="login.php" method="POST">
-        <h1>Mi primerito Login</h1>
-        <label> Correo: <input type="email" name="email"></label><br>
-        <label> Contraseña: <input type="password" name="password"></label>
-        <input type="submit" value="Enviar">
+require_once __DIR__ . '/../../models/UserModel.php';
+require_once __DIR__ . '/../../alert.php';
+
+$usuarioModel = new UserModel();
+$mensaje = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre = trim($_POST["email"] ?? "");
+    $password = trim($_POST["password"] ?? "");
+
+    if (!$nombre || !$password) {
+        $mensaje = "Debes completar todos los campos.";
+    } else {
+        $usuario = $usuarioModel->obtenerUsuarioPorNombre($nombre); 
+
+        if (!$usuario) {
+            $mensaje = "Usuario no encontrado.";
+        } elseif ($usuario->getContrasenia() != $password) {
+            $mensaje = "Contraseña incorrecta.";
+        } else {
+            $_SESSION['usuario'] = $usuario->getNombre();
+            setcookie('usuario', $usuario->getNombre(), time() + 3600, '/');
+            header("Location: ../../views/movies/list.php");
+            exit;
+        }
+    }
+}
+?>
+
+<link rel="stylesheet" href="../../css/style.css">
+
+<div class="container">
+    <h1>Login</h1>
+    <?php if ($mensaje) echo "<p style='color:red;'>$mensaje</p>"; ?>
+    <form method="POST">
+        <label>Usuario: <input type="text" name="email"></label><br>
+        <label>Contraseña: <input type="password" name="password"></label><br>
+        <input type="submit" value="Entrar">
     </form>
-    
-</body>
-</html>
+</div>
