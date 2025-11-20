@@ -7,7 +7,7 @@ require_once 'alert.php';
 
 
 
-if (isset($_SESSION['usuario']) || isset($_COOKIE['usuario'])) {
+if (isset($_SESSION['usuario'])) {
     header('Location: views/movies/list.php');
     exit;
 } else {

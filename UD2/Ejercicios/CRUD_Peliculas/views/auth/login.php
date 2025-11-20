@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+require_once __DIR__ . '/../movies/navbar.php';
 require_once __DIR__ . '/../../models/UserModel.php';
 require_once __DIR__ . '/../../alert.php';
 

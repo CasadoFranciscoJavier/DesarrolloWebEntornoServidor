@@ -53,7 +53,7 @@ class MovieModel
             try {
                 $conexion = $this->miConector->conectar();
 
-                $consulta = $conexion->prepare("SELECT * FROM usuarios WHERE id = :id");
+                $consulta = $conexion->prepare("SELECT * FROM peliculas WHERE id = :id");
                 $consulta->bindParam(':id', $id);
                 $consulta->execute();
 

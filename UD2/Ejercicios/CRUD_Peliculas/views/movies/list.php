@@ -26,10 +26,9 @@ $peliculas = $movieModel->obtenerTodosPeliculas();
         <div class="movie-list">
             <?php foreach ($peliculas as $pelicula): ?>
                 <div class="movie-card">
-                    <h2><?php echo htmlspecialchars($pelicula->getTitulo()); ?></h2>
-                    <p><strong>Sinopsis:</strong> <?php echo htmlspecialchars($pelicula->getSinopsis()); ?></p>
-                    <p><strong>Año:</strong> <?php echo htmlspecialchars($pelicula->getAnio()); ?></p>
-                    <p><strong>Género:</strong> <?php echo htmlspecialchars($pelicula->getGenero()); ?></p>
+                    <h2><?php echo htmlspecialchars($pelicula->getTitulo()); ?>
+                        <button onclick ="window.location.href='detail.php?id=<?php echo $pelicula->getId();?>'">👁</button>
+                    </h2>
                 </div>
             <?php endforeach; ?>
         </div>

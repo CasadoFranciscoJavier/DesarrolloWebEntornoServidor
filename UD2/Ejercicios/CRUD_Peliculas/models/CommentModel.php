@@ -23,13 +23,7 @@ class CommentModel
             $fila["pelicula_id"]
         );
 
-        // Asignamos nombre de usuario y título de película si vienen en la consulta
-        if(isset($fila["usuario_nombre"])) {
-            $comentario->setUsuarioNombre($fila["usuario_nombre"]);
-        }
-        if(isset($fila["pelicula_titulo"])) {
-            $comentario->setPeliculaTitulo($fila["pelicula_titulo"]);
-        }
+    
 
         return $comentario;
     }

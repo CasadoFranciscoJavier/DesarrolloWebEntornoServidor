@@ -2,7 +2,7 @@
 
 ?>
 
-<link rel="stylesheet" href="../../css/style.css">
+
 
 <nav class="navbar">
     <div class="navbar-left">
@@ -19,6 +19,21 @@
         <?php endif; ?>
     </div>
 </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <style>
 /* Navbar simple, adaptable a tu style.css */
