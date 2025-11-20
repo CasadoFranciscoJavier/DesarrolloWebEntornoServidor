@@ -19,7 +19,7 @@ if (isset($_POST["nombre"])) {
     
     $productoModel->actualizarProducto($producto);
 
-    header("Location: ../index.php");
+    header("Location: detalles.php?id=$id");
 }
 
 ?>

@@ -1,61 +1,60 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Bienvenido</title>
-    <link rel="stylesheet" href="style.css"> 
-</head>
-<body>
-    <div class="container">
-
 <?php
+
 session_start();
 
 require_once "usuarios.php";
 
+function hacerLogin($email, $password){
 
-function alert_msg($mensaje, $redirigir, $tipo = 'info') {
-    
-    echo " <div class='alert $tipo'>
-            <p>$mensaje</p>
-        </div>
-        <meta http-equiv='refresh' content='3;url=$redirigir'>";
-    exit;
+    global $usuarios;
+    $DURACION_COOKIE = 10 * 60; // 10 MINUTOS
+
+    if (isset($usuarios[$email]) && $usuarios[$email]['password'] == $password) {
+        $_SESSION["nombre"] = $usuarios[$email]['nombre'];
+
+        setcookie("email", $email, time() + $DURACION_COOKIE);
+        setcookie("password", $password, time() + $DURACION_COOKIE);
+
+        header("Location: hola.php");
+    }
 }
 
-// ===========================================
-// LÓGICA DE VERIFICACIÓN 
-// ===========================================
-if (isset($_POST['email']) && isset($_POST['password'])) {
+if (isset($_SESSION["nombre"])) {
+    header("Location: hola.php");
+} else if (isset($_COOKIE['email']) && isset($_COOKIE['password'])){
+
+    $email = $_COOKIE['email'];
+    $password = $_COOKIE['password'];
+
+    hacerLogin($email, $password);
+
+} else if(isset($_POST['email']) && isset($_POST['password'])){
 
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-   
-    if (empty($email) || empty($password)) {
-        alert_msg("Debes completar todos los campos.", "login.html", "info");
-    }
-
-    if (!isset($usuarios[$email])) {
-        alert_msg("El usuario no está registrado.", "login.html", "error");
-
-        }  else if ($usuarios[$email]['password'] == $password) {
-            $_SESSION["nombre"] = $usuarios[$email]['nombre'];  
-            alert_msg("Acceso registrado correctamente. Redirigiendo...", "hola.php", "success");
-
-        } else {
-            
-            alert_msg("Contraseña incorrecta.", "login.html", "error");
-        }
-
-} else {
-    // Si se accede directamente sin datos POST
-        alert_msg("¿Dónde te crees que vas, avioneto?", "login.html", "error");
+    hacerLogin($email, $password);
 
 }
 
 ?>
- </div>
-</body>
-</html>
 
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Login</title>
+</head>
+
+<body>
+
+    <form method="POST">
+        <label> Correo: <input type="email" name="email"></label><br>
+        <label> Contraseña: <input type="password" name="password"></label>
+        <input type="submit">
+    </form>
+
+</body>
+
+</html>

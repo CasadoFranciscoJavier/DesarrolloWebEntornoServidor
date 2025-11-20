@@ -8,7 +8,7 @@ class Movie
     private $anio;
     private $genero;
 
-    public function __construct($id = null, $titulo = "", $sinopsis = null, $anio = null, $genero = null)
+    public function __construct($id, $titulo, $sinopsis, $anio, $genero)
     {
         $this->id = $id;
         $this->titulo = $titulo;
@@ -22,9 +22,19 @@ class Movie
         return $this->id;
     }
 
-    public function gettitulo()
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function getTitulo()
     {
         return $this->titulo;
+    }
+
+    public function setTitulo($titulo)
+    {
+        $this->titulo = $titulo;
     }
 
     public function getSinopsis()
@@ -32,24 +42,14 @@ class Movie
         return $this->sinopsis;
     }
 
-    public function getAnio()
-    {
-        return $this->anio;
-    }
-
-    public function getGenero()
-    {
-        return $this->genero;
-    }
-
-    public function settitulo($titulo)
-    {
-        $this->titulo = $titulo;
-    }
-
     public function setSinopsis($sinopsis)
     {
         $this->sinopsis = $sinopsis;
+    }
+
+    public function getAnio()
+    {
+        return $this->anio;
     }
 
     public function setAnio($anio)
@@ -57,13 +57,18 @@ class Movie
         $this->anio = $anio;
     }
 
+    public function getGenero()
+    {
+        return $this->genero;
+    }
+
     public function setGenero($genero)
     {
         $this->genero = $genero;
     }
 
-    public function __toString()
+    public function __tostring()
     {
-        return "ID: {$this->id}, titulo: {$this->titulo}, Sinopsis: {$this->sinopsis}, Año: {$this->anio}, Género: {$this->genero}";
+        return "<a href='view/detalles.php?id=$this->id'>$this->titulo</a> ($this->anio)";
     }
 }

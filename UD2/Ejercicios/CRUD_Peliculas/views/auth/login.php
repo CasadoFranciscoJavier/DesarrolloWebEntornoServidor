@@ -1,43 +1,63 @@
 <?php
 session_start();
-require_once __DIR__ . '/../movies/navbar.php';
+
 require_once __DIR__ . '/../../models/UserModel.php';
-require_once __DIR__ . '/../../alert.php';
 
-$usuarioModel = new UserModel();
-$mensaje = "";
+$DURACION_COOKIE = 10 * 60; // 10 MINUTOS
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = trim($_POST["email"] ?? "");
-    $password = trim($_POST["password"] ?? "");
+function hacerLogin($nombre, $contrasenia)
+{
+    global $DURACION_COOKIE;
+    $usuarioModel = new UserModel();
 
-    if (!$nombre || !$password) {
-        $mensaje = "Debes completar todos los campos.";
-    } else {
-        $usuario = $usuarioModel->obtenerUsuarioPorNombre($nombre); 
+    $usuarioObjeto = $usuarioModel->obtenerUsuarioPorNombre($nombre);
 
-        if (!$usuario) {
-            $mensaje = "Usuario no encontrado.";
-        } elseif ($usuario->getContrasenia() != $password) {
-            $mensaje = "Contraseña incorrecta.";
-        } else {
-            $_SESSION['usuario'] = $usuario->getNombre();
-            setcookie('usuario', $usuario->getNombre(), time() + 3600, '/');
-            header("Location: ../../views/movies/list.php");
-            exit;
-        }
+    if ($usuarioObjeto && $usuarioObjeto->getContrasenia() == $contrasenia) {
+        $_SESSION["usuario"] = $usuarioObjeto->getNombre();
+        $_SESSION["rol"] = $usuarioObjeto->getRol();
+        $_SESSION["contrasenia"] = $usuarioObjeto->getContrasenia();
+        $_SESSION["id"] = $usuarioObjeto->getId();
+
+        setcookie("usuario", $nombre, time() + $DURACION_COOKIE, "/");
+        setcookie("contrasenia", $contrasenia, time() + $DURACION_COOKIE, "/");
+
+        header("Location: ../movies/list.php");
     }
+}
+
+if (isset($_SESSION["usuario"])) {
+    header("Location: ../movies/list.php");
+
+} else if (isset($_COOKIE["usuario"]) && isset($_COOKIE["contrasenia"])) {
+    $nombre = $_COOKIE["usuario"];
+    $contrasenia = $_COOKIE["contrasenia"];
+    hacerLogin($nombre, $contrasenia);
+
+} else if (isset($_POST["nombre"]) && isset($_POST["contrasenia"])) {
+    $nombre = $_POST["nombre"];
+    $contrasenia = $_POST["contrasenia"];
+    hacerLogin($nombre, $contrasenia);
 }
 ?>
 
 <link rel="stylesheet" href="../../css/style.css">
 
-<div class="container">
-    <h1>Login</h1>
-    <?php if ($mensaje) echo "<p style='color:red;'>$mensaje</p>"; ?>
-    <form method="POST">
-        <label>Usuario: <input type="text" name="email"></label><br>
-        <label>Contraseña: <input type="password" name="password"></label><br>
-        <input type="submit" value="Entrar">
-    </form>
-</div>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form method="POST">
+            <label>Usuario: <input type="text" name="nombre"></label><br>
+            <label>Contraseña: <input type="password" name="contrasenia"></label><br>
+            <input type="submit" value="Entrar">
+        </form>
+    </div>
+</body>
+
+</html>

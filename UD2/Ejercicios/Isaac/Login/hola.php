@@ -1,16 +1,12 @@
-<link rel="stylesheet" href="style.css">
-<div class="container">
+<?php
 
-    <?php
+session_start();
 
-    session_start();
+if(isset($_SESSION["nombre"])){
+    echo "Hola " . $_SESSION["nombre"] . "!!!!";
 
-    if (isset($_SESSION["nombre"])) {
-        echo "<h1>Hola " . $_SESSION["nombre"] . "!!!!</h1>";
-    } else {
-        header("Location: login.html");
-        exit;
-    }
+    echo "<br><a href='cerrarSesion.php'>CERRAR SESIÓN</a>";
 
-    ?>
-</div>
+}else{
+    header("Location: login.php");
+}

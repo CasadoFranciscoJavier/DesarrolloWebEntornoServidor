@@ -12,65 +12,79 @@ class MovieModel
         $this->miConector = new Conector();
     }
 
-    private function filaUser($fila)
+    private function filaPelicula($fila)
     {
-        if (!$fila) return null;
+        $id = $fila["id"];
+        $titulo = $fila["titulo"];
+        $sinopsis = $fila["sinopsis"];
+        $anio = $fila["anio"];
+        $genero = $fila["genero"];
 
-        $movie = new Movie(
-            $fila["id"],
-            $fila["titulo"],
-            $fila["sinopsis"],
-            $fila["anio"],
-            $fila["genero"]
-        );
+        $pelicula = new Movie($id, $titulo, $sinopsis, $anio, $genero);
 
-
-
-        return $movie;
+        return $pelicula;
     }
 
-    // solo para registrar usuarios normales
-    public function insertarPelicula($movie)
+    public function insertarPelicula($pelicula)
+    {
+        try {
+            $conexion = $this->miConector->conectar();
+
+            $consulta = $conexion->prepare("INSERT INTO peliculas(titulo, sinopsis, anio, genero) VALUES (:titulo, :sinopsis, :anio, :genero)");
+
+            $consulta->bindParam(':titulo', $pelicula->getTitulo());
+            $consulta->bindParam(':sinopsis', $pelicula->getSinopsis());
+            $consulta->bindParam(':anio', $pelicula->getAnio());
+            $consulta->bindParam(':genero', $pelicula->getGenero());
+
+            $consulta->execute();
+            $id = $this->obtenerUltimoId();
+
+            $pelicula->setId($id);
+        } catch (PDOException $excepcion) {
+            $pelicula = null;
+        }
+
+        return $pelicula;
+    }
+
+    public function obtenerUltimoId()
     {
         $conexion = $this->miConector->conectar();
 
-        $sql = "INSERT INTO peliculas (titulo, sinopsis, anio, genero)
-                VALUES (:titulo, :sinopsis, :anio, :genero)";
-        $stmt = $conexion->prepare($sql);
+        $consulta = $conexion->prepare("SELECT MAX(id) FROM peliculas");
 
-        $stmt->bindParam(':titulo', $movie->getTitulo());
-        $stmt->bindParam(':sinopsis', $movie->getSinopsis());
-        $stmt->bindParam(':anio', $movie->getAnio());
-        $stmt->bindParam(':genero', $movie->getGenero());
+        $consulta->execute();
 
-        return $stmt->execute();
+        $resultadoConsulta = $consulta->fetch();
+
+        $id = $resultadoConsulta[0];
+
+        return $id;
     }
 
 
     public function obtenerPeliculaPorId($id)
-    { {
+    {
+        try {
+            $conexion = $this->miConector->conectar();
 
-            try {
-                $conexion = $this->miConector->conectar();
+            $consulta = $conexion->prepare("SELECT * FROM peliculas WHERE id = :id");
+            $consulta->bindParam(':id', $id);
+            $consulta->execute();
 
-                $consulta = $conexion->prepare("SELECT * FROM peliculas WHERE id = :id");
-                $consulta->bindParam(':id', $id);
-                $consulta->execute();
+            $resultadoConsulta = $consulta->fetch();
 
-                $resultadoConsulta = $consulta->fetch();
-
-                $usuario = $this->filaUser($resultadoConsulta);
-            } catch (PDOException $excepcion) {
-                $usuario = null;
-            }
-
-            return $usuario;
+            $pelicula = $this->filaPelicula($resultadoConsulta);
+        } catch (PDOException $excepcion) {
+            $pelicula = null;
         }
+
+        return $pelicula;
     }
 
     public function obtenerTodosPeliculas()
     {
-
         $conexion = $this->miConector->conectar();
 
         $consulta = $conexion->prepare("SELECT * FROM peliculas");
@@ -81,42 +95,35 @@ class MovieModel
         $peliculas = [];
 
         foreach ($resultadoConsulta as $fila) {
-            $peliculas[] = $this->filaUser($fila); //Push de pelicula
+            $peliculas[] = $this->filaPelicula($fila);
         }
 
         return $peliculas;
     }
 
-    public function eliminarPeliculaPorId($id)
+    public function borrarPeliculaPorId($id)
     {
         $conexion = $this->miConector->conectar();
 
-        $sql = "DELETE FROM peliculas WHERE id = :id";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $consulta = $conexion->prepare("DELETE FROM peliculas WHERE id=:id");
 
-        return $stmt->execute();
+        $consulta->bindParam(':id', $id);
+
+        return $consulta->execute();
     }
 
-
-    public function actualizarPelicula (Movie $movie)
+    public function actualizarPelicula($pelicula)
     {
         $conexion = $this->miConector->conectar();
 
-        $sql = "UPDATE peliculas
-                SET titulo = :titulo,
-                    sinopsis = :sinopsis,
-                    anio = :anio,
-                    genero = :genero
-                WHERE id = :id";
-        $stmt = $conexion->prepare($sql);
+        $consulta = $conexion->prepare("UPDATE peliculas SET titulo = :titulo, sinopsis = :sinopsis, anio = :anio, genero = :genero WHERE id=:id");
 
-        $stmt->bindParam(':titulo', $movie->getTitulo());
-        $stmt->bindParam(':sinopsis', $movie->getSinopsis());
-        $stmt->bindParam(':anio', $movie->getAnio());
-        $stmt->bindParam(':genero', $movie->getGenero());
-        $stmt->bindParam(':id', $movie->getId());
+        $consulta->bindParam(':titulo', $pelicula->getTitulo());
+        $consulta->bindParam(':sinopsis', $pelicula->getSinopsis());
+        $consulta->bindParam(':anio', $pelicula->getAnio());
+        $consulta->bindParam(':genero', $pelicula->getGenero());
+        $consulta->bindParam(':id', $pelicula->getId());
 
-        return $stmt->execute();
+        return $consulta->execute();
     }
 }

@@ -1,66 +1,61 @@
 <?php
 session_start();
-require_once __DIR__ . '/navbar.php';
 
-require_once __DIR__ . '/../../models/MovieModel.php';
-require_once __DIR__ . '/../../models/RatingModel.php';
-require_once __DIR__ . '/../../models/CommentModel.php';
-require_once __DIR__ . '/../../models/UserModel.php';
-
-// Comprobamos sesión
-if (!isset($_SESSION['usuario'])) {
-    header('Location: ../auth/login.php');
-    exit;
+if (!isset($_SESSION["usuario"])) {
+    header("Location: ../auth/login.php");
 }
 
-$usuarioRegistrado = $_SESSION['usuario'];
+require_once __DIR__ . '/../../models/MovieModel.php';
+require_once __DIR__ . '/../../models/Movie.php';
+require_once __DIR__ . '/../../models/RatingModel.php';
+require_once __DIR__ . '/../../models/CommentModel.php';
+require_once __DIR__ . '/../../models/User.php';
+require_once __DIR__ . '/../../models/Comment.php';
 
-$usuarioModel = new UserModel();
-$usuarioObj = $usuarioModel->obtenerUsuarioPorNombre($usuarioRegistrado);
-$rolUsuario = $usuarioObj ? $usuarioObj->getRol() : null;
+$usuarioRol = $_SESSION["rol"];
 
-$id = $_GET['id'] ?? null;
-$movieModel = new MovieModel();
-$pelicula = $movieModel->obtenerPeliculaPorId($id);
 
-$movieRatingModel = new RatingModel();
-$peliculaRating = $movieRatingModel->obtenerMediaPuntuacionPorPelicula($id);
 
-$movieCommentModel = new CommentModel();
-$peliculaComments = $movieCommentModel->obtenerComentariosPorPelicula($id);
+$peliculaModel = new MovieModel();
+$ratingModel = new RatingModel();
+$comentarioModel = new CommentModel();
+
+if (isset($_GET["id"])) {
+    $id = $_GET["id"];
+    $pelicula = $peliculaModel->obtenerPeliculaPorId($id);
+    $mediaPuntuacion = $ratingModel->obtenerMediaPuntuacionPorPelicula($id);
+    $comentarios = $comentarioModel->obtenerComentariosPorPelicula($id);
+}
 ?>
-
 <link rel="stylesheet" href="../../css/style.css">
+<?php
+require_once __DIR__ . '/navbar.php';
 
-<div class="container">
-  
 
-    <?php if (empty($pelicula)): ?>
-        <p>No hay película registrada.</p>
-    <?php else: ?>
-        <div class="movie-list">
-           
-           
-                <div class="movie-card">
-                    <h2><?php echo htmlspecialchars($pelicula->getTitulo()); ?></h2>
-                    <p><strong>Sinopsis:</strong> <?php echo htmlspecialchars($pelicula->getSinopsis()); ?></p>
-                    <p><strong>Año:</strong> <?php echo htmlspecialchars($pelicula->getAnio()); ?></p>
-                    <p><strong>Género:</strong> <?php echo htmlspecialchars($pelicula->getGenero()); ?></p>
-                    <p><strong>Media de Puntuación:</strong> <?php echo htmlspecialchars($peliculaRating); ?></p>
-                    <p><strong>Comentarios:</strong>
-                        <ul>
-                            <?php foreach ($peliculaComments as $comentario): ?>
-                                <li><?php echo htmlspecialchars($comentario->getContenido()); echo htmlspecialchars($comentario->getUsuarioNombre()); ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </p>
-              <?php if ($rolUsuario == 'administrador'): ?>
-                   <button onclick ="window.location.href='edit.php?id=<?php echo $pelicula->getId();?>'">✏️ Editar</button>
-                   <button onclick ="if(confirm('¿Estás seguro de que deseas eliminar esta película?')) { window.location.href='delete.php?id=<?php echo $pelicula->getId();?>'; }">🗑️ Eliminar</button> 
-                <?php endif; ?>
-               
-                </div>
-           
-        </div>
-    <?php endif; ?>
-</div>
+echo "<h1 style = 'text-align: left';>" . $pelicula->getTitulo() . "</h1>";
+echo "<p><strong>Sinopsis:</strong> " . $pelicula->getSinopsis() . "</p>";
+echo "<p><strong>Año:</strong> " . $pelicula->getAnio() . "</p>";
+echo "<p><strong>Género:</strong> " . $pelicula->getGenero() . "</p>";
+echo "<p><strong>Puntuación media:</strong> " . $mediaPuntuacion . "/10</p>";
+
+echo "<h3 style= 'text-align: left';>" . "Comentarios:</h3>";
+foreach ($comentarios as $comentario) {
+    $idUsuario = $comentario->getUsuarioId();
+    $nombreUsuario = $comentario->getUsuarioNombre();
+
+    // No mostrar comentarios de usuarios baneados
+    if (strpos($nombreUsuario, 'usuario_baneado') === 0) {
+        continue;
+    }
+
+    echo "<p><strong>" . $nombreUsuario . ":</strong> " . $comentario->getContenido() . "<a href='userDetail.php?id=$idUsuario&nombre=$nombreUsuario'><button>🔎</button></a>"."</p>";
+}
+
+if ($usuarioRol == "administrador") {
+    echo "<br>";
+    echo "<a href='edit.php?id=$id'><button>✏</button></a>";
+    echo "<a href='delete.php?id=$id' onclick=\"return confirm('Estás seguro de lo que quieres hacer?')\"><button>🗑</button></a>";
+}
+
+echo "<br><br>";
+echo "<a href='list.php'><button>Volver</button></a>";

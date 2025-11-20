@@ -16,19 +16,24 @@ class CommentModel
     {
         if (!$fila) return null;
 
-        $comentario = new Comment(
-            $fila["id"],
-            $fila["contenido"],
-            $fila["usuario_id"],
-            $fila["pelicula_id"]
-        );
+        $id = $fila["id"];
+        $contenido = $fila["contenido"];
+        $usuarioId = $fila["usuario_id"];
+        $peliculaId = $fila["pelicula_id"];
 
-    
+        $comentario = new Comment($id, $contenido, $usuarioId, $peliculaId);
+
+        if (isset($fila["usuario_nombre"])) {
+            $comentario->setUsuarioNombre($fila["usuario_nombre"]);
+        }
+        if (isset($fila["pelicula_titulo"])) {
+            $comentario->setPeliculaTitulo($fila["pelicula_titulo"]);
+        }
 
         return $comentario;
     }
 
-    public function insertarComentario(Comment $comentario)
+    public function insertarComentario($comentario)
     {
         $conexion = $this->miConector->conectar();
 
@@ -36,9 +41,13 @@ class CommentModel
                 VALUES (:contenido, :usuario_id, :pelicula_id)";
         $stmt = $conexion->prepare($sql);
 
-        $stmt->bindParam(':contenido', $comentario->getContenido());
-        $stmt->bindParam(':usuario_id', $comentario->getUsuarioId());
-        $stmt->bindParam(':pelicula_id', $comentario->getPeliculaId());
+        $contenido = $comentario->getContenido();
+        $usuarioId = $comentario->getUsuarioId();
+        $peliculaId = $comentario->getPeliculaId();
+
+        $stmt->bindParam(':contenido', $contenido);
+        $stmt->bindParam(':usuario_id', $usuarioId);
+        $stmt->bindParam(':pelicula_id', $peliculaId);
 
         return $stmt->execute();
     }
@@ -61,7 +70,7 @@ class CommentModel
         return $this->filaComentario($fila);
     }
 
-    public function obtenerComentariosPorPelicula($pelicula_id)
+    public function obtenerComentariosPorPelicula($peliculaId)
     {
         $conexion = $this->miConector->conectar();
 
@@ -73,11 +82,13 @@ class CommentModel
                 ORDER BY c.id DESC";
 
         $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':pelicula_id', $pelicula_id);
+        $stmt->bindParam(':pelicula_id', $peliculaId);
         $stmt->execute();
 
+        $resultadoConsulta = $stmt->fetchAll();
+
         $comentarios = [];
-        foreach($stmt->fetchAll() as $fila){
+        foreach ($resultadoConsulta as $fila) {
             $comentarios[] = $this->filaComentario($fila);
         }
 
@@ -95,7 +106,7 @@ class CommentModel
         return $stmt->execute();
     }
 
-    public function actualizarComentario(Comment $comentario)
+    public function actualizarComentario($comentario)
     {
         $conexion = $this->miConector->conectar();
 
@@ -104,8 +115,12 @@ class CommentModel
                 WHERE id = :id";
 
         $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':contenido', $comentario->getContenido());
-        $stmt->bindParam(':id', $comentario->getId());
+
+        $contenido = $comentario->getContenido();
+        $id = $comentario->getId();
+
+        $stmt->bindParam(':contenido', $contenido);
+        $stmt->bindParam(':id', $id);
 
         return $stmt->execute();
     }

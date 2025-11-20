@@ -1,15 +1,13 @@
 <?php
 
-
 class User
 {
     private $id;
     private $nombre;
     private $contrasenia;
     private $rol;
-   
 
-    public function __construct($id = null, $nombre = "", $contrasenia = null, $rol = null)
+    public function __construct($id, $nombre, $contrasenia, $rol)
     {
         $this->id = $id;
         $this->nombre = $nombre;
@@ -22,9 +20,19 @@ class User
         return $this->id;
     }
 
-    public function getnombre()
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function getNombre()
     {
         return $this->nombre;
+    }
+
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
     }
 
     public function getContrasenia()
@@ -32,21 +40,14 @@ class User
         return $this->contrasenia;
     }
 
-    public function getRol()
-    {
-        return $this->rol;
-    }
-
-  
-
-    public function setnombre($nombre)
-    {
-        $this->nombre = $nombre;
-    }
-
     public function setContrasenia($contrasenia)
     {
         $this->contrasenia = $contrasenia;
+    }
+
+    public function getRol()
+    {
+        return $this->rol;
     }
 
     public function setRol($rol)
@@ -54,10 +55,8 @@ class User
         $this->rol = $rol;
     }
 
-   
-
-    public function __toString()
+    public function __tostring()
     {
-        return "ID: {$this->id}, nombre: {$this->nombre}, Contrasenia: {$this->contrasenia}, Rol: {$this->rol} ";
+        return "Usuario: $this->nombre (Rol: $this->rol)";
     }
 }

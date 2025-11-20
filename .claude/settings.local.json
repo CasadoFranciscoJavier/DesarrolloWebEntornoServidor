@@ -3,7 +3,8 @@
     "allow": [
       "Bash(mkdir:*)",
       "Bash(python:*)",
-      "Bash(php -r:*)"
+      "Bash(php -r:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []

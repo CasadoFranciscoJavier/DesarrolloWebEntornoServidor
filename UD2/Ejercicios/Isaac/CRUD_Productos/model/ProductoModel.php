@@ -67,15 +67,40 @@ class ProductoModel
     public function insertarProducto($producto)
     {
 
+        try {
+            $conexion = $this->miConector->conectar();
+
+            $consulta = $conexion->prepare("INSERT INTO PRODUCTO(NOMBRE, PRECIO) VALUES (:nombre, :precio)");
+
+            $consulta->bindParam(':nombre', $producto->getNombre());
+            $consulta->bindParam(':precio', $producto->getPrecio());
+
+            $consulta->execute();
+            $id = $this->obenerUltimoId();
+
+            $producto->setId($id);
+        } catch (PDOException $excepcion) {
+            $producto = null;
+        }
+
+        return $producto;
+
+    }
+
+    public function obenerUltimoId()
+    {
+
         $conexion = $this->miConector->conectar();
 
-        $consulta = $conexion->prepare("INSERT INTO PRODUCTO(NOMBRE, PRECIO) VALUES (:nombre, :precio)");
+        $consulta = $conexion->prepare("SELECT MAX(ID) FROM PRODUCTO");
 
-        $consulta->bindParam(':nombre', $producto->getNombre());
-        $consulta->bindParam(':precio', $producto->getPrecio());
+        $consulta->execute();
 
-        return $consulta->execute();
-        // TO-DO: que la función devuelva el producto insertado con su nuevo ID
+        $resultadoConsulta = $consulta->fetch();
+
+        $id = $resultadoConsulta[0];
+
+        return $id;
 
     }
 

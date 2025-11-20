@@ -36,6 +36,6 @@ class Producto{
     }
 
     public function __tostring(){
-        return "$this->nombre: $this->precio €";
+        return "<a href='view/detalles.php?id=$this->id'>$this->nombre</a>: $this->precio €";
     }
 }

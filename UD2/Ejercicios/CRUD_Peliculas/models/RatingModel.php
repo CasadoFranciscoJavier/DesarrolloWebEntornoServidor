@@ -16,25 +16,24 @@ class RatingModel
     {
         if (!$fila) return null;
 
-        $puntuacion = new Rating(
-            $fila["id"],
-            $fila["puntuacion"],
-            $fila["usuario_id"],
-            $fila["pelicula_id"]
-        );
+        $id = $fila["id"];
+        $puntuacion = $fila["puntuacion"];
+        $usuarioId = $fila["usuario_id"];
+        $peliculaId = $fila["pelicula_id"];
 
-        // Asignamos nombre de usuario y título de película si vienen en la consulta
-        if(isset($fila["usuario_nombre"])) {
-            $puntuacion->setUsuarioNombre($fila["usuario_nombre"]);
+        $rating = new Rating($id, $puntuacion, $usuarioId, $peliculaId);
+
+        if (isset($fila["usuario_nombre"])) {
+            $rating->setUsuarioNombre($fila["usuario_nombre"]);
         }
-        if(isset($fila["pelicula_titulo"])) {
-            $puntuacion->setPeliculaTitulo($fila["pelicula_titulo"]);
+        if (isset($fila["pelicula_titulo"])) {
+            $rating->setPeliculaTitulo($fila["pelicula_titulo"]);
         }
 
-        return $puntuacion;
+        return $rating;
     }
 
-    public function insertarPuntuacion(Rating $puntuacion)
+    public function insertarPuntuacion($puntuacion)
     {
         $conexion = $this->miConector->conectar();
 
@@ -42,9 +41,13 @@ class RatingModel
                 VALUES (:puntuacion, :usuario_id, :pelicula_id)";
         $stmt = $conexion->prepare($sql);
 
-        $stmt->bindParam(':puntuacion', $puntuacion->getPuntuacion());
-        $stmt->bindParam(':usuario_id', $puntuacion->getUsuarioId());
-        $stmt->bindParam(':pelicula_id', $puntuacion->getPeliculaId());
+        $valorPuntuacion = $puntuacion->getPuntuacion();
+        $usuarioId = $puntuacion->getUsuarioId();
+        $peliculaId = $puntuacion->getPeliculaId();
+
+        $stmt->bindParam(':puntuacion', $valorPuntuacion);
+        $stmt->bindParam(':usuario_id', $usuarioId);
+        $stmt->bindParam(':pelicula_id', $peliculaId);
 
         return $stmt->execute();
     }
@@ -53,62 +56,67 @@ class RatingModel
     {
         $conexion = $this->miConector->conectar();
 
-        $sql = "SELECT c.*, u.nombre as usuario_nombre, p.titulo as pelicula_titulo
-                FROM rating c
-                JOIN usuarios u ON c.usuario_id = u.id
-                JOIN peliculas p ON c.pelicula_id = p.id
-                WHERE c.id = :id";
+        $sql = "SELECT r.*, u.nombre as usuario_nombre, p.titulo as pelicula_titulo
+                FROM rating r
+                JOIN usuarios u ON r.usuario_id = u.id
+                JOIN peliculas p ON r.pelicula_id = p.id
+                WHERE r.id = :id";
 
         $stmt = $conexion->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
 
-        $fila = $stmt->fetch();
-        return $this->filapuntuacion($fila);
+        $resultadoConsulta = $stmt->fetch();
+        $puntuacion = $this->filaPuntuacion($resultadoConsulta);
+
+        return $puntuacion;
     }
 
-    public function obtenerMediaPuntuacionPorPelicula($pelicula_id)
-{
-    $conexion = $this->miConector->conectar();
+    public function obtenerMediaPuntuacionPorPelicula($peliculaId)
+    {
+        $conexion = $this->miConector->conectar();
 
-    $sql = "SELECT AVG(p.puntuacion) AS media
-            FROM rating p
-            WHERE p.pelicula_id = :pelicula_id";
+        $sql = "SELECT AVG(r.puntuacion) AS media
+                FROM rating r
+                WHERE r.pelicula_id = :pelicula_id";
 
-    $stmt = $conexion->prepare($sql);
-    $stmt->bindParam(':pelicula_id', $pelicula_id);
-    $stmt->execute();
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':pelicula_id', $peliculaId);
+        $stmt->execute();
 
-    $resultado = $stmt->fetch();
+        $resultado = $stmt->fetch();
 
-    return $resultado['media'] !== null ? round($resultado['media'], 2) : 0;
-}
+        $media = $resultado['media'] !== null ? round($resultado['media'], 2) : 0;
+
+        return $media;
+    }
 
 
-    public function borrarPuntuacionPorIdPelicula($pelicula_id)
+    public function borrarPuntuacionPorIdPelicula($peliculaId)
     {
         $conexion = $this->miConector->conectar();
 
         $sql = "DELETE FROM rating WHERE pelicula_id = :pelicula_id";
         $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':pelicula_id', $pelicula_id);
+        $stmt->bindParam(':pelicula_id', $peliculaId);
 
         return $stmt->execute();
     }
 
-    public function actualizarPuntuacion (Rating $puntuacion)
+    public function actualizarPuntuacion($puntuacion)
     {
         $conexion = $this->miConector->conectar();
 
         $sql = "UPDATE rating
-                SET puntuacion = :puntuacion,
-                    
+                SET puntuacion = :puntuacion
                 WHERE id = :id";
         $stmt = $conexion->prepare($sql);
 
-        $stmt->bindParam(':puntuacion', $puntuacion->getPuntuacion());
-        
-        $stmt->bindParam(':id', $puntuacion->getId());
+        $valorPuntuacion = $puntuacion->getPuntuacion();
+        $id = $puntuacion->getId();
+
+        $stmt->bindParam(':puntuacion', $valorPuntuacion);
+        $stmt->bindParam(':id', $id);
 
         return $stmt->execute();
     }

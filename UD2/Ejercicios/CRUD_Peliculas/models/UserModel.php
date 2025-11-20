@@ -12,24 +12,19 @@ class UserModel
         $this->miConector = new Conector();
     }
 
-    private function filaUser($fila)
+    private function filaUsuario($fila)
     {
-        if (!$fila)
-            return null;
+        if (!$fila) return null;
 
-        $user = new User(
-            $fila["id"],
-            $fila["nombre"],
-            $fila["contrasenia"],
-            $fila["rol"]
-        );
+        $id = $fila["id"];
+        $nombre = $fila["nombre"];
+        $contrasenia = $fila["contrasenia"];
+        $rol = $fila["rol"];
 
-
-
-        return $user;
+        $usuario = new User($id, $nombre, $contrasenia, $rol);
+        return $usuario;
     }
 
-    // solo para registrar usuarios normales
     public function insertarUsuario($usuario)
     {
         $conexion = $this->miConector->conectar();
@@ -38,29 +33,36 @@ class UserModel
                 VALUES (:nombre, :contrasenia, :rol)";
         $stmt = $conexion->prepare($sql);
 
-        $stmt->bindParam(':nombre', $usuario->getNombre());
-        $stmt->bindParam(':contrasenia', $usuario->getContrasenia());
-        $stmt->bindParam(':rol', "usuario");
+        $nombre = $usuario->getNombre();
+        $contrasenia = $usuario->getContrasenia();
+        $rol = "usuario";
+
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':contrasenia', $contrasenia);
+        $stmt->bindParam(':rol', $rol);
 
         return $stmt->execute();
     }
 
 
-   public function obtenerUsuarioPorNombre($nombre)
-{
-    try {
-        $conexion = $this->miConector->conectar();
-        $consulta = $conexion->prepare("SELECT * FROM usuarios WHERE nombre = :nombre");
-        $consulta->bindParam(':nombre', $nombre);
-        $consulta->execute();
+    public function obtenerUsuarioPorNombre($nombre)
+    {
+        try {
+            $conexion = $this->miConector->conectar();
 
-        $fila = $consulta->fetch();
+            $consulta = $conexion->prepare("SELECT * FROM usuarios WHERE nombre = :nombre");
+            $consulta->bindParam(':nombre', $nombre);
+            $consulta->execute();
 
-        return $this->filaUser($fila);
-    } catch (PDOException $ex) {
-        return null;
+            $resultadoConsulta = $consulta->fetch();
+
+            $usuario = $this->filaUsuario($resultadoConsulta);
+        } catch (PDOException $excepcion) {
+            $usuario = null;
+        }
+
+        return $usuario;
     }
-}
 
 
     public function obtenerTodosUsuarios()
@@ -75,7 +77,7 @@ class UserModel
         $usuarios = [];
 
         foreach ($resultadoConsulta as $fila) {
-            $usuarios[] = $this->filaUser($fila);
+            $usuarios[] = $this->filaUsuario($fila);
         }
 
         return $usuarios;
@@ -87,19 +89,21 @@ class UserModel
 
         $sql = "UPDATE usuarios
                 SET nombre = :nombre,
-                    contrasenia = :contrasenia,
+                    contrasenia = :contrasenia
                 WHERE id = :id";
         $stmt = $conexion->prepare($sql);
 
-        $stmt->bindParam(':nombre', "usuario_baneado");
-        $stmt->bindParam(':contrasenia', 0000);
+        $nombreBaneado = "usuario_baneado_" . $id;
+        $contraseniaBaneada = "0000";
+
+        $stmt->bindParam(':nombre', $nombreBaneado);
+        $stmt->bindParam(':contrasenia', $contraseniaBaneada);
         $stmt->bindParam(':id', $id);
 
         return $stmt->execute();
     }
 
-
-    public function actualizarUsuario(User $usuario)
+    public function actualizarUsuario($usuario)
     {
         $conexion = $this->miConector->conectar();
 
@@ -109,13 +113,17 @@ class UserModel
                     rol = :rol
                 WHERE id = :id";
 
-
         $stmt = $conexion->prepare($sql);
 
-        $stmt->bindParam(':nombre', $usuario->getNombre());
-        $stmt->bindParam(':contrasenia', $usuario->getContrasenia());
-        $stmt->bindParam(':rol', $usuario->getRol());
-        $stmt->bindParam(':id', $usuario->getId());
+        $nombre = $usuario->getNombre();
+        $contrasenia = $usuario->getContrasenia();
+        $rol = $usuario->getRol();
+        $id = $usuario->getId();
+
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':contrasenia', $contrasenia);
+        $stmt->bindParam(':rol', $rol);
+        $stmt->bindParam(':id', $id);
 
         return $stmt->execute();
     }

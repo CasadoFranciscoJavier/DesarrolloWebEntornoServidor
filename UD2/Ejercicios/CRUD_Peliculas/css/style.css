@@ -35,11 +35,13 @@ h1, h2, h3 {
 
 p {
     margin-bottom: 16px;
+     text-align: left;
 }
 
 a {
     color: #4a6fa5;
     text-decoration: none;
+     text-align: left;
 }
 a:hover {
     color: #7ea1c4;
