@@ -7,7 +7,7 @@ class User
     private $contrasenia;
     private $rol;
 
-    public function __construct($id, $nombre, $contrasenia, $rol)
+    public function __construct($id, $nombre, $contrasenia, $rol="usuario")
     {
         $this->id = $id;
         $this->nombre = $nombre;

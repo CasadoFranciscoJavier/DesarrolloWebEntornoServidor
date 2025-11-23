@@ -1,7 +1,10 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/../movies/navbar.php';
 require_once __DIR__ . '/../../models/UserModel.php';
+require_once __DIR__ . '/../../alert.php';
+
 
 $DURACION_COOKIE = 10 * 60; // 10 MINUTOS
 
@@ -20,8 +23,13 @@ function hacerLogin($nombre, $contrasenia)
 
         setcookie("usuario", $nombre, time() + $DURACION_COOKIE, "/");
         setcookie("contrasenia", $contrasenia, time() + $DURACION_COOKIE, "/");
+        alert("Inicio de sesión correcto", "../movies/list.php", "success");
+        // header("Location: ../movies/list.php");
+    } else {
 
-        header("Location: ../movies/list.php");
+        alert("No se ha podido iniciar sesión, prueba a registrarte", "register.php", "error");
+        // esto es lo que debería ponerse si no tuvieramos el alert:
+        //header("Location: ../movies/register.php");
     }
 }
 

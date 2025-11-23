@@ -64,6 +64,25 @@ class UserModel
         return $usuario;
     }
 
+    public function obtenerUsuarioPorId($id)
+    {
+        try {
+            $conexion = $this->miConector->conectar();
+
+            $consulta = $conexion->prepare("SELECT * FROM usuarios WHERE id = :id");
+            $consulta->bindParam(':id', $id);
+            $consulta->execute();
+
+            $resultadoConsulta = $consulta->fetch();
+
+            $usuario = $this->filaUsuario($resultadoConsulta);
+        } catch (PDOException $excepcion) {
+            $usuario = null;
+        }
+
+        return $usuario;
+    }
+
 
     public function obtenerTodosUsuarios()
     {
@@ -127,4 +146,19 @@ class UserModel
 
         return $stmt->execute();
     }
+
+    public function obtenerUltimoId()
+    {
+       $conexion = $this->miConector->conectar();
+
+        $consulta = $conexion->prepare("SELECT MAX(id) FROM usuarios");
+
+        $consulta->execute();
+
+        $resultadoConsulta = $consulta->fetch();
+
+        $id = $resultadoConsulta[0];
+
+        return $id;
+    }   
 }

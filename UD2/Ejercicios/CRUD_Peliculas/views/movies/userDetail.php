@@ -16,14 +16,18 @@ if (isset($_GET["id"])) {
     $userModel = new UserModel();
 
     $idUsuario = $_GET["id"];
-    $nombreUsuario = $_GET["nombre"];
-    $usuario = $userModel->obtenerUsuarioPorNombre($nombreUsuario);
 
+    // Si se proporciona el nombre en la URL, usarlo; si no, obtenerlo de la BD
+    if (isset($_GET["nombre"])) {
+        $nombreUsuario = $_GET["nombre"];
+        $usuario = $userModel->obtenerUsuarioPorNombre($nombreUsuario);
+    } else {
+        $usuario = $userModel->obtenerUsuarioPorId($idUsuario);
+        $nombreUsuario = $usuario->getNombre();
+    }
 
     $usuarioRol = $_SESSION["rol"];
-  
 
-    
 }
 ?>
 

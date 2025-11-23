@@ -38,6 +38,12 @@ echo "<p><strong>Año:</strong> " . $pelicula->getAnio() . "</p>";
 echo "<p><strong>Género:</strong> " . $pelicula->getGenero() . "</p>";
 echo "<p><strong>Puntuación media:</strong> " . $mediaPuntuacion . "/10</p>";
 
+// Botones para usuarios
+echo "<div style='margin: 20px 0;'>";
+echo "<a href='addRating.php?id=$id'><button>⭐ Añadir Puntuación</button></a> ";
+echo "<a href='addComment.php?id=$id'><button>💬 Añadir Comentario</button></a>";
+echo "</div>";
+
 echo "<h3 style= 'text-align: left';>" . "Comentarios:</h3>";
 foreach ($comentarios as $comentario) {
     $idUsuario = $comentario->getUsuarioId();
