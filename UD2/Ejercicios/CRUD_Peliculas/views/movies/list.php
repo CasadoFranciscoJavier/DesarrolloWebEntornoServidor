@@ -50,5 +50,8 @@ if ($usuarioRol == "administrador") {
             max-width: 600px;
             margin: 0 auto 10px auto;'>
 
-            <a href='add.php'><button>➕</button></a>";
+             <a href='add.php'>
+                <button>➕</button>
+            </a>
+            </div>";
 }

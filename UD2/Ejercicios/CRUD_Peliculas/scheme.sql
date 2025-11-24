@@ -10,7 +10,7 @@ CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL UNIQUE,
     contrasenia VARCHAR(255) NOT NULL,
-    rol ENUM('administrador', 'usuario') NOT NULL
+    rol ENUM('administrador', 'usuario') NOT NULL DEFAULT 'usuario'
 );
 
 CREATE TABLE peliculas (
@@ -36,7 +36,8 @@ CREATE TABLE rating (
     usuario_id INT,
     pelicula_id INT,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (pelicula_id) REFERENCES peliculas(id) ON DELETE CASCADE
+    FOREIGN KEY (pelicula_id) REFERENCES peliculas(id) ON DELETE CASCADE,
+    CONSTRAINT UNIQUE (pelicula_id, usuario_id)
 );
 
 -- ================================

@@ -38,7 +38,6 @@
 
 
 <style>
-/* Navbar simple, adaptable a tu style.css */
 .navbar {
     display: flex;
     justify-content: space-between;

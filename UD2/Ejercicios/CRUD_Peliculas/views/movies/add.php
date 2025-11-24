@@ -1,10 +1,11 @@
 <?php
-
-require_once "./navbar.php";
+session_start();
 
 if (!isset($_SESSION["usuario"])) {
     header("Location: ../auth/login.php");
 }
+
+require_once "./navbar.php";
 
 
 if (isset($_POST["titulo"])) {

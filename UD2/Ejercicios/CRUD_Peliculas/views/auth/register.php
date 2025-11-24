@@ -18,9 +18,10 @@ if (isset($_POST["nombre"])) {
 
     $nuevoUsuarioId = $UserModel->obtenerUltimoId();
 
-    // Iniciar sesión automáticamente después del registro
+    // tENGO QUE REINICI SESION PARA REGISTRARME AUTOMATICAMENTE Y ME LLEVE BIEN AL DEATILS DE PELICULAS, YA QUE ESTA PAGINA REQUIERE LOGIN.
+    //si no lo pusiera aquí, me llevaría directamente a login.php y tendría que iniciar sesión manualmente.
     $_SESSION["usuario"] = $nombre;
-    $_SESSION["rol"] = "usuario"; // Asumiendo que los nuevos usuarios tienen rol "usuario"
+    $_SESSION["rol"] = "usuario"; 
 
     header("Location: ../movies/userDetail.php?id=$nuevoUsuarioId");
     exit;

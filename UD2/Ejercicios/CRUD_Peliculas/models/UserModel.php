@@ -12,9 +12,9 @@ class UserModel
         $this->miConector = new Conector();
     }
 
-    private function filaUsuario($fila)
-    {
-        if (!$fila) return null;
+    private function filaUsuario($fila) {
+        $usuario = null;
+        if ($fila) {
 
         $id = $fila["id"];
         $nombre = $fila["nombre"];
@@ -22,6 +22,7 @@ class UserModel
         $rol = $fila["rol"];
 
         $usuario = new User($id, $nombre, $contrasenia, $rol);
+        }
         return $usuario;
     }
 
