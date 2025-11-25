@@ -1,26 +1,26 @@
 <?php
 
-require_once "../../models/User.php";
+require_once "../../models/Usuario.php";
 
 session_start();
 
-require_once "../../models/UserModel.php";
+require_once "../../models/UsuarioModel.php";
 
-$usuarioModel = new UserModel();
+$usuarioModel = new UsuarioModel();
 
 if (isset($_SESSION["usuario"])) {
-    header("Location: ../movies/list.php");
+    header("Location: ../repuestos/list.php");
 } else if (isset($_POST["nombre"]) && isset($_POST["contrasenia"])) {
     $nombre = $_POST["nombre"];
     $contrasenia = $_POST["contrasenia"];
 
-    $nuevoUsuario = new User(null, $nombre, $contrasenia, "usuario");
+    $nuevoUsuario = new Usuario(null, $nombre, $contrasenia, "usuario");
     $usuarioModel->insertarUsuario($nuevoUsuario);
 
     $usuarioRegistrado = $usuarioModel->obtenerUsuarioPorNombre($nombre);
     $_SESSION["usuario"] = $usuarioRegistrado;
 
-    header("Location: ../movies/list.php");
+    header("Location: ../repuestos/list.php");
 }
 
 ?>

@@ -1,67 +1,76 @@
 <?php
-session_start();
 
-if (!isset($_SESSION["usuario"])) {
-    header("Location: ../auth/login.php");
-}
-
-require_once __DIR__ . '/../../models/MovieModel.php';
-require_once __DIR__ . '/../../models/Movie.php';
-require_once __DIR__ . '/../../models/RatingModel.php';
-require_once __DIR__ . '/../../models/CommentModel.php';
-require_once __DIR__ . '/../../models/User.php';
-require_once __DIR__ . '/../../models/Comment.php';
-
-$usuarioRol = $_SESSION["rol"];
-
-
+require_once "../../models/MovieModel.php";
+require_once "../../models/Movie.php";
+require_once "../../models/RatingModel.php";
+require_once "../../models/CommentModel.php";
+require_once "./navbar.php";
 
 $peliculaModel = new MovieModel();
 $ratingModel = new RatingModel();
 $comentarioModel = new CommentModel();
 
-if (isset($_GET["id"])) {
-    $id = $_GET["id"];
-    $pelicula = $peliculaModel->obtenerPeliculaPorId($id);
-    $mediaPuntuacion = $ratingModel->obtenerMediaPuntuacionPorPelicula($id);
-    $comentarios = $comentarioModel->obtenerComentariosPorPelicula($id);
-}
+$idPelicula = $_GET["id"];
+
+$pelicula = $peliculaModel->obtenerPeliculaPorId($idPelicula);
+$mediaPuntuacion = $ratingModel->obtenerMediaPuntuacionPorPelicula($idPelicula);
+$comentarios = $comentarioModel->obtenerComentariosPorPelicula($idPelicula);
+
+$titulo = $pelicula->getTitulo();
+$sinopsis = $pelicula->getSinopsis();
+$anio = $pelicula->getAnio();
+$genero = $pelicula->getGenero();
+
 ?>
 <link rel="stylesheet" href="../../css/style.css">
+
 <?php
-require_once __DIR__ . '/navbar.php';
 
+echo "<h1>$titulo</h1>";
+echo "<p><strong>Sinopsis:</strong> $sinopsis</p>";
+echo "<p><strong>Año:</strong> $anio</p>";
+echo "<p><strong>Género:</strong> $genero</p>";
+echo "<p><strong>Puntuación media:</strong> $mediaPuntuacion/10</p>";
 
-echo "<h1 style = 'text-align: left';>" . $pelicula->getTitulo() . "</h1>";
-echo "<p><strong>Sinopsis:</strong> " . $pelicula->getSinopsis() . "</p>";
-echo "<p><strong>Año:</strong> " . $pelicula->getAnio() . "</p>";
-echo "<p><strong>Género:</strong> " . $pelicula->getGenero() . "</p>";
-echo "<p><strong>Puntuación media:</strong> " . $mediaPuntuacion . "/10</p>";
+echo "<br>";
+echo "<a href='addRating.php?id=$idPelicula'><button>⭐ Añadir Puntuación</button></a>";
 
-// Botones para usuarios
-echo "<div style='margin: 20px 0;'>";
-echo "<a href='addRating.php?id=$id'><button>⭐ Añadir Puntuación</button></a> ";
-echo "<a href='addComment.php?id=$id'><button>💬 Añadir Comentario</button></a>";
-echo "</div>";
+echo "<h3>Comentarios</h3>";
 
-echo "<h3 style= 'text-align: left';>" . "Comentarios:</h3>";
 foreach ($comentarios as $comentario) {
-    $idUsuario = $comentario->getUsuarioId();
     $nombreUsuario = $comentario->getUsuarioNombre();
+    $contenidoComentario = $comentario->getContenido();
+    $idComentario = $comentario->getId();
+    $idUsuario = $comentario->getUsuarioId();
 
-    // No mostrar comentarios de usuarios baneados
-    if (strpos($nombreUsuario, 'usuario_baneado') == 0) {
+    if (strpos($nombreUsuario, 'usuario_baneado') === 0) {
         continue;
     }
 
-    echo "<p><strong>" . $nombreUsuario . ":</strong> " . $comentario->getContenido() . "<a href='userDetail.php?id=$idUsuario&nombre=$nombreUsuario'><button>🔎</button></a>"."</p>";
+    echo "<li>";
+    echo "<a href='userDetail.php?id=$idUsuario&nombre=$nombreUsuario'>$nombreUsuario</a> ha comentado: $contenidoComentario";
+
+    if ($usuario->getRol() == "administrador") {
+        echo " <a href='deleteComment.php?id=$idComentario&idPelicula=$idPelicula' onclick=\"return confirm('¿Eliminar este comentario?')\"><button>🗑</button></a>";
+    }
+
+    echo "</li>";
 }
 
-if ($usuarioRol == "administrador") {
+if ($usuario->getRol() == "administrador") {
     echo "<br>";
-    echo "<a href='edit.php?id=$id'><button>✏</button></a>";
-    echo "<a href='delete.php?id=$id' onclick=\"return confirm('Estás seguro de lo que quieres hacer?')\"><button>🗑</button></a>";
+    echo "<a href='edit.php?id=$idPelicula'><button>✏ Editar</button></a> ";
+    echo "<a href='delete.php?id=$idPelicula' onclick=\"return confirm('Estás seguro de lo que quieres hacer?')\"><button>🗑 Eliminar</button></a> ";
+    echo "<a href='resetRatings.php?id=$idPelicula' onclick=\"return confirm('¿Resetear todas las valoraciones?')\"><button>🔄 Resetear Valoraciones</button></a>";
 }
 
-echo "<br><br>";
-echo "<a href='list.php'><button>Volver</button></a>";
+?>
+
+<form action="addComment.php" method="POST">
+    <input type="hidden" name="id-pelicula" value="<?php echo $idPelicula ?>">
+    <textarea name="contenido-comentario" rows="4" cols="50"></textarea><br>
+    <input type="submit" value="Enviar comentario">
+</form>
+
+<br>
+<a href="list.php"><button>Volver</button></a>

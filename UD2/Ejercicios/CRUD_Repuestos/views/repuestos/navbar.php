@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../models/User.php';
+require_once __DIR__ . '/../../models/Usuario.php';
 
 session_start();
 
@@ -13,15 +13,21 @@ if (isset($_SESSION['usuario'])) {
         header("Location: ../../views/auth/login.php");
         exit();
     }
-    $usuario = $_SESSION['usuario'];
-    $nombreUsuario = $usuario->getNombre();
+    if (is_object($_SESSION['usuario']) && get_class($_SESSION['usuario']) == 'Usuario') {
+        $usuario = $_SESSION['usuario'];
+        $nombreUsuario = $usuario->getNombre();
+    } else {
+        session_destroy();
+        header("Location: ../../views/auth/login.php");
+        exit();
+    }
 }
 
 ?>
 
 <nav class="navbar">
     <div class="navbar-left">
-        <a href="../../views/movies/list.php" class="nav-button">Inicio</a>
+        <a href="../../views/repuestos/list.php" class="nav-button">Inicio</a>
     </div>
 
     <div class="navbar-right">
@@ -34,21 +40,6 @@ if (isset($_SESSION['usuario'])) {
         <?php endif; ?>
     </div>
 </nav>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <style>
 .navbar {

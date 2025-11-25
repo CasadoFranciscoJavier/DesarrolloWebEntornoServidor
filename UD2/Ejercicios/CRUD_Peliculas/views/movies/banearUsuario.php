@@ -1,19 +1,27 @@
 <?php
+
+require_once "../../models/User.php";
+
 session_start();
 
-if (!isset($_SESSION["rol"]) || $_SESSION["rol"] !== "administrador") {
+if (!isset($_SESSION["usuario"])) {
     header("Location: ../auth/login.php");
-    exit;
 }
 
-require_once __DIR__ . '/../../models/UserModel.php';
-require_once __DIR__ . '/../../alert.php';
+$usuario = $_SESSION["usuario"];
+$rol = $usuario->getRol();
+
+if ($rol != "administrador") {
+    header("Location: list.php");
+}
 
 if (isset($_POST["id"])) {
+    require_once "../../models/UserModel.php";
+
     $userModel = new UserModel();
-    $userModel->banearUsuarioPorId($_POST["id"]);
-    alert ("Usuario baneado correctamente de la base de datos","list.php","success");
-} else {
+    $idUsuario = $_POST["id"];
+
+    $userModel->banearUsuarioPorId($idUsuario);
+
     header("Location: list.php");
-    exit;
 }

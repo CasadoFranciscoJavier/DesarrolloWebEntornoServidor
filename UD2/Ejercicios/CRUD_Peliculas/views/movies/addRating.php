@@ -1,50 +1,39 @@
 <?php
-session_start();
-
-if (!isset($_SESSION["usuario"])) {
-    header("Location: ../auth/login.php");
-    exit();
-}
 
 require_once "../../models/RatingModel.php";
 require_once "../../models/Rating.php";
+require_once "./navbar.php";
+
+$ratingModel = new RatingModel();
 
 if (isset($_GET["id"])) {
     $idPelicula = $_GET["id"];
 }
 
 if (isset($_POST["puntuacion"])) {
-    $ratingModel = new RatingModel();
-
     $puntuacion = $_POST["puntuacion"];
-    $idUsuario = $_SESSION["id"];
+    $idUsuario = $usuario->getId();
 
-    $nuevaPuntuacion = new Rating(null, $puntuacion, $idUsuario, $idPelicula);
-    $ratingModel->insertarPuntuacion($nuevaPuntuacion);
+    $nuevaValoracion = new Rating(null, $puntuacion, $idUsuario, $idPelicula);
+    $ratingModel->insertarPuntuacion($nuevaValoracion);
 
     header("Location: detail.php?id=$idPelicula");
-    exit();
 }
 
 ?>
+<link rel="stylesheet" href="../../css/style.css">
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../../css/style.css">
     <title>Añadir Puntuación</title>
 </head>
-
 <body>
-    <?php require_once "./navbar.php"; ?>
-
     <h1>Añadir Puntuación</h1>
     <form method="POST">
         <label>Puntuación (1-10):
-            <select name="puntuacion" required>
-                <option value="">Selecciona...</option>
+            <select name="puntuacion">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -56,11 +45,10 @@ if (isset($_POST["puntuacion"])) {
                 <option value="9">9</option>
                 <option value="10">10</option>
             </select>
-        </label><br><br>
-
+        </label><br>
         <input type="submit" value="Añadir puntuación">
-        <a href="detail.php?id=<?php echo $idPelicula; ?>"><button type="button">Cancelar</button></a>
     </form>
+    <br>
+    <a href="detail.php?id=<?php echo $idPelicula; ?>"><button>Volver</button></a>
 </body>
-
 </html>

@@ -1,46 +1,35 @@
 <?php
 
-require_once __DIR__ . '/../movies/navbar.php';
-require_once __DIR__ . '/../../models/UserModel.php';
-require_once __DIR__ . '/../../alert.php';
+require_once __DIR__ . '/../repuestos/navbar.php';
+require_once __DIR__ . '/../../models/UsuarioModel.php';
 
-
-$DURACION_COOKIE = 10 * 60; // 10 MINUTOS
+$DURACION_COOKIE = 10 * 60;
 
 function hacerLogin($nombre, $contrasenia)
 {
     global $DURACION_COOKIE;
-    $usuarioModel = new UserModel();
+    $usuarioModel = new UsuarioModel();
 
     $usuarioObjeto = $usuarioModel->obtenerUsuarioPorNombre($nombre);
 
     if ($usuarioObjeto && $usuarioObjeto->getContrasenia() == $contrasenia) {
         $_SESSION["usuario"] = $usuarioObjeto;
 
-        //  $_SESSION["rol"] = $usuarioObjeto->getRol();
-        // $_SESSION["contrasenia"] = $usuarioObjeto->getContrasenia();
-        // $_SESSION["id"] = $usuarioObjeto->getId();
-
         setcookie("usuario", $nombre, time() + $DURACION_COOKIE, "/");
         setcookie("contrasenia", $contrasenia, time() + $DURACION_COOKIE, "/");
-        alert("Inicio de sesión correcto", "../movies/list.php", "success");
-        // header("Location: ../movies/list.php");
-    } else {
 
-        alert("No se ha podido iniciar sesión, prueba a registrarte", "register.php", "error");
-        // esto es lo que debería ponerse si no tuvieramos el alert:
-        //header("Location: ../movies/register.php");
+        header("Location: ../repuestos/list.php");
+    } else {
+        echo "<p style='color: red;'>Usuario o contraseña incorrectos</p>";
     }
 }
 
 if (isset($_SESSION["usuario"])) {
-    header("Location: ../movies/list.php");
-
+    header("Location: ../repuestos/list.php");
 } else if (isset($_COOKIE["usuario"]) && isset($_COOKIE["contrasenia"])) {
     $nombre = $_COOKIE["usuario"];
     $contrasenia = $_COOKIE["contrasenia"];
     hacerLogin($nombre, $contrasenia);
-
 } else if (isset($_POST["nombre"]) && isset($_POST["contrasenia"])) {
     $nombre = $_POST["nombre"];
     $contrasenia = $_POST["contrasenia"];
@@ -52,11 +41,9 @@ if (isset($_SESSION["usuario"])) {
 
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Login</title>
 </head>
-
 <body>
     <div class="container">
         <h1>Login</h1>
@@ -65,7 +52,8 @@ if (isset($_SESSION["usuario"])) {
             <label>Contraseña: <input type="password" name="contrasenia"></label><br>
             <input type="submit" value="Entrar">
         </form>
+        <br>
+        <a href="register.php">¿No tienes cuenta? Regístrate</a>
     </div>
 </body>
-
 </html>

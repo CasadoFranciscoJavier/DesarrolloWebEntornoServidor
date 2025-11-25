@@ -1,63 +1,43 @@
 <?php
+
+require_once "../../models/User.php";
+
 session_start();
 
 if (!isset($_SESSION["usuario"])) {
     header("Location: ../auth/login.php");
 }
 
-require_once __DIR__ . '/../../models/UserModel.php';
-require_once __DIR__ . '/../../models/User.php';
-require_once __DIR__ . '/navbar.php';
+require_once "../../models/UserModel.php";
+require_once "./navbar.php";
 
-
+$userModel = new UserModel();
 
 if (isset($_GET["id"])) {
-
-    $userModel = new UserModel();
-
     $idUsuario = $_GET["id"];
-
-    // Si se proporciona el nombre en la URL, usarlo; si no, obtenerlo de la BD
-    if (isset($_GET["nombre"])) {
-        $nombreUsuario = $_GET["nombre"];
-        $usuario = $userModel->obtenerUsuarioPorNombre($nombreUsuario);
-    } else {
-        $usuario = $userModel->obtenerUsuarioPorId($idUsuario);
-        $nombreUsuario = $usuario->getNombre();
-    }
-
-    $usuarioRol = $_SESSION["rol"];
-
+    $usuarioBuscado = $userModel->obtenerUsuarioPorId($idUsuario);
 }
+
+$nombreUsuario = $usuarioBuscado->getNombre();
+$rolUsuario = $usuarioBuscado->getRol();
+
 ?>
+<link rel="stylesheet" href="../../css/style.css">
 
-<!DOCTYPE html>
-<html lang=" es">
+<?php
 
-<head>
-     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../../css/style.css">
-    <title>Banear Usuario</title>
-</head>
+echo "<h1>Detalles del Usuario</h1>";
+echo "<p><strong>ID:</strong> $idUsuario</p>";
+echo "<p><strong>Nombre:</strong> $nombreUsuario</p>";
+echo "<p><strong>Rol:</strong> $rolUsuario</p>";
 
-<body>
-    <div class="container">
-        <h1>Datos del usuario: <?php echo $nombreUsuario; ?></h1>
-        <P>ID: <?php echo $idUsuario; ?></P>
-        <P>Nombre: <?php echo $nombreUsuario; ?></P>
-        <P>Rol: <?php echo $usuarioRol; ?></P>
-   
-    <?php
-    if ($usuarioRol == "administrador") {
-        echo "
-            <form method='POST' action='banearUsuario.php'>
-                <input type='hidden' name='id' value='$idUsuario'>
-                <button style='background-color: red;' type='submit'>Banear Usuario</button>
-            </form>
-        ";
-    }
-    ?>
-    <a href="list.php"><button>Volver</button></a>
-     </div>
-</body>
-</html>
+if ($usuario->getRol() == "administrador") {
+    echo "<br>";
+    echo "<form action='banearUsuario.php' method='POST'>";
+    echo "<input type='hidden' name='id' value='$idUsuario'>";
+    echo "<button type='submit' onclick=\"return confirm('¿Banear a este usuario?')\" style='background-color: red; color: white;'>Banear Usuario</button>";
+    echo "</form>";
+}
+
+echo "<br>";
+echo "<a href='list.php'><button>Volver</button></a>";

@@ -16,12 +16,12 @@ if ($rol != "administrador") {
 }
 
 if (isset($_GET["id"])) {
-    require_once "../../models/MovieModel.php";
-    require_once "../../models/Movie.php";
+    require_once "../../models/RatingModel.php";
 
-    $movieModel = new MovieModel();
-    $id = $_GET["id"];
-    $movieModel->borrarPeliculaPorId($id);
+    $ratingModel = new RatingModel();
+    $idPelicula = $_GET["id"];
+
+    $ratingModel->borrarPuntuacionPorIdPelicula($idPelicula);
+
+    header("Location: detail.php?id=$idPelicula");
 }
-
-header("Location: list.php");

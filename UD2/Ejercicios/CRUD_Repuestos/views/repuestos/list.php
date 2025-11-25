@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../../models/MovieModel.php';
-require_once __DIR__ . '/../../models/Movie.php';
+require_once __DIR__ . '/../../models/RepuestoModel.php';
+require_once __DIR__ . '/../../models/Repuesto.php';
 require_once __DIR__ . '/navbar.php';
 
 if (!isset($_SESSION["usuario"])) {
@@ -9,15 +9,15 @@ if (!isset($_SESSION["usuario"])) {
 
 $usuarioRol = $usuario->getRol();
 
-$peliculaModel = new MovieModel();
-$peliculas = $peliculaModel->obtenerTodosPeliculas();
+$repuestoModel = new RepuestoModel();
+$repuestos = $repuestoModel->obtenerTodosRepuestos();
 ?>
 <link rel="stylesheet" href="../../css/style.css">
 <?php
 
-echo "<h1>Listado de Películas</h1>";
-foreach ($peliculas as $pelicula) {
-    $id = $pelicula->getId();
+echo "<h1>Catálogo de Repuestos</h1>";
+foreach ($repuestos as $repuesto) {
+    $id = $repuesto->getId();
 
     echo "
         <div class='container'
@@ -29,16 +29,14 @@ foreach ($peliculas as $pelicula) {
             max-width: 600px;
             margin: 0 auto 10px auto;'>
 
-            <span>$pelicula</span>
+            <span>$repuesto</span>
             <a href='detail.php?id=$id'>
                 <button>👁</button>
             </a>
         </div>";
 }
 
-
 if ($usuarioRol == "administrador") {
-
     echo "<div class='container'
          style='
             display: flex;
@@ -49,7 +47,7 @@ if ($usuarioRol == "administrador") {
             margin: 0 auto 10px auto;'>
 
              <a href='add.php'>
-                <button>➕</button>
+                <button>➕ Añadir Repuesto</button>
             </a>
             </div>";
 }

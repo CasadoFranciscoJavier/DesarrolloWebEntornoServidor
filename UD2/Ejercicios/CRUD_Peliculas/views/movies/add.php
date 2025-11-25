@@ -1,18 +1,16 @@
 <?php
-session_start();
-
-if (!isset($_SESSION["usuario"])) {
-    header("Location: ../auth/login.php");
-}
 
 require_once "./navbar.php";
 
+$rol = $usuario->getRol();
+
+if ($rol != "administrador") {
+    header("Location: list.php");
+}
 
 if (isset($_POST["titulo"])) {
-
     require_once "../../models/MovieModel.php";
     require_once "../../models/Movie.php";
-   
 
     $movieModel = new MovieModel();
 
@@ -22,38 +20,29 @@ if (isset($_POST["titulo"])) {
     $genero = $_POST["genero"];
 
     $nuevaPelicula = new Movie(null, $titulo, $sinopsis, $anio, $genero);
-    $nuevaPelicula = $movieModel->insertarPelicula($nuevaPelicula);
+    $movieModel->insertarPelicula($nuevaPelicula);
+    $id = $movieModel->obtenerUltimoId();
 
-
-    $nuevaMovieId = $movieModel->obtenerUltimoId();
-    
-
-    header("Location: detail.php?id=$nuevaMovieId");
+    header("Location: detail.php?id=$id");
 }
 
 ?>
-
+<link rel="stylesheet" href="../../css/style.css">
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../../css/style.css">
-
-    <title>Agregar producto</title>
+    <title>Añadir Película</title>
 </head>
-
 <body>
     <h1>Añadir Película</h1>
     <form method="POST">
-        <label>Título: <input name="titulo" type="text" value=""></label><br>
+        <label>Título: <input name="titulo" type="text"></label><br>
         <label>Sinopsis: <textarea name="sinopsis"></textarea></label><br>
-        <label>Año: <input name="anio" type="number" value=""></label><br>
-        <label>Género: <input name="genero" type="text" value=""></label><br>
-
-        <input type="submit">
+        <label>Año: <input name="anio" type="number"></label><br>
+        <label>Género: <input name="genero" type="text"></label><br>
+        <input type="submit" value="Añadir Película">
     </form>
 </body>
-
 </html>

@@ -1,6 +1,6 @@
 <?php
 
-require_once "../../models/User.php";
+require_once "../../models/Usuario.php";
 
 session_start();
 
@@ -16,12 +16,12 @@ if ($rol != "administrador") {
 }
 
 if (isset($_GET["id"])) {
-    require_once "../../models/MovieModel.php";
-    require_once "../../models/Movie.php";
+    require_once "../../models/RepuestoModel.php";
+    require_once "../../models/Repuesto.php";
 
-    $movieModel = new MovieModel();
+    $repuestoModel = new RepuestoModel();
     $id = $_GET["id"];
-    $movieModel->borrarPeliculaPorId($id);
+    $repuestoModel->borrarRepuestoPorId($id);
 }
 
 header("Location: list.php");
