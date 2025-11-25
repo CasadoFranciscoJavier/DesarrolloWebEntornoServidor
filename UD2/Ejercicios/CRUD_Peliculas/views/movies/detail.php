@@ -50,7 +50,7 @@ foreach ($comentarios as $comentario) {
     $nombreUsuario = $comentario->getUsuarioNombre();
 
     // No mostrar comentarios de usuarios baneados
-    if (strpos($nombreUsuario, 'usuario_baneado') === 0) {
+    if (strpos($nombreUsuario, 'usuario_baneado') == 0) {
         continue;
     }
 
