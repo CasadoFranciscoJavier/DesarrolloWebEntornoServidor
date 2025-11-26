@@ -33,7 +33,8 @@ if (isset($_POST["puntuacion"])) {
     <h1>Añadir Puntuación</h1>
     <form method="POST">
         <label>Puntuación (1-10):
-            <select name="puntuacion">
+            <select name="puntuacion" required>
+                <option value="">Selecciona...</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>

@@ -1,37 +1,30 @@
 <?php
 
-require_once __DIR__ . '/../../models/User.php';
-
 session_start();
 
-$usuario = null;
-$nombreUsuario = "";
-
-if (isset($_SESSION['usuario'])) {
-    if (is_string($_SESSION['usuario'])) {
-        session_destroy();
-        header("Location: ../../views/auth/login.php");
-        exit();
-    }
-    $usuario = $_SESSION['usuario'];
-    $nombreUsuario = $usuario->getNombre();
+if (!isset($_SESSION["usuario"])) {
+    header("Location: ../auth/login.php");
+    exit();
+} else {
+    $usuario = $_SESSION["usuario"];
 }
 
 ?>
 
 <nav class="navbar">
     <div class="navbar-left">
-        <a href="../../views/movies/list.php" class="nav-button">Inicio</a>
+        <a href="list.php" class="nav-button">Películas</a>
+        <?php
+        $rol = $usuario->getRol();
+        if ($rol == "administrador") {
+            echo '<a href="add.php" class="nav-button">Añadir Película</a>';
+        }
+        ?>
     </div>
 
     <div class="navbar-right">
-        <?php if (isset($_SESSION['usuario'])): ?>
-            <span class="nav-username">Hola, <?php echo htmlspecialchars($nombreUsuario); ?></span>
-            <a href="../../views/auth/logout.php" class="nav-button">Cerrar sesión</a>
-        <?php else: ?>
-            <a href="../../views/auth/register.php" class="nav-button">Registrar usuario</a>
-            <a href="../../views/auth/login.php" class="nav-button">Iniciar sesión</a>
-        <?php endif; ?>
+        <span class="nav-username">Hola, <?php echo htmlspecialchars($usuario->getNombre()); ?></span>
+        <a href="../auth/logout.php" class="nav-button">Cerrar sesión</a>
     </div>
 </nav>
 

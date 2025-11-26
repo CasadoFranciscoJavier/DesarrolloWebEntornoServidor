@@ -46,6 +46,26 @@ class UserModel
     }
 
 
+    public function hacerLogin($nombre, $contrasenia)
+    {
+        try {
+            $conexion = $this->miConector->conectar();
+
+            $consulta = $conexion->prepare("SELECT * FROM usuarios WHERE nombre = :nombre AND contrasenia = :contrasenia");
+            $consulta->bindParam(':nombre', $nombre);
+            $consulta->bindParam(':contrasenia', $contrasenia);
+            $consulta->execute();
+
+            $resultadoConsulta = $consulta->fetch();
+
+            $usuario = $this->filaUsuario($resultadoConsulta);
+        } catch (PDOException $excepcion) {
+            $usuario = null;
+        }
+
+        return $usuario;
+    }
+
     public function obtenerUsuarioPorNombre($nombre)
     {
         try {

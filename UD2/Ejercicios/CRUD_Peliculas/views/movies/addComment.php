@@ -15,3 +15,4 @@ $comentario = new Comment(null, $contenido, $idUsuario, $idPelicula);
 $comentarioModel->insertarComentario($comentario);
 
 header("Location: detail.php?id=$idPelicula");
+exit();

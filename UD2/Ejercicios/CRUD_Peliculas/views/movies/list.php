@@ -1,55 +1,23 @@
 <?php
-require_once __DIR__ . '/../../models/MovieModel.php';
-require_once __DIR__ . '/../../models/Movie.php';
-require_once __DIR__ . '/navbar.php';
 
-if (!isset($_SESSION["usuario"])) {
-    header("Location: ../auth/login.php");
-}
-
-$usuarioRol = $usuario->getRol();
+require_once "../../models/MovieModel.php";
+require_once "../../models/Movie.php";
+require_once "./navbar.php";
 
 $peliculaModel = new MovieModel();
 $peliculas = $peliculaModel->obtenerTodosPeliculas();
+
 ?>
 <link rel="stylesheet" href="../../css/style.css">
+
+<h1>Listado de Películas</h1>
+
+<ul>
 <?php
-
-echo "<h1>Listado de Películas</h1>";
 foreach ($peliculas as $pelicula) {
+    $titulo = $pelicula->getTitulo();
     $id = $pelicula->getId();
-
-    echo "
-        <div class='container'
-         style='
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            max-width: 600px;
-            margin: 0 auto 10px auto;'>
-
-            <span>$pelicula</span>
-            <a href='detail.php?id=$id'>
-                <button>👁</button>
-            </a>
-        </div>";
+    echo "<li><a href='detail.php?id=$id'>$titulo</a></li>";
 }
-
-
-if ($usuarioRol == "administrador") {
-
-    echo "<div class='container'
-         style='
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            max-width: 600px;
-            margin: 0 auto 10px auto;'>
-
-             <a href='add.php'>
-                <button>➕</button>
-            </a>
-            </div>";
-}
+?>
+</ul>
