@@ -25,7 +25,7 @@ class Calculadora extends Controller
     {
         $numeros = [];
 
-        for ($i = 1; $i < $size; $i++) {
+        for ($i = 1; $i <= $size; $i++) {
             $numeros[] = $i;
         }
         return $numeros;
