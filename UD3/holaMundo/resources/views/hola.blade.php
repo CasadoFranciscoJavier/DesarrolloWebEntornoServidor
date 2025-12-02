@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hola Mundo</title>
-</head>
-<body>
-    <h1>Hola, {{ $nombre }}!</h1>
-    <p>Bienvenido a nuestra aplicación de ejemplo construida en Laravel.</p>
-</body>
-</html>
+@extends('layout')
+
+
+@section('titulo', 'Hola mundo')
+
+@section('contenido')
+    <h1>Bienvenido a mi página de inicio</h1>
+    <p>Esta es la primera página de mi aplicación Laravel.</p>
+    <x-color color="red">
+    Eres menor 
+</x-color>
+
+@endsection
