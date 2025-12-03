@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Calculadora;
+use App\Http\Controllers\UsuarioController;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Models\Usuario;
-use App\Http\Controllers\UsuarioController;
+use Illuminate\Validation\ValidationException;
 
 
 Route::get('/hola/{nombre?}', function ($nombre = 'Mundo') {
@@ -48,17 +50,21 @@ Route::get('/numeros/{size}', [Calculadora::class, 'obtenerListaNumeros']);
 
 // OPCION 3 (mejor)
 // Insertar nuevo usuario
+// Route::post('/usuario', [UsuarioController::class, 'crearUsuario']);
+
 Route::post('/usuario', function (Request $request) {
 
-    $data = $request->all();
-    $usuarioNuevo = Usuario::create([
-        'nombre' => $data['nombre'],
-        'email' => $data['email'],
-    ]);
+    $controlador = new UsuarioController();
 
-    return $usuarioNuevo;
+    try {
+        $respuesta = $controlador->insertarUsuario($request);
+    } catch (ValidationException $e) {
+        $respuesta = $e->errors();
+    }
+
+    return $respuesta;
+
 });
-
 
 
 // GET: Obtener un usuario por ID
@@ -80,15 +86,17 @@ Route::get('/usuario', function () {
 
 //PUT: Actualizar un usuario
 Route::put('/usuario/{id}', function ($id, Request $request) {
-   $data = $request->all();
-    $usuario = Usuario::find($id);
-    
-    $usuario -> nombre = $data['nombre'];
-    $usuario -> email = $data['email'];
-    
-    $usuario->save();
 
-    return $usuario;
+    $controlador = new UsuarioController();
+
+    try {
+        $respuesta = $controlador->editarUsuario($id,$request);
+    } catch (ValidationException $e) {
+        $respuesta = $e->errors();
+    }
+
+    return $respuesta;
+
 });
 
 
@@ -99,4 +107,21 @@ Route::delete('/usuario/{id}', function ($id) {
 
     return $usuario;
 });
+
+
+
+
+
+
+
+// Rutas de Usuario usando el controlador con validaciones
+
+
+// Route::get('/usuario', [UsuarioController::class, 'obtenerTodosUsuarios']);
+
+// Route::get('/usuario/{id}', [UsuarioController::class, 'obtenerUsuario']);
+
+// Route::put('/usuario/{id}', [UsuarioController::class, 'actualizarUsuario']);
+
+// Route::delete('/usuario/{id}', [UsuarioController::class, 'eliminarUsuario']);
 
