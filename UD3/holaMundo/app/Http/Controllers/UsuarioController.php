@@ -28,7 +28,7 @@ class UsuarioController extends Controller
             'email' => $data['email'],
         ]);
 
-        return $usuarioNuevo;
+        return view('detalle-usuario', ['usuario' => $usuarioNuevo]);
 
     }
 

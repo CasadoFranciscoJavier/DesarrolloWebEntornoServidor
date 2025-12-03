@@ -1,20 +1,23 @@
-
 @extends('layout')
 
-@section('titulo', 'mostrar números')
+@section('titulo', 'Registrar Usuario')
 
 @section('contenido')
 
-    <h1>Mi Primerito formulario</h1>
-    
-    <form action="miPrimeritoFormulario.php" method="GET">
-        <label for="nombre">Nombre</label>
-        <input name="nombre" id="nombre" type="test">
+    <h1>Registrar Nuevo Usuario</h1>
 
-        <label for="email">Email</label>
-        <input name="email" id="email" type="email">
+    <form action="/usuario" method="POST">
+        @csrf
 
-        <input type="submit">
+        <label for="nombre">Nombre:</label>
+        <input name="nombre" id="nombre" type="text" required>
+        <br><br>
 
+        <label for="email">Email:</label>
+        <input name="email" id="email" type="email" required>
+        <br><br>
+
+        <button type="submit">Registrar Usuario</button>
     </form>
+
 @endsection

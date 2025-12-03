@@ -2,9 +2,8 @@
 
 use App\Http\Controllers\Calculadora;
 use App\Http\Controllers\UsuarioController;
-use Illuminate\Support\Facades\Route; // Importamos la clase Route
-use Termwind\Components\Raw;
-use Illuminate\Support\Facades\Request ;
+use App\Models\Usuario;
+use Illuminate\Support\Facades\Route;
 
 
 Route::get('/hola/{nombre?}', function ($nombre = 'Mundo') {
@@ -26,16 +25,18 @@ Route::get('/numeros/{size?}', function ($size) {
     ]);
 });
 
-// crea la pagina /registar-usuario con un formulario que permita 
-// registar un nuevo usuario. Una vez registrado debe de ir  al detalle 
-// del nuevo usuario /usuario/{id}
-//===============================
+// Mostrar formulario de registro
 Route::get('/usuario', function () {
     return view('registrar-usuario');
 });
 
-Route::get('/usuario/{id}', function ( Request $request) {
-    return view('detalle-usuario');
+// Procesar el formulario y crear usuario
+Route::post('/usuario', [UsuarioController::class, 'insertarUsuario']);
+
+// Mostrar detalle del usuario
+Route::get('/usuario/{id}', function ($id) {
+    $usuario = Usuario::find($id);
+    return view('detalle-usuario', ['usuario' => $usuario]);
 });
 
 
