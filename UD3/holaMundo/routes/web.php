@@ -26,12 +26,12 @@ Route::get('/numeros/{size?}', function ($size) {
 });
 
 // Mostrar formulario de registro
-Route::get('/usuario', function () {
+Route::get('/nuevo_usuario', function () {
     return view('registrar-usuario');
 });
 
 // Procesar el formulario y crear usuario
-Route::post('/usuario', [UsuarioController::class, 'insertarUsuario']);
+Route::post('/nuevo_usuario', [UsuarioController::class, 'insertarUsuario']);
 
 // Mostrar detalle del usuario
 Route::get('/usuario/{id}', function ($id) {
@@ -40,7 +40,25 @@ Route::get('/usuario/{id}', function ($id) {
 });
 
 
+// Listar todos los usuarios
+Route::get('/usuarios', function () {
+    $usuarios = Usuario::all();
+    return view('listar-usuarios', ['usuarios' => $usuarios]);
+});
 
+// Mostrar formulario de edición
+Route::get('/usuario/{id}/editar', function ($id) {
+    $usuario = Usuario::find($id);
+    return view('editar-usuario', ['usuario' => $usuario]);
+});
 
+// Procesar la edición del usuario
+Route::post('/usuario/{id}', [UsuarioController::class, 'editarUsuario']);
 
+//eliminar usuario
+Route::delete('/usuario/{id}/delete', function ($id) {
+    $usuario = Usuario::destroy($id);
+    $usuarios = Usuario::all();
+    return view('listar-usuarios', ['usuarios' => $usuarios]);
+});
 

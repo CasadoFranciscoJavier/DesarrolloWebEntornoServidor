@@ -43,11 +43,11 @@ class UsuarioController extends Controller
         if($usuario){
             $usuario->nombre = $data['nombre'];
             $usuario->email = $data['email'];
-    
+
             $usuario->save();
         }
 
-        return $usuario;
+        return view('detalle-usuario', ['usuario' => $usuario]);
 
     }
 }

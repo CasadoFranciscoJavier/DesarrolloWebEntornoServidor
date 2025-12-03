@@ -6,7 +6,7 @@
 
     <h1>Registrar Nuevo Usuario</h1>
 
-    <form action="/usuario" method="POST">
+    <form action="/nuevo_usuario" method="POST">
         @csrf
 
         <label for="nombre">Nombre:</label>

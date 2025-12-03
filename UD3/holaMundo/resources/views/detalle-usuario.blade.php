@@ -11,6 +11,8 @@
     <p><strong>Email:</strong> {{ $usuario->email }}</p>
 
     <br>
-    <a href="/usuario">Registrar otro usuario</a>
+    <a href="/nuevo_usuario">Registrar otro usuario</a>
+    <br>
+    <a href="/usuarios">Ver lista de usuarios</a>
 
 @endsection
