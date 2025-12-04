@@ -1,11 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('home');
-});
+})->middleware('auth');
+
+Route::get('/panel-admin', function () {
+    return view('panel-admin');
+})->middleware('role:admin');
+
 
 Auth::routes();
 

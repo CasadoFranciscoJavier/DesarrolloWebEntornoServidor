@@ -24,7 +24,10 @@
       "Bash(powershell -Command \"Add-MpPreference -ExclusionPath ''C:\\Users\\Usuario\\Documents\\GitHub\\2ºDAW\\DesarrolloWebEntornoServidor\\UD3\\holaMundo\\vendor''\")",
       "Bash(icacls:*)",
       "Bash(xcopy:*)",
-      "Bash(mklink:*)"
+      "Bash(mklink:*)",
+      "Bash(copy:*)",
+      "Bash(php -S:*)",
+      "Bash(timeout 5 php artisan:*)"
     ],
     "deny": [],
     "ask": []
