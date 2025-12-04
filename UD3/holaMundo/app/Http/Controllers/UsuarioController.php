@@ -28,7 +28,7 @@ class UsuarioController extends Controller
             'email' => $data['email'],
         ]);
 
-        return view('detalle-usuario', ['usuario' => $usuarioNuevo]);
+        return $usuarioNuevo;
 
     }
 
@@ -47,7 +47,7 @@ class UsuarioController extends Controller
             $usuario->save();
         }
 
-        return view('detalle-usuario', ['usuario' => $usuario]);
+        return $usuario;
 
     }
 }

@@ -6,7 +6,7 @@
 
     <h1>Editar Usuario</h1>
 
-    <form action="/usuario/{{ $usuario->id }}" method="POST">
+    <form action="/usuario/{{ $usuario->id }}/editar" method="POST">
         @csrf
 
         <label for="nombre">Nombre:</label>

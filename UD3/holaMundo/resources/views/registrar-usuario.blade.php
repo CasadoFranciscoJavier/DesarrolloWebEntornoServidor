@@ -6,18 +6,20 @@
 
     <h1>Registrar Nuevo Usuario</h1>
 
-    <form action="/nuevo_usuario" method="POST">
+    @if ($errors->any())
+        <h3>Errores</h3>
+        <ol>
+            @foreach ($errors->all() as $mensajeError)
+                <li>{{ $mensajeError }} </li>
+            @endforeach
+        </ol>
+    @endif
+
+    <form method="POST" action="/usuario">
         @csrf
+        <label>Nombre: <input type="text" name="nombre"></label><br>
+        <label>Email: <input type="text" name="email"></label><br>
 
-        <label for="nombre">Nombre:</label>
-        <input name="nombre" id="nombre" type="text" required>
-        <br><br>
-
-        <label for="email">Email:</label>
-        <input name="email" id="email" type="email" required>
-        <br><br>
-
-        <button type="submit">Registrar Usuario</button>
+        <input type="submit">
     </form>
-
 @endsection

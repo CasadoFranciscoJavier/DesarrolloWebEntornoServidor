@@ -20,7 +20,11 @@
             <td>{{ $usuario->email }}</td>
             <td>
                 <a href="/usuario/{{ $usuario->id }}/editar">Editar</a>
-                <a href="/usuario/{{ $usuario->id }}/delete">Eliminar</a>
+                <form action="/usuario/{{ $usuario->id }}/delete" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este usuario?')">Eliminar</button>
+                </form>
             </td>
         </tr>
         @endforeach

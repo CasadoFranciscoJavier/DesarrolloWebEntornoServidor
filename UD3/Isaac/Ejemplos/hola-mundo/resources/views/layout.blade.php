@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@yield('titulo')</title>
+</head>
+<body>
+    <header>
+        <h1>Mi Sitio Web</h1>
+        @include('plantillas.navbar')
+    </header>
+    <main>
+        @yield('contenido')
+    </main>
+    <footer>
+        <p>© 2025 Mi Sitio Web</p>
+    </footer>
+</body>
+</html>
