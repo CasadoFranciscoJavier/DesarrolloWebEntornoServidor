@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan migrate:status:*)",
+      "Bash(php artisan tinker:*)",
+      "Bash(php artisan db:table:*)",
+      "Bash(findstr:*)",
+      "Bash(php artisan migrate:rollback:*)",
+      "Bash(php artisan migrate:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
