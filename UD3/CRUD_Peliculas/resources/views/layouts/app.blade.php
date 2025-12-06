@@ -66,7 +66,7 @@
                                     </a>
 
                                     @if (Auth::user()->role == "admin")
-                                        <a class="dropdown-item" href="/panel-admin">Panel del admin</a>
+                                        <a class="dropdown-item" href="/movie/create">Nueva Película</a>
                                     @endif
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

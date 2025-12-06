@@ -3,20 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\PeliculasModel;
+use App\Models\Pelicula;
+use Illuminate\Validation\Rule;
 
 
 class peliculaControlador extends Controller
 {
-    public function Crear(Request $request)
+    public function ValidarPelicula(Request $request, $id = null)
     {
         // 1. Convertir el array de géneros permitidos a una cadena separada por comas
-        $genresList = implode(',', PeliculasModel::VALID_GENRES);
+        $genresList = implode(',', Pelicula::VALID_GENRES);
 
-        // 2. Definir todas las reglas de validación
+        // 2. Definir la regla del título según si es creación o edición
+        $titleRule = ['required', 'string', 'min:3', 'max:100'];
+
+        if ($id == null) {
+            $titleRule[] = 'unique:peliculas,title';
+        } else {
+            $titleRule[] = Rule::unique('peliculas', 'title')->ignore($id);
+        }
+
+        // 3. Definir todas las reglas de validación
         $rules = [
             'poster_url' => ['required', 'string', 'url', 'max:255'],
-            'title' => ['required', 'string', 'min:3', 'max:100', 'unique:movies,title'], // Usamos 'movies' si renombraste la tabla
+            'title' => $titleRule,
             'release_year' => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
 
             // Regla para el array contenedor (genres)
@@ -28,16 +38,52 @@ class peliculaControlador extends Controller
             'synopsis' => ['required', 'string', 'min:10', 'max:5000'],
         ];
 
-        // 3. Ejecutar la validación. Si falla, Laravel automáticamente redirige
+        // 4. Ejecutar la validación. Si falla, Laravel automáticamente redirige
         //    de vuelta con los errores y los datos de entrada.
-        $validatedData = $request->validate($rules);
 
-        // 4. Lógica de creación (solo se ejecuta si la validación es exitosa)
-        // Ya que la validación pasó, procedemos con la asignación masiva
-        $pelicula = PeliculasModel::create($validatedData);
+        $request->validate($rules);
 
-        // 5. Un solo punto de salida (siguiendo tu restricción)
-        return redirect()->route('movie.detail', $pelicula->id)
-            ->with('success', 'Película creada exitosamente.');
+
+    }
+
+    public function RegistrarPelicula(Request $request)
+    {
+
+        $this->ValidarPelicula($request);
+
+        $data = $request->all();
+
+        $peliculaNueva = Pelicula::create([
+            'poster_url' => $data['poster_url'],
+            'title' => $data['title'],
+            'release_year' => $data['release_year'],
+            'genres' => $data['genres'],
+            'synopsis' => $data['synopsis'],
+        ]);
+
+        return $peliculaNueva;
+
+    }
+
+    public function editarPelicula($id, Request $request)
+    {
+
+        $this->ValidarPelicula($request, $id);
+
+        $data = $request->all();
+        $pelicula = Pelicula::find($id);
+
+        if($pelicula){
+            $pelicula->poster_url = $data['poster_url'];
+            $pelicula->title = $data['title'];
+            $pelicula->release_year = $data['release_year'];
+            $pelicula->genres = $data['genres'];
+            $pelicula->synopsis = $data['synopsis'];
+    
+            $pelicula->save();
+        }
+
+        return $pelicula;
+
     }
 }

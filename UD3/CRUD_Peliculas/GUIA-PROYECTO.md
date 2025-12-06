@@ -1,43 +1,50 @@
-# 📽️ GUÍA DEL PROYECTO - CRUD Películas
+# 📽️ GUÍA COMPLETA - CRUD Películas con Laravel
 
 ## 📋 Índice
 1. [Descripción del Proyecto](#descripción-del-proyecto)
-2. [Comandos Iniciales](#comandos-iniciales)
-3. [Estructura de la Base de Datos](#estructura-de-la-base-de-datos)
+2. [Configuración Inicial](#configuración-inicial)
+3. [Migraciones](#migraciones)
 4. [Modelos](#modelos)
-5. [Sistema de Autenticación](#sistema-de-autenticación)
-6. [Rutas](#rutas)
-7. [Vistas](#vistas)
-8. [Paginación](#paginación)
-9. [Datos de Prueba](#datos-de-prueba)
-10. [Problemas Comunes](#problemas-comunes)
+5. [Seeders (Datos de Prueba)](#seeders-datos-de-prueba)
+6. [Autenticación y Roles](#autenticación-y-roles)
+7. [Controladores](#controladores)
+8. [Rutas](#rutas)
+9. [Vistas](#vistas)
+10. [Lista de Comandos Completa](#lista-de-comandos-completa)
 
 ---
 
 ## 📝 Descripción del Proyecto
 
-Aplicación web de gestión de películas con sistema de roles (admin/usuario) y comentarios.
+Sistema CRUD de películas con autenticación, roles (admin/user) y comentarios.
 
 **Funcionalidades:**
-- ✅ Lista de películas paginada (10 por página)
 - ✅ Sistema de autenticación (login/register)
 - ✅ Roles: Admin y Usuario
-- ⏳ Detalle de película con comentarios (pendiente)
-- ⏳ Crear/eliminar películas (solo admin) (pendiente)
-- ⏳ Crear/eliminar comentarios (pendiente)
+- ✅ Lista de películas paginada (10 por página)
+- ✅ Detalle de película con comentarios
+- ✅ Crear/editar/eliminar películas (solo admin)
+- ✅ Crear comentarios (usuarios autenticados)
+- ✅ Eliminar comentarios (solo admin)
 
 ---
 
-## 🚀 Comandos Iniciales
+## 🚀 Configuración Inicial
 
-### 1. Crear el proyecto Laravel
+### 1. Crear proyecto Laravel
 ```bash
 composer create-project laravel/laravel CRUD_Peliculas
 cd CRUD_Peliculas
 ```
 
 ### 2. Configurar base de datos
-**Archivo:** [.env](.env)
+
+**Crear base de datos en MySQL:**
+```sql
+CREATE DATABASE mi_crud_peliculas;
+```
+
+**Editar archivo `.env`:**
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -47,38 +54,25 @@ DB_USERNAME=root
 DB_PASSWORD=1234
 ```
 
-### 3. Crear la base de datos en MySQL
-Ejecutar en MySQL Workbench:
-```sql
-CREATE DATABASE mi_crud_peliculas;
+### 3. Instalar autenticación Laravel UI
+```bash
+composer require laravel/ui
+php artisan ui bootstrap --auth
+npm install && npm run build
 ```
 
 ---
 
-## 🗄️ Estructura de la Base de Datos
+## 🗄️ Migraciones
 
-### Migraciones
+### Orden de creación
 
-#### 1. Tabla `users` (ya existía)
-**Archivo:** [database/migrations/0001_01_01_000000_create_users_table.php](database/migrations/0001_01_01_000000_create_users_table.php)
-
-Campos originales:
-- `id`
-- `name`
-- `email`
-- `password`
-- `remember_token`
-- `timestamps`
-
-#### 2. Agregar campo `role` a `users`
-**Comando:**
+#### 1. Agregar campo `role` a tabla `users`
 ```bash
 php artisan make:migration add_rol_to_users_table --table=users
 ```
 
-**Archivo:** [database/migrations/2025_12_05_162924_add_rol_to_users_table.php](database/migrations/2025_12_05_162924_add_rol_to_users_table.php)
-
-**Contenido:**
+**Editar migración:**
 ```php
 public function up(): void
 {
@@ -86,49 +80,74 @@ public function up(): void
         $table->string('role')->default('user');
     });
 }
+
+public function down(): void
+{
+    Schema::table('users', function (Blueprint $table) {
+        $table->dropColumn('role');
+    });
+}
 ```
 
-**Problema encontrado:** La migración se marcó como ejecutada pero la columna no se creó.
-
-**Solución:** Eliminar registro de la tabla `migrations` y volver a ejecutar:
-```bash
-php artisan tinker --execute="DB::table('migrations')->where('migration', '2025_12_05_162924_add_rol_to_users_table')->delete();"
-php artisan migrate --path=database/migrations/2025_12_05_162924_add_rol_to_users_table.php
-```
-
-#### 3. Tabla `peliculas`
-**Comando:**
+#### 2. Crear tabla `peliculas`
 ```bash
 php artisan make:migration create_peliculas_table
 ```
 
-**Archivo:** [database/migrations/2025_12_05_165045_create_peliculas_table.php](database/migrations/2025_12_05_165045_create_peliculas_table.php)
+**Editar migración:**
+```php
+public function up(): void
+{
+    Schema::create('peliculas', function (Blueprint $table) {
+        $table->id();
+        $table->string('poster_url');
+        $table->string('title')->unique();
+        $table->integer('release_year');
+        $table->json('genres');
+        $table->text('synopsis');
+        $table->timestamps();
+    });
+}
 
-**Campos:**
-- `id`
-- `poster_url` (string) - URL de la imagen del póster
-- `title` (string, unique) - Título de la película
-- `release_year` (integer) - Año de estreno
-- `genres` (json) - Array de géneros
-- `synopsis` (text) - Sinopsis
-- `timestamps`
+public function down(): void
+{
+    Schema::dropIfExists('peliculas');
+}
+```
 
-#### 4. Tabla `comentarios`
-**Comando:**
+#### 3. Crear tabla `comentarios`
 ```bash
 php artisan make:migration create_comentarios_table
 ```
 
-**Archivo:** [database/migrations/2025_12_05_170004_create_comentarios_table.php](database/migrations/2025_12_05_170004_create_comentarios_table.php)
+**Editar migración:**
+```php
+public function up(): void
+{
+    Schema::create('comentarios', function (Blueprint $table) {
+        $table->id();
 
-**Campos:**
-- `id`
-- `pelicula_id` (foreign key → peliculas)
-- `user_id` (foreign key → users)
-- `content` (text) - Contenido del comentario
-- `timestamps`
+        $table->foreignId('pelicula_id')
+              ->constrained('peliculas')
+              ->onDelete('cascade');
 
-### Ejecutar todas las migraciones
+        $table->foreignId('user_id')
+              ->constrained('users')
+              ->onDelete('cascade');
+
+        $table->text('content');
+
+        $table->timestamps();
+    });
+}
+
+public function down(): void
+{
+    Schema::dropIfExists('comentarios');
+}
+```
+
+#### 4. Ejecutar migraciones
 ```bash
 php artisan migrate
 ```
@@ -137,32 +156,33 @@ php artisan migrate
 
 ## 🎯 Modelos
 
-### 1. Modelo User
-**Archivo:** [app/Models/User.php](app/Models/User.php)
+**IMPORTANTE:** Los modelos se crean DESPUÉS de las migraciones para seguir el flujo correcto.
 
-**Problema:** El nombre del campo en `$fillable` no coincidía con la base de datos.
-- ❌ Antes: `'rol'` (español)
-- ✅ Ahora: `'role'` (inglés)
+### 1. Modelo User (ya existe)
 
-**Código actual:**
+**Editar `app/Models/User.php`:**
 ```php
 protected $fillable = [
     'name',
     'email',
     'password',
-    'role'  // ← Debe coincidir con el nombre en la base de datos
+    'role'  // Añadir este campo
 ];
 ```
 
-### 2. Modelo Pelicula
-**Problema inicial:** El modelo se llamaba `PeliculasModel` y Laravel buscaba la tabla `peliculas_models`.
+### 2. Crear modelo Pelicula
+```bash
+php artisan make:model Pelicula
+```
 
-**Solución:** Renombrar a `Pelicula` para que Laravel busque automáticamente la tabla `peliculas`.
-
-**Archivo:** [app/Models/Pelicula.php](app/Models/Pelicula.php)
-
-**Código:**
+**Editar `app/Models/Pelicula.php`:**
 ```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
 class Pelicula extends Model
 {
     protected $fillable = [
@@ -174,10 +194,10 @@ class Pelicula extends Model
     ];
 
     protected $casts = [
-        'genres' => 'array',  // Convierte JSON a array automáticamente
+        'genres' => 'array',
     ];
 
-    public function comments()
+    public function comentarios()
     {
         return $this->hasMany(Comentario::class);
     }
@@ -189,20 +209,19 @@ class Pelicula extends Model
 }
 ```
 
-**Convención Laravel:**
-- Modelo: `Pelicula` → Tabla: `peliculas`
-- Modelo: `Usuario` → Tabla: `usuarios`
-- Modelo: `Comentario` → Tabla: `comentarios`
+### 3. Crear modelo Comentario
+```bash
+php artisan make:model Comentario
+```
 
-### 3. Modelo Comentario
-**Problema inicial:** Se llamaba `ComentariosModel`.
-
-**Solución:** Renombrado a `Comentario`.
-
-**Archivo:** [app/Models/Comentario.php](app/Models/Comentario.php)
-
-**Código:**
+**Editar `app/Models/Comentario.php`:**
 ```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
 class Comentario extends Model
 {
     protected $fillable = [
@@ -225,64 +244,243 @@ class Comentario extends Model
 
 ---
 
-## 🔐 Sistema de Autenticación
+## 🌱 Seeders (Datos de Prueba)
 
-### 1. Instalar Laravel UI
+### Generar hash de contraseña
 ```bash
-composer require laravel/ui
-php artisan ui bootstrap --auth
-npm install && npm run build
+php artisan tinker --execute="echo bcrypt('12345678');"
 ```
 
-Esto crea:
-- Rutas de autenticación (`Auth::routes()`)
-- Vistas de login/register en `resources/views/auth/`
-- Layout base en `resources/views/layouts/app.blade.php`
+**Resultado:** `$2y$12$.zbRm1JcsQymXdwV4tYJKOJPDDntrfX.wY2xGmyjC7u9WvdkaH4dK`
 
-### 2. Middleware de Roles
-**Comando:**
+### Ejecutar seed completo
+
+Archivo `database/seed_completo.sql` contiene:
+- 10 usuarios (2 admins + 8 users)
+- 20 películas de ciencia ficción/acción
+- 30 comentarios
+
+**Importar en MySQL Workbench:**
+1. Abrir MySQL Workbench
+2. Abrir archivo `seed_completo.sql`
+3. Ejecutar script completo
+
+**Password de todos los usuarios:** `12345678`
+
+---
+
+## 🔐 Autenticación y Roles
+
+### 1. Crear middleware de roles
 ```bash
 php artisan make:middleware RoleMiddleware
 ```
 
-**Archivo:** [app/Http/Middleware/RoleMiddleware.php](app/Http/Middleware/RoleMiddleware.php)
-
-**Código:**
+**Editar `app/Http/Middleware/RoleMiddleware.php`:**
 ```php
-public function handle(Request $request, Closure $next, string $role): Response
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class RoleMiddleware
 {
-    $respuesta = null;
+    public function handle(Request $request, Closure $next, string $role): Response
+    {
+        $respuesta = null;
 
-    if ($request->user() == null) {
-        $respuesta = redirect('/login');
+        if ($request->user() == null) {
+            $respuesta = redirect('/login');
+        }
+
+        if ($respuesta == null && $request->user()->role != $role) {
+            $respuesta = abort(403, 'No tienes permisos para acceder a esta página');
+        }
+
+        if ($respuesta == null) {
+            $respuesta = $next($request);
+        }
+
+        return $respuesta;
     }
-
-    if ($respuesta == null && $request->user()->role != $role) {
-        $respuesta = abort(403, 'No tienes permisos para acceder a esta página');
-    }
-
-    if ($respuesta == null) {
-        $respuesta = $next($request);
-    }
-
-    return $respuesta;
 }
 ```
 
-**Reglas del código:**
-- ✅ Solo UN return al final
-- ✅ Variables con nombres descriptivos
-- ✅ Usar `==` en lugar de `===`
-- ❌ No usar `break`, `continue` ni múltiples `return`
+### 2. Registrar middleware
 
-### 3. Registrar middleware
-**Archivo:** [app/Providers/AppServiceProvider.php](app/Providers/AppServiceProvider.php)
-
+**Editar `app/Providers/AppServiceProvider.php`:**
 ```php
-public function boot(): void
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
+
+class AppServiceProvider extends ServiceProvider
 {
-    Paginator::useBootstrapFive();
-    $this->app['router']->aliasMiddleware('role', \App\Http\Middleware\RoleMiddleware::class);
+    public function boot(): void
+    {
+        Paginator::useBootstrapFive();
+        $this->app['router']->aliasMiddleware('role', \App\Http\Middleware\RoleMiddleware::class);
+    }
+}
+```
+
+### 3. Actualizar HomeController
+
+**Editar `app/Http/Controllers/HomeController.php`:**
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Pelicula;
+
+class HomeController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    public function index()
+    {
+        $peliculas = Pelicula::paginate(10);
+        return view('home', ['peliculas' => $peliculas]);
+    }
+}
+```
+
+---
+
+## 🎮 Controladores
+
+### 1. Crear controlador de películas
+```bash
+php artisan make:controller peliculaControlador
+```
+
+**Editar `app/Http/Controllers/peliculaControlador.php`:**
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Pelicula;
+use Illuminate\Validation\Rule;
+
+class peliculaControlador extends Controller
+{
+    public function ValidarPelicula(Request $request, $id = null)
+    {
+        $genresList = implode(',', Pelicula::VALID_GENRES);
+
+        $titleRule = ['required', 'string', 'min:3', 'max:100'];
+
+        if ($id == null) {
+            $titleRule[] = 'unique:peliculas,title';
+        } else {
+            $titleRule[] = Rule::unique('peliculas', 'title')->ignore($id);
+        }
+
+        $rules = [
+            'poster_url' => ['required', 'string', 'url', 'max:255'],
+            'title' => $titleRule,
+            'release_year' => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
+            'genres' => ['required', 'array', 'min:1', 'distinct'],
+            'genres.*' => ['required', 'string', 'in:' . $genresList],
+            'synopsis' => ['required', 'string', 'min:10', 'max:5000'],
+        ];
+
+        $request->validate($rules);
+    }
+
+    public function RegistrarPelicula(Request $request)
+    {
+        $this->ValidarPelicula($request);
+
+        $data = $request->all();
+
+        $peliculaNueva = Pelicula::create([
+            'poster_url' => $data['poster_url'],
+            'title' => $data['title'],
+            'release_year' => $data['release_year'],
+            'genres' => $data['genres'],
+            'synopsis' => $data['synopsis'],
+        ]);
+
+        return $peliculaNueva;
+    }
+
+    public function editarPelicula($id, Request $request)
+    {
+        $this->ValidarPelicula($request, $id);
+
+        $data = $request->all();
+        $pelicula = Pelicula::find($id);
+
+        if($pelicula){
+            $pelicula->poster_url = $data['poster_url'];
+            $pelicula->title = $data['title'];
+            $pelicula->release_year = $data['release_year'];
+            $pelicula->genres = $data['genres'];
+            $pelicula->synopsis = $data['synopsis'];
+
+            $pelicula->save();
+        }
+
+        return $pelicula;
+    }
+}
+```
+
+### 2. Crear controlador de comentarios
+```bash
+php artisan make:controller ComentarioControlador
+```
+
+**Editar `app/Http/Controllers/ComentarioControlador.php`:**
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Comentario;
+use App\Models\Pelicula;
+
+class ComentarioControlador extends Controller
+{
+    public function ValidarComentario(Request $request)
+    {
+        $rules = [
+            'pelicula_id' => ['required', 'integer', 'exists:peliculas,id'],
+            'content' => ['required', 'string', 'min:3', 'max:1000'],
+        ];
+
+       $request->validate($rules);
+    }
+
+    public function RegistrarComentario(Request $request)
+    {
+        $this->ValidarComentario($request);
+
+        $data = $request->all();
+
+        $comentarioNuevo = Comentario::create([
+            'user_id' => auth()->id(),
+            'pelicula_id' => $data['pelicula_id'],
+            'content' => $data['content'],
+        ]);
+
+        return $comentarioNuevo;
+    }
 }
 ```
 
@@ -290,330 +488,318 @@ public function boot(): void
 
 ## 🛣️ Rutas
 
-**Archivo:** [routes/web.php](routes/web.php)
-
-### Ruta principal (lista de películas)
+**Editar `routes/web.php`:**
 ```php
-use App\Models\Pelicula;
+<?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\peliculaControlador;
+use App\Http\Controllers\ComentarioControlador;
+use App\Models\Pelicula;
+use App\Models\Comentario;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
+
+// Lista de películas
 Route::get('/', function () {
     $peliculas = Pelicula::paginate(10);
     return view('home', ['peliculas' => $peliculas]);
 })->middleware('auth');
-```
 
-**Explicación:**
-- `Pelicula::paginate(10)` → Trae 10 películas por página
-- Si la URL es `/?page=2` → Laravel trae películas 11-20
-- `middleware('auth')` → Solo usuarios autenticados pueden acceder
+// Crear película
+Route::get('/movie/create', function () {
+    return view('registrar-pelicula');
+})->middleware(['auth', 'role:admin']);
 
-### Ruta de panel admin (ejemplo de uso de roles)
-```php
-Route::get('/panel-admin', function () {
-    return view('panel-admin');
-})->middleware('role:admin');
-```
+Route::post('/movie', function (Request $request) {
+    $controlador = new peliculaControlador();
 
-**Explicación:**
-- `middleware('role:admin')` → Solo usuarios con `role = 'admin'` pueden acceder
+    try {
+        $pelicula = $controlador->RegistrarPelicula($request);
+        $respuesta = redirect("/movie/detail/" . $pelicula->id);
+    } catch (ValidationException $e) {
+        $respuesta = back()->withErrors($e->errors());
+    }
 
-### Rutas de autenticación
-```php
+    return $respuesta;
+});
+
+// Detalle de película
+Route::get('/movie/detail/{id}', function ($id) {
+    $pelicula = Pelicula::find($id);
+    $comentarios = Comentario::where('pelicula_id', $id)->orderBy('created_at', 'desc')->get();
+    return view('detalle-pelicula', ['pelicula' => $pelicula, 'comentarios' => $comentarios]);
+})->middleware('auth');
+
+// Editar película
+Route::get('/movie/edit/{id}', function ($id) {
+    $pelicula = Pelicula::find($id);
+    return view('editar-pelicula', ['pelicula' => $pelicula]);
+})->middleware(['auth', 'role:admin']);
+
+Route::post('/movie/edit/{id}', function ($id, Request $request) {
+    $controlador = new peliculaControlador();
+
+    try {
+        $pelicula = $controlador->editarPelicula($id, $request);
+        $respuesta = redirect("/movie/detail/" . $pelicula->id);
+    } catch (ValidationException $e) {
+        $respuesta = back()->withErrors($e->errors());
+    }
+
+    return $respuesta;
+})->middleware(['auth', 'role:admin']);
+
+// Borrar película
+Route::get('/movie/delete/{id}', function ($id) {
+    $pelicula = Pelicula::find($id);
+
+    if ($pelicula != null) {
+        $pelicula->delete();
+    }
+
+    return redirect('/');
+})->middleware(['auth', 'role:admin']);
+
+// Crear comentario
+Route::post('/comments/create', function (Request $request) {
+    $controlador = new ComentarioControlador();
+
+    try {
+        $comentario = $controlador->RegistrarComentario($request);
+        $respuesta = redirect("/movie/detail/" . $comentario->pelicula_id);
+    } catch (ValidationException $e) {
+        $respuesta = back()->withErrors($e->errors());
+    }
+
+    return $respuesta;
+})->middleware('auth');
+
+// Borrar comentario
+Route::get('/comments/delete/{id}', function ($id) {
+    $comentario = Comentario::find($id);
+    $peliculaId = 1;
+
+    if ($comentario != null) {
+        $peliculaId = $comentario->pelicula_id;
+        $comentario->delete();
+    }
+
+    return redirect("/movie/detail/" . $peliculaId);
+})->middleware(['auth', 'role:admin']);
+
 Auth::routes();
-```
 
-Esto genera automáticamente:
-- `/login` - Formulario de login
-- `/register` - Formulario de registro
-- `/logout` - Cerrar sesión
-- `/password/reset` - Recuperar contraseña
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+```
 
 ---
 
 ## 🎨 Vistas
 
-### Vista principal (lista de películas)
-**Archivo:** [resources/views/home.blade.php](resources/views/home.blade.php)
+### 1. Actualizar navbar en layout
 
-**Características:**
-- Grid responsive: 5 columnas en desktop, 3 en tablet, 2 en móvil
-- Tarjetas con póster, título y año
-- Botón "Ver detalles" en cada película
-- Paginación al final
-
-**Código clave:**
+**Editar `resources/views/layouts/app.blade.php` (línea 68-70):**
 ```blade
-<div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
-    @foreach($peliculas as $pelicula)
-    <div class="col">
-        <div class="card">
-            <img src="{{ $pelicula->poster_url }}" class="card-img-top" alt="{{ $pelicula->title }}">
-            <div class="card-body p-2">
-                <h6 class="card-title">{{ $pelicula->title }}</h6>
-                <p class="card-text small mb-2"><strong>Año:</strong> {{ $pelicula->release_year }}</p>
-                <a href="/movie/detail/{{ $pelicula->id }}" class="btn btn-primary btn-sm w-100">Ver detalles</a>
-            </div>
-        </div>
-    </div>
-    @endforeach
-</div>
-
-<div class="d-flex justify-content-center mt-4">
-    {{ $peliculas->links() }}
-</div>
+@if (Auth::user()->role == "admin")
+    <a class="dropdown-item" href="/movie/create">Nueva Película</a>
+@endif
 ```
 
-**Clases Bootstrap usadas:**
-- `row-cols-*` - Define cuántas columnas por fila
-- `g-3` - Gap (espacio) entre columnas
-- `card` - Tarjeta de Bootstrap
-- `btn-sm` - Botón pequeño
-- `w-100` - Ancho completo
+### 2. Vista home (lista de películas)
 
-### Layout base
-**Archivo:** [resources/views/layouts/app.blade.php](resources/views/layouts/app.blade.php)
+**Archivo:** `resources/views/home.blade.php`
+
+Grid responsive con paginación Bootstrap 5.
+
+### 3. Vista registrar película
+
+**Crear:** `resources/views/registrar-pelicula.blade.php`
+
+Formulario con:
+- URL del póster
+- Título
+- Año
+- Géneros (8 checkboxes)
+- Sinopsis
+- Validación con `{{ old() }}`
+
+### 4. Vista editar película
+
+**Crear:** `resources/views/editar-pelicula.blade.php`
+
+Igual que registrar pero con valores precargados usando `{{ old('field', $pelicula->field) }}`.
+
+### 5. Vista detalle película
+
+**Crear:** `resources/views/detalle-pelicula.blade.php`
 
 Incluye:
-- Navbar con logo y menú de usuario
-- Bootstrap 5 CSS/JS
-- Links de login/register/logout
+- Información de la película
+- Botones de editar/borrar (solo admin)
+- Lista de comentarios con autor y fecha
+- Formulario para añadir comentario
+- Botón borrar comentario (solo admin)
 
 ---
 
-## 📄 Paginación
+## 📦 Lista de Comandos Completa
 
-### ¿Cómo funciona?
+### Secuencia para crear un proyecto desde cero:
 
-**1. En la ruta** [routes/web.php:7](routes/web.php#L7)
-```php
-$peliculas = Pelicula::paginate(10);
-```
-
-**Explicación:**
-- `paginate(10)` → Solo trae 10 películas, no todas
-- Laravel mira la URL para saber qué página mostrar:
-  - `http://localhost:8000/` → Página 1 (películas 1-10)
-  - `http://localhost:8000/?page=2` → Página 2 (películas 11-20)
-
-**2. En la vista** [home.blade.php:22-24](resources/views/home.blade.php#L22-L24)
-```blade
-{{ $peliculas->links() }}
-```
-
-**Explicación:**
-- Genera automáticamente los botones de paginación: `[1] [2] [Next]`
-- Los botones apuntan a `/?page=1`, `/?page=2`, etc.
-
-**3. Configurar estilo Bootstrap** [AppServiceProvider.php:23](app/Providers/AppServiceProvider.php#L23)
-```php
-use Illuminate\Pagination\Paginator;
-
-public function boot(): void
-{
-    Paginator::useBootstrapFive();
-    // ...
-}
-```
-
-**Explicación:**
-- Por defecto Laravel usa Tailwind CSS (botones feos)
-- `useBootstrapFive()` → Usa estilos de Bootstrap 5 (botones bonitos)
-
-### Cambiar cantidad por página
-```php
-// 5 por página (4 páginas con 20 películas)
-Pelicula::paginate(5);
-
-// 20 por página (1 página con 20 películas)
-Pelicula::paginate(20);
-```
-
----
-
-## 🌱 Datos de Prueba
-
-### Archivo SQL completo
-**Archivo:** [database/seed_completo.sql](database/seed_completo.sql)
-
-**Contenido:**
-- **10 usuarios:** 2 admins + 8 usuarios normales
-- **20 películas:** Clásicos con pósters reales de TMDB
-- **30 comentarios:** Distribuidos en varias películas
-
-### Usuarios de prueba
-**Password para todos:** `12345678`
-
-| Email | Nombre | Role |
-|-------|--------|------|
-| admin1@test.com | Admin1 | admin |
-| admin2@test.com | Admin2 | admin |
-| user1@test.com | User1 | user |
-| user2@test.com | User2 | user |
-| ... | ... | user |
-
-### Hash de contraseña
-**Problema:** El hash de la contraseña debe generarse con Laravel, no con un generador externo.
-
-**Solución:**
 ```bash
-php artisan tinker --execute="echo bcrypt('12345678');"
-```
+# 1. Crear proyecto
+composer create-project laravel/laravel CRUD_Peliculas
+cd CRUD_Peliculas
 
-Esto genera: `$2y$12$.zbRm1JcsQymXdwV4tYJKOJPDDntrfX.wY2xGmyjC7u9WvdkaH4dK`
+# 2. Instalar Laravel UI y Bootstrap
+composer require laravel/ui
+php artisan ui bootstrap --auth
+npm install && npm run build
 
-### Cómo usar el seed
-1. Abrir MySQL Workbench
-2. Abrir el archivo `database/seed_completo.sql`
-3. Ejecutar todo el script
-4. Verificar: `SELECT COUNT(*) FROM peliculas;` → Debe dar 20
+# 3. Crear migraciones
+php artisan make:migration add_rol_to_users_table --table=users
+php artisan make:migration create_peliculas_table
+php artisan make:migration create_comentarios_table
 
----
-
-## ⚠️ Problemas Comunes
-
-### 1. server.php se borra constantemente
-**Causa:** Windows Defender detecta `server.php` como amenaza.
-
-**Solución:** Crear `server.php` en la RAÍZ del proyecto (no en vendor).
-
-**Archivo:** [server.php](server.php)
-```php
-<?php
-$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '');
-if ($uri !== '/' && file_exists(__DIR__.'/public'.$uri)) {
-    return false;
-}
-require_once __DIR__.'/public/index.php';
-```
-
-**Ubicación:** `CRUD_Peliculas/server.php` (raíz)
-
-### 2. Error: "Table 'peliculas_models' doesn't exist"
-**Causa:** El modelo se llamaba `PeliculasModel` y Laravel busca la tabla `peliculas_models`.
-
-**Solución:** Renombrar modelo a `Pelicula` (singular, sin "Model").
-
-### 3. Error: "Column 'role' not found"
-**Causa:** La migración se marcó como ejecutada pero la columna no se creó.
-
-**Solución:**
-```bash
-# Eliminar registro de la tabla migrations
-php artisan tinker --execute="DB::table('migrations')->where('migration', '2025_12_05_162924_add_rol_to_users_table')->delete();"
-
-# Ejecutar migración de nuevo
-php artisan migrate --path=database/migrations/2025_12_05_162924_add_rol_to_users_table.php
-```
-
-### 4. Credenciales no coinciden al hacer login
-**Causa:** El hash de la contraseña en la base de datos no es correcto.
-
-**Solución:** Generar hash con Laravel:
-```bash
-php artisan tinker --execute="echo bcrypt('12345678');"
-```
-
-Copiar el hash y usarlo en el SQL.
-
-### 5. Paginación con estilos feos (Tailwind)
-**Causa:** Laravel usa Tailwind por defecto.
-
-**Solución:** Configurar Bootstrap en [AppServiceProvider.php:23](app/Providers/AppServiceProvider.php#L23):
-```php
-Paginator::useBootstrapFive();
-```
-
----
-
-## 📚 Resumen de Archivos Importantes
-
-### Configuración
-- [.env](.env) - Configuración de base de datos
-- [app/Providers/AppServiceProvider.php](app/Providers/AppServiceProvider.php) - Configuración de paginación y middleware
-
-### Modelos
-- [app/Models/User.php](app/Models/User.php) - Modelo de usuarios
-- [app/Models/Pelicula.php](app/Models/Pelicula.php) - Modelo de películas
-- [app/Models/Comentario.php](app/Models/Comentario.php) - Modelo de comentarios
-
-### Migraciones
-- [database/migrations/0001_01_01_000000_create_users_table.php](database/migrations/0001_01_01_000000_create_users_table.php)
-- [database/migrations/2025_12_05_162924_add_rol_to_users_table.php](database/migrations/2025_12_05_162924_add_rol_to_users_table.php)
-- [database/migrations/2025_12_05_165045_create_peliculas_table.php](database/migrations/2025_12_05_165045_create_peliculas_table.php)
-- [database/migrations/2025_12_05_170004_create_comentarios_table.php](database/migrations/2025_12_05_170004_create_comentarios_table.php)
-
-### Middleware
-- [app/Http/Middleware/RoleMiddleware.php](app/Http/Middleware/RoleMiddleware.php) - Control de acceso por roles
-
-### Rutas
-- [routes/web.php](routes/web.php) - Rutas de la aplicación
-
-### Vistas
-- [resources/views/layouts/app.blade.php](resources/views/layouts/app.blade.php) - Layout base
-- [resources/views/home.blade.php](resources/views/home.blade.php) - Lista de películas
-
-### Datos de prueba
-- [database/seed_completo.sql](database/seed_completo.sql) - Usuarios, películas y comentarios
-- [server.php](server.php) - Servidor de desarrollo
-
----
-
-## ✅ Estado Actual del Proyecto
-
-### Completado
-- ✅ Base de datos con 3 tablas: users, peliculas, comentarios
-- ✅ Modelos con relaciones
-- ✅ Sistema de autenticación (login/register)
-- ✅ Middleware de roles (admin/user)
-- ✅ Lista de películas paginada (10 por página)
-- ✅ Vista responsive con Bootstrap 5
-- ✅ Datos de prueba (20 películas, 10 usuarios, 30 comentarios)
-
-### Pendiente
-- ⏳ Detalle de película con comentarios
-- ⏳ Crear película (solo admin)
-- ⏳ Eliminar película (solo admin)
-- ⏳ Crear comentario (usuarios logados)
-- ⏳ Eliminar comentario (solo admin)
-- ⏳ Botón "Nueva Película" en navbar (solo visible para admin)
-
----
-
-## 📝 Notas Adicionales
-
-### Convenciones del proyecto
-- **Un solo return por función**
-- **Variables descriptivas:** `$usuario`, `$pelicula` (nunca `$u`, `$p`)
-- **Comparaciones:** Usar `==` y `!=` (no `===`)
-- **Sin breaks ni continues en bucles**
-- **Flujo lineal:** Usar variables de control en lugar de salidas tempranas
-
-### Comandos útiles
-```bash
-# Servidor de desarrollo
-php artisan serve
-
-# Ejecutar migraciones
+# 4. Ejecutar migraciones
 php artisan migrate
 
-# Refrescar migraciones (borra datos)
-php artisan migrate:fresh
+# 5. Crear modelos
+php artisan make:model Pelicula
+php artisan make:model Comentario
 
-# Ver estado de migraciones
+# 6. Crear middleware
+php artisan make:middleware RoleMiddleware
+
+# 7. Crear controladores
+php artisan make:controller peliculaControlador
+php artisan make:controller ComentarioControlador
+php artisan make:controller HomeController
+
+# 8. Generar hash de contraseña
+php artisan tinker --execute="echo bcrypt('12345678');"
+
+# 9. Verificar migraciones
 php artisan migrate:status
 
-# Tinker (consola interactiva)
-php artisan tinker
+# 10. Iniciar servidor
+php artisan serve
+```
+
+### Comandos útiles durante el desarrollo:
+
+```bash
+# Ver rutas registradas
+php artisan route:list
+
+# Limpiar caché
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
+
+# Rollback migraciones
+php artisan migrate:rollback
+php artisan migrate:rollback --step=1
+
+# Refrescar migraciones (BORRA DATOS)
+php artisan migrate:fresh
 
 # Verificar si columna existe
 php artisan tinker --execute="echo Schema::hasColumn('users', 'role') ? 'Existe' : 'No existe';"
 
-# Generar hash de contraseña
-php artisan tinker --execute="echo bcrypt('12345678');"
+# Acceder a tinker (consola interactiva)
+php artisan tinker
 ```
 
 ---
 
-**Última actualización:** 2025-12-05
+## ✅ Resumen de Archivos Modificados/Creados
+
+### Configuración
+- `.env` - Configuración de base de datos
+- `app/Providers/AppServiceProvider.php` - Bootstrap pagination + middleware
+
+### Migraciones
+- `database/migrations/2025_12_05_162924_add_rol_to_users_table.php`
+- `database/migrations/2025_12_05_165045_create_peliculas_table.php`
+- `database/migrations/2025_12_05_170004_create_comentarios_table.php`
+
+### Modelos
+- `app/Models/User.php` - Añadido campo 'role'
+- `app/Models/Pelicula.php` - Modelo completo
+- `app/Models/Comentario.php` - Modelo completo
+
+### Middleware
+- `app/Http/Middleware/RoleMiddleware.php`
+
+### Controladores
+- `app/Http/Controllers/HomeController.php`
+- `app/Http/Controllers/peliculaControlador.php`
+- `app/Http/Controllers/ComentarioControlador.php`
+
+### Rutas
+- `routes/web.php` - Todas las rutas del CRUD
+
+### Vistas
+- `resources/views/layouts/app.blade.php` - Navbar actualizado
+- `resources/views/home.blade.php` - Lista de películas
+- `resources/views/registrar-pelicula.blade.php` - Formulario crear
+- `resources/views/editar-pelicula.blade.php` - Formulario editar
+- `resources/views/detalle-pelicula.blade.php` - Detalle + comentarios
+
+### Datos
+- `database/seed_completo.sql` - 10 users, 20 películas, 30 comentarios
+- `server.php` - En raíz del proyecto
+
+---
+
+## 📝 Convenciones del Código
+
+1. **Un solo return por función**
+2. **Variables descriptivas:** `$pelicula`, `$comentario` (nunca `$p`, `$c`)
+3. **Comparaciones:** Usar `==` y `!=` (no `===` ni `!==`)
+4. **Sin breaks ni continues**
+5. **Flujo lineal:** Usar variables de control
+
+---
+
+## 🔍 Conceptos Clave Explicados
+
+### Validación de título único con edición
+
+```php
+$titleRule = ['required', 'string', 'min:3', 'max:100'];
+
+if ($id == null) {
+    // CREACIÓN: El título debe ser único
+    $titleRule[] = 'unique:peliculas,title';
+} else {
+    // EDICIÓN: El título debe ser único EXCEPTO para este ID
+    $titleRule[] = Rule::unique('peliculas', 'title')->ignore($id);
+}
+```
+
+**¿Por qué?**
+- Al crear: No puede haber 2 películas con el mismo título
+- Al editar: Si no cambias el título, no debe dar error de duplicado
+
+### Paginación
+
+```php
+// En la ruta
+$peliculas = Pelicula::paginate(10);
+
+// En la vista
+{{ $peliculas->links() }}
+```
+
+- `paginate(10)` → Solo trae 10 registros
+- Laravel lee `?page=2` de la URL automáticamente
+- `links()` → Genera botones de paginación
+
+---
+
+**Última actualización:** 2025-12-06
 **Versión Laravel:** 12.41.1
 **Versión PHP:** 8.2.12
