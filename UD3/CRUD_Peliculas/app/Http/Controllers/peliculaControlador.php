@@ -20,7 +20,8 @@ class peliculaControlador extends Controller
         if ($id == null) {
             $titleRule[] = 'unique:peliculas,title';
         } else {
-            $titleRule[] = Rule::unique('peliculas', 'title')->ignore($id);
+            // Asegurar que el ID sea entero y especificar explícitamente la columna de ID
+            $titleRule[] = Rule::unique('peliculas', 'title')->ignore((int)$id, 'id');
         }
 
         // 3. Definir todas las reglas de validación

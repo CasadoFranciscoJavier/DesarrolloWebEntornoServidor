@@ -488,6 +488,8 @@ class ComentarioControlador extends Controller
 
 ## 🛣️ Rutas
 
+### Rutas Web
+
 **Editar `routes/web.php`:**
 ```php
 <?php
@@ -593,6 +595,120 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 ```
 
+### Rutas API (REST)
+
+**Crear archivo de rutas API:**
+
+Laravel incluye por defecto el archivo `routes/api.php` para rutas API. Si no existe, créalo manualmente o ejecuta:
+
+```bash
+php artisan install:api
+```
+
+**Editar `routes/api.php`:**
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\peliculaControlador;
+use App\Models\Pelicula;
+use App\Http\Controllers\ComentarioControlador;
+use App\Models\Comentario;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
+
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+
+// Listar todas las películas
+Route::get('/movies', function () {
+    $peliculas = Pelicula::all();
+    return $peliculas;
+});
+
+// Obtener detalle de película con comentarios
+Route::get('/movies/{id}', function ($id) {
+    $pelicula = Pelicula::find($id);
+    $comentarios = Comentario::where('pelicula_id', $id)->orderBy('created_at', 'desc')->get();
+    return [$pelicula, $comentarios];
+});
+
+// Crear nueva película
+Route::post('/movies', function (Request $request) {
+    $controlador = new peliculaControlador();
+
+    try {
+        $respuesta = $controlador->RegistrarPelicula($request);
+    } catch (ValidationException $e) {
+        $respuesta = $e->errors();
+    }
+
+    return $respuesta;
+});
+
+// Actualizar película
+Route::put('/movies/{id}', function ($id, Request $request) {
+    $controlador = new peliculaControlador();
+
+    try {
+        $respuesta = $controlador->editarPelicula($id,$request);
+    } catch (ValidationException $e) {
+        $respuesta = $e->errors();
+    }
+
+    return $respuesta;
+});
+
+// Eliminar película
+Route::delete('/movies/{id}', function ($id) {
+    $pelicula = Pelicula::find($id);
+
+    if ($pelicula) {
+        $pelicula->delete();
+        return ['message' => 'Película eliminada correctamente'];
+    }
+
+    return ['error' => 'Película no encontrada'];
+});
+```
+
+**Rutas API disponibles:**
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | /api/movies | Listar todas las películas |
+| GET | /api/movies/{id} | Obtener detalle de una película |
+| POST | /api/movies | Crear una nueva película |
+| PUT | /api/movies/{id} | Actualizar una película |
+| DELETE | /api/movies/{id} | Eliminar una película |
+
+**Ejemplo de uso con Postman:**
+
+**POST /api/movies**
+```json
+{
+    "poster_url": "https://example.com/poster.jpg",
+    "title": "Nueva Película",
+    "release_year": 2024,
+    "genres": ["Action", "Drama"],
+    "synopsis": "Descripción de la película..."
+}
+```
+
+**PUT /api/movies/2**
+```json
+{
+    "poster_url": "https://example.com/poster.jpg",
+    "title": "Título Actualizado",
+    "release_year": 2024,
+    "genres": ["Action", "Sci-Fi"],
+    "synopsis": "Nueva sinopsis..."
+}
+```
+
+**IMPORTANTE:** No incluir el campo `id` en el body del JSON, ya que el ID viene en la URL.
+
 ---
 
 ## 🎨 Vistas
@@ -677,13 +793,16 @@ php artisan make:controller peliculaControlador
 php artisan make:controller ComentarioControlador
 php artisan make:controller HomeController
 
-# 8. Generar hash de contraseña
+# 8. Crear rutas API
+php artisan install:api
+
+# 9. Generar hash de contraseña
 php artisan tinker --execute="echo bcrypt('12345678');"
 
-# 9. Verificar migraciones
+# 10. Verificar migraciones
 php artisan migrate:status
 
-# 10. Iniciar servidor
+# 11. Iniciar servidor
 php artisan serve
 ```
 
@@ -740,6 +859,7 @@ php artisan tinker
 
 ### Rutas
 - `routes/web.php` - Todas las rutas del CRUD
+- `routes/api.php` - API REST para películas
 
 ### Vistas
 - `resources/views/layouts/app.blade.php` - Navbar actualizado
