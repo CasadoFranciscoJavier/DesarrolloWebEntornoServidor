@@ -9,8 +9,9 @@
 6. [Autenticación y Roles](#autenticación-y-roles)
 7. [Controladores](#controladores)
 8. [Rutas](#rutas)
-9. [Vistas](#vistas)
-10. [Lista de Comandos Completa](#lista-de-comandos-completa)
+9. [Configuración CORS](#configuración-cors-para-consumir-la-api-desde-react)
+10. [Vistas](#vistas)
+11. [Lista de Comandos Completa](#lista-de-comandos-completa)
 
 ---
 
@@ -711,6 +712,88 @@ Route::delete('/movies/{id}', function ($id) {
 
 ---
 
+## 🌐 Configuración CORS (para consumir la API desde React)
+
+Para permitir que el frontend React (corriendo en `http://localhost:5173`) pueda consumir la API de Laravel sin problemas de CORS:
+
+### 1. Publicar configuración de CORS
+
+```bash
+php artisan config:publish cors
+```
+
+Este comando crea el archivo `config/cors.php` si no existe.
+
+### 2. Configurar CORS
+
+**Editar `config/cors.php`:**
+
+**Para desarrollo (permitir todo):**
+```php
+<?php
+
+return [
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+
+    'allowed_methods' => ['*'],
+
+    'allowed_origins' => ['*'],
+
+    'allowed_origins_patterns' => [],
+
+    'allowed_headers' => ['*'],
+
+    'exposed_headers' => [],
+
+    'max_age' => 0,
+
+    'supports_credentials' => false,
+];
+```
+
+**Para producción (más restrictivo):**
+```php
+<?php
+
+return [
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+
+    'allowed_origins' => ['http://localhost:5173'],  // URL del frontend Vite
+
+    'allowed_origins_patterns' => [],
+
+    'allowed_headers' => ['Content-Type', 'X-Requested-With', 'Authorization'],
+
+    'exposed_headers' => [],
+
+    'max_age' => 0,
+
+    'supports_credentials' => false,
+];
+```
+
+### 3. Limpiar caché de configuración
+
+```bash
+php artisan config:clear
+```
+
+### 4. Verificar que funciona
+
+**Probar endpoint desde el navegador o Postman:**
+```
+http://127.0.0.1:8000/api/movies
+```
+
+**Notas importantes:**
+- En desarrollo usamos `allowed_origins => ['*']` para aceptar peticiones desde cualquier origen
+- En producción deberías especificar solo las URLs permitidas: `['http://localhost:5173', 'https://tu-dominio.com']`
+- El middleware de CORS viene incluido por defecto en Laravel desde la versión 7+
+
+---
+
 ## 🎨 Vistas
 
 ### 1. Actualizar navbar en layout
@@ -796,13 +879,18 @@ php artisan make:controller HomeController
 # 8. Crear rutas API
 php artisan install:api
 
-# 9. Generar hash de contraseña
+# 9. Configurar CORS (para consumo desde React)
+php artisan config:publish cors
+# Editar config/cors.php según necesidades
+php artisan config:clear
+
+# 10. Generar hash de contraseña
 php artisan tinker --execute="echo bcrypt('12345678');"
 
-# 10. Verificar migraciones
+# 11. Verificar migraciones
 php artisan migrate:status
 
-# 11. Iniciar servidor
+# 12. Iniciar servidor
 php artisan serve
 ```
 
