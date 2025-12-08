@@ -163,13 +163,57 @@ php artisan migrate
 ### 1. Modelo User (ya existe)
 
 **Editar `app/Models/User.php`:**
+
+Añadir 'role' al array $fillable:
+
 ```php
-protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role'  // Añadir este campo
-];
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    use HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role'  // Añadir este campo
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+}
 ```
 
 ### 2. Crear modelo Pelicula
@@ -287,26 +331,24 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        $respuesta = null;
-
-        if ($request->user() == null) {
-            $respuesta = redirect('/login');
+        if (Auth::check() && Auth::user()->role === $role) {
+            $salida = $next($request);
+        }else{
+            $salida = redirect('/');
         }
 
-        if ($respuesta == null && $request->user()->role != $role) {
-            $respuesta = abort(403, 'No tienes permisos para acceder a esta página');
-        }
-
-        if ($respuesta == null) {
-            $respuesta = $next($request);
-        }
-
-        return $respuesta;
+        return $salida;
     }
 }
 ```
@@ -324,6 +366,17 @@ use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
     public function boot(): void
     {
         Paginator::useBootstrapFive();
@@ -612,67 +665,19 @@ php artisan install:api
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\peliculaControlador;
-use App\Models\Pelicula;
-use App\Http\Controllers\ComentarioControlador;
-use App\Models\Comentario;
-use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\Api\PeliculaApiController;
 use Illuminate\Http\Request;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-// Listar todas las películas
-Route::get('/movies', function () {
-    $peliculas = Pelicula::all();
-    return $peliculas;
-});
-
-// Obtener detalle de película con comentarios
-Route::get('/movies/{id}', function ($id) {
-    $pelicula = Pelicula::find($id);
-    $comentarios = Comentario::where('pelicula_id', $id)->orderBy('created_at', 'desc')->get();
-    return [$pelicula, $comentarios];
-});
-
-// Crear nueva película
-Route::post('/movies', function (Request $request) {
-    $controlador = new peliculaControlador();
-
-    try {
-        $respuesta = $controlador->RegistrarPelicula($request);
-    } catch (ValidationException $e) {
-        $respuesta = $e->errors();
-    }
-
-    return $respuesta;
-});
-
-// Actualizar película
-Route::put('/movies/{id}', function ($id, Request $request) {
-    $controlador = new peliculaControlador();
-
-    try {
-        $respuesta = $controlador->editarPelicula($id,$request);
-    } catch (ValidationException $e) {
-        $respuesta = $e->errors();
-    }
-
-    return $respuesta;
-});
-
-// Eliminar película
-Route::delete('/movies/{id}', function ($id) {
-    $pelicula = Pelicula::find($id);
-
-    if ($pelicula) {
-        $pelicula->delete();
-        return ['message' => 'Película eliminada correctamente'];
-    }
-
-    return ['error' => 'Película no encontrada'];
-});
+// Rutas API con controlador documentado para Swagger
+Route::get('/movies', [PeliculaApiController::class, 'index']);
+Route::get('/movies/{id}', [PeliculaApiController::class, 'show']);
+Route::post('/movies', [PeliculaApiController::class, 'store']);
+Route::put('/movies/{id}', [PeliculaApiController::class, 'update']);
+Route::delete('/movies/{id}', [PeliculaApiController::class, 'destroy']);
 ```
 
 **Rutas API disponibles:**
