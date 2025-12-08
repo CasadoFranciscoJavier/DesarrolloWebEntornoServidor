@@ -318,11 +318,18 @@ Archivo `database/seed_completo.sql` contiene:
 ## 🔐 Autenticación y Roles
 
 ### 1. Crear middleware de roles
+
+**Nota:** Este archivo NO existe inicialmente. Lo creamos con el comando:
+
 ```bash
 php artisan make:middleware RoleMiddleware
 ```
 
-**Editar `app/Http/Middleware/RoleMiddleware.php`:**
+**Qué hace este comando:**
+- Crea el archivo `app/Http/Middleware/RoleMiddleware.php`
+- Genera una estructura básica de middleware que debemos personalizar
+
+**Contenido inicial generado por Laravel:**
 ```php
 <?php
 
@@ -331,7 +338,29 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Auth;
+
+class RoleMiddleware
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        return $next($request);
+    }
+}
+```
+
+**Modificar completamente `app/Http/Middleware/RoleMiddleware.php`:**
+
+Reemplazar TODO el contenido con:
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;  // AÑADIR: Import de Auth facade
 
 class RoleMiddleware
 {
@@ -340,8 +369,9 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string $role): Response  // MODIFICAR: Añadir parámetro $role
     {
+        // AÑADIR: Toda esta lógica de verificación de rol
         if (Auth::check() && Auth::user()->role === $role) {
             $salida = $next($request);
         }else{
@@ -353,16 +383,48 @@ class RoleMiddleware
 }
 ```
 
+**Cambios realizados:**
+1. ✅ Añadido `use Illuminate\Support\Facades\Auth;`
+2. ✅ Modificado parámetro del método `handle()` para aceptar `string $role`
+3. ✅ Reemplazada lógica simple por verificación de autenticación y rol
+
+---
+
 ### 2. Registrar middleware
 
-**Editar `app/Providers/AppServiceProvider.php`:**
+**Nota:** El archivo `app/Providers/AppServiceProvider.php` YA EXISTE desde que creaste el proyecto Laravel.
+
+**Contenido original de `app/Providers/AppServiceProvider.php`:**
 ```php
 <?php
 
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Pagination\Paginator;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        //
+    }
+
+    public function boot(): void
+    {
+        //
+    }
+}
+```
+
+**Modificar `app/Providers/AppServiceProvider.php`:**
+
+```php
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;  // AÑADIR: Import de Paginator
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -379,22 +441,37 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // AÑADIR: Configurar paginación con Bootstrap 5
         Paginator::useBootstrapFive();
+
+        // AÑADIR: Registrar alias del middleware de roles
         $this->app['router']->aliasMiddleware('role', \App\Http\Middleware\RoleMiddleware::class);
     }
 }
 ```
 
-### 3. Actualizar HomeController
+**Cambios realizados:**
+1. ✅ Añadido `use Illuminate\Pagination\Paginator;`
+2. ✅ Añadido `Paginator::useBootstrapFive();` en el método `boot()`
+3. ✅ Añadido registro del middleware con alias 'role'
 
-**Editar `app/Http/Controllers/HomeController.php`:**
+**¿Por qué hacemos esto?**
+- `Paginator::useBootstrapFive()` → Para que la paginación use estilos de Bootstrap 5
+- `aliasMiddleware('role', ...)` → Para poder usar `->middleware('role:admin')` en las rutas
+
+---
+
+### 3. Crear y configurar HomeController
+
+**Nota:** Este archivo NO existe inicialmente. Laravel UI lo crea automáticamente cuando ejecutas `php artisan ui bootstrap --auth`.
+
+**Contenido inicial generado por Laravel UI:**
 ```php
 <?php
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pelicula;
 
 class HomeController extends Controller
 {
@@ -405,22 +482,80 @@ class HomeController extends Controller
 
     public function index()
     {
+        return view('home');  // Solo retorna la vista vacía
+    }
+}
+```
+
+**Modificar `app/Http/Controllers/HomeController.php`:**
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Pelicula;  // AÑADIR: Import del modelo Pelicula
+
+class HomeController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    public function index()
+    {
+        // MODIFICAR: Obtener películas paginadas y pasarlas a la vista
         $peliculas = Pelicula::paginate(10);
         return view('home', ['peliculas' => $peliculas]);
     }
 }
 ```
 
+**Cambios realizados:**
+1. ✅ Añadido `use App\Models\Pelicula;`
+2. ✅ Modificado método `index()` para obtener películas paginadas
+3. ✅ Pasamos datos a la vista con `['peliculas' => $peliculas]`
+
+**¿Por qué hacemos esto?**
+- La vista `home.blade.php` mostrará el listado de películas
+- `paginate(10)` divide los resultados en páginas de 10 elementos
+- Sin esto, la vista home estaría vacía
+
 ---
 
 ## 🎮 Controladores
 
 ### 1. Crear controlador de películas
+
+**Nota:** Este archivo NO existe inicialmente. Lo creamos con el comando:
+
 ```bash
 php artisan make:controller peliculaControlador
 ```
 
-**Editar `app/Http/Controllers/peliculaControlador.php`:**
+**Qué hace este comando:**
+- Crea el archivo `app/Http/Controllers/peliculaControlador.php`
+- Genera un controlador vacío con la estructura básica
+
+**Contenido inicial generado por Laravel:**
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class peliculaControlador extends Controller
+{
+    //
+}
+```
+
+**Modificar completamente `app/Http/Controllers/peliculaControlador.php`:**
+
+Reemplazar TODO el contenido con:
 ```php
 <?php
 
@@ -495,12 +630,54 @@ class peliculaControlador extends Controller
 }
 ```
 
+**Cambios realizados:**
+1. ✅ Añadido `use App\Models\Pelicula;`
+2. ✅ Añadido `use Illuminate\Validation\Rule;`
+3. ✅ Creado método `ValidarPelicula($request, $id = null)` para validaciones
+4. ✅ Creado método `RegistrarPelicula($request)` para crear películas
+5. ✅ Creado método `editarPelicula($id, $request)` para actualizar películas
+
+**¿Por qué tres métodos?**
+- `ValidarPelicula()` → Centraliza las reglas de validación (reutilizable para crear y editar)
+- `RegistrarPelicula()` → Crea nuevas películas en la base de datos
+- `editarPelicula()` → Actualiza películas existentes
+
+**Nota importante sobre validación:**
+- Para **crear**: título debe ser único → `'unique:peliculas,title'`
+- Para **editar**: título único excepto el actual → `Rule::unique()->ignore($id, 'id')`
+
+---
+
 ### 2. Crear controlador de comentarios
+
+**Nota:** Este archivo NO existe inicialmente. Lo creamos con el comando:
+
 ```bash
 php artisan make:controller ComentarioControlador
 ```
 
-**Editar `app/Http/Controllers/ComentarioControlador.php`:**
+**Qué hace este comando:**
+- Crea el archivo `app/Http/Controllers/ComentarioControlador.php`
+- Genera un controlador vacío con la estructura básica
+
+**Contenido inicial generado por Laravel:**
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class ComentarioControlador extends Controller
+{
+    //
+}
+```
+
+**Modificar completamente `app/Http/Controllers/ComentarioControlador.php`:**
+
+Reemplazar TODO el contenido con:
+
 ```php
 <?php
 
@@ -539,9 +716,36 @@ class ComentarioControlador extends Controller
 }
 ```
 
+**Cambios realizados:**
+1. ✅ Añadido `use App\Models\Comentario;`
+2. ✅ Añadido `use App\Models\Pelicula;`
+3. ✅ Creado método `ValidarComentario($request)` para validaciones
+4. ✅ Creado método `RegistrarComentario($request)` para crear comentarios
+
+**¿Por qué dos métodos?**
+- `ValidarComentario()` → Valida que la película exista y el contenido sea válido
+- `RegistrarComentario()` → Crea el comentario asociando automáticamente el usuario autenticado
+
+**Nota importante:**
+- `auth()->id()` obtiene automáticamente el ID del usuario autenticado
+- `'exists:peliculas,id'` valida que la película exista en la base de datos
+
 ---
 
 ## 🛣️ Rutas
+
+**Nota:** El archivo `routes/web.php` YA EXISTE desde que creaste el proyecto Laravel.
+
+**Contenido inicial de `routes/web.php`:**
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+```
 
 ### Rutas Web
 
