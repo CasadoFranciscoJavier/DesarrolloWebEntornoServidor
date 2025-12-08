@@ -45,7 +45,7 @@ export default function PeliculaDetalleCard({ movie }) {
                             <p className="card-text mt-2">{movie.synopsis}</p>
                         </div>
 
-                        {/* Botones de acción */}
+                       
                         <div className="d-flex gap-2">
                             <Link to={`/movies/${movie.id}/edit`} className="btn btn-warning">
                                 Editar

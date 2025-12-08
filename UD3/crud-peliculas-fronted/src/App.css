@@ -18,6 +18,16 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+
+.navbar-fija {
+    /* Define la altura máxima deseada para la barra */
+    height: 80px; 
+    
+    /* Muy importante: asegura que los elementos internos se centren verticalmente */
+    display: flex;
+    align-items: center; 
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

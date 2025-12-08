@@ -2,56 +2,72 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getPeliculaById, actualizarPelicula } from "../services/PeliculaService.js";
 
-export default function EditarPelicula() {
-    const { id } = useParams();
-    const navigate = useNavigate();
+const peliculaVacia = {
+    poster_url: '',
+    title: '',
+    release_year: '',
+    genres: [],
+    synopsis: ''
+}
 
-    const [poster_url, setPosterUrl] = useState('');
-    const [title, setTitle] = useState('');
-    const [release_year, setReleaseYear] = useState('');
-    const [genres, setGenres] = useState([]);
-    const [synopsis, setSynopsis] = useState('');
+
+export default function EditarPelicula() {
+
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const [movie, setMovie] = useState(peliculaVacia);
 
     const GENEROS = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Fantasy', 'Documentary', 'Romance'];
 
+    // useEffect(() => {             Así sería con varios useState
+    //     getPeliculaById(id)
+    //         .then((response) => {
+    //             const pelicula = response.data[0];
+    //             setPosterUrl(pelicula.poster_url);
+    //             setTitle(pelicula.title);
+    //             setReleaseYear(pelicula.release_year);
+    //             setGenres(pelicula.genres);
+    //             setSynopsis(pelicula.synopsis);
+    //         })
+    //         .catch((error) => console.error(error));
+    // }, [id]);
+
     useEffect(() => {
         getPeliculaById(id)
-            .then((response) => {
-                const pelicula = response.data[0];
-                setPosterUrl(pelicula.poster_url);
-                setTitle(pelicula.title);
-                setReleaseYear(pelicula.release_year);
-                setGenres(pelicula.genres);
-                setSynopsis(pelicula.synopsis);
-            })
+            .then((response) => setMovie(response.data[0]))  // La API Laravel devuelve un array: [pelicula, comentarios]Necesitamos solo el primer elemento (la película)
             .catch((error) => console.error(error));
     }, [id]);
 
-    const handleGenreChange = (genero) => {
-        if (genres.includes(genero)) {
-            setGenres(genres.filter(generoActual => generoActual != genero));
+    function handleChange(input) {
+        const { name, value } = input.target;
+        setMovie({
+            ...movie,
+            [name]: value
+        });
+    }
+
+    function handleGenreChange(genero) {
+        if (movie.genres.includes(genero)) {
+            setMovie({
+                ...movie,
+                genres: movie.genres.filter(generoActual => generoActual != genero)  
+            });
+            // El filter recorre la lista elemento por elemento (a cada uno lo llama temporalmente generoActual
+            //Nos quedamos solo con los géneros que NO SEAN IGUALES al que acabo de clicar
         } else {
-            setGenres([...genres, genero]);
+            setMovie({
+                ...movie,
+                genres: [...movie.genres, genero]
+            });
         }
-    };
+    }
 
-    const handleSubmit = (evento) => {
-        evento.preventDefault();
-
-        const datos = {
-            poster_url: poster_url,
-            title: title,
-            release_year: release_year,
-            genres: genres,
-            synopsis: synopsis
-        };
-
-        actualizarPelicula(id, datos)
-            .then(() => {
-                navigate(`/movies/${id}`);
-            })
+    function handleSubmit(form) {
+        form.preventDefault();
+        actualizarPelicula(id, movie)
+            .then(() => navigate(`/movies/${id}`))
             .catch((error) => console.error(error));
-    };
+    }
 
     return (
         <div className="container mt-4">
@@ -59,40 +75,43 @@ export default function EditarPelicula() {
 
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label className="form-label">URL del Poster</label>
+                    <label className="form-label"><strong>URL Póster: </strong></label>
                     <input
                         type="url"
+                        name="poster_url"
                         className="form-control"
-                        value={poster_url}
-                        onChange={(evento) => setPosterUrl(evento.target.value)}
+                        value={movie.poster_url}
+                        onChange={handleChange}
                         required
                     />
                 </div>
 
                 <div className="mb-3">
-                    <label className="form-label">Titulo</label>
+                    <label className="form-label"><strong>Título: </strong></label>
                     <input
                         type="text"
+                        name="title"
                         className="form-control"
-                        value={title}
-                        onChange={(evento) => setTitle(evento.target.value)}
+                        value={movie.title}
+                        onChange={handleChange}
                         required
                     />
                 </div>
 
                 <div className="mb-3">
-                    <label className="form-label">Año</label>
+                    <label className="form-label"><strong>Año: </strong></label>
                     <input
                         type="number"
+                        name="release_year"
                         className="form-control"
-                        value={release_year}
-                        onChange={(evento) => setReleaseYear(evento.target.value)}
+                        value={movie.release_year}
+                        onChange={handleChange}
                         required
                     />
                 </div>
 
                 <div className="mb-3">
-                    <label className="form-label">Generos</label>
+                    <label className="form-label"><strong>Géneros: </strong></label>
                     <div className="row">
                         {GENEROS.map((genero) => (
                             <div key={genero} className="col-6 col-md-3">
@@ -100,7 +119,7 @@ export default function EditarPelicula() {
                                     <input
                                         type="checkbox"
                                         className="form-check-input"
-                                        checked={genres.includes(genero)}
+                                        checked={movie.genres.includes(genero)}
                                         onChange={() => handleGenreChange(genero)}
                                     />
                                     <label className="form-check-label">{genero}</label>
@@ -111,12 +130,13 @@ export default function EditarPelicula() {
                 </div>
 
                 <div className="mb-3">
-                    <label className="form-label">Sinopsis</label>
+                    <label className="form-label "><strong>Sinopsis: </strong></label>
                     <textarea
+                        name="synopsis"
                         className="form-control"
                         rows="5"
-                        value={synopsis}
-                        onChange={(evento) => setSynopsis(evento.target.value)}
+                        value={movie.synopsis}
+                        onChange={handleChange}
                         required
                     ></textarea>
                 </div>
