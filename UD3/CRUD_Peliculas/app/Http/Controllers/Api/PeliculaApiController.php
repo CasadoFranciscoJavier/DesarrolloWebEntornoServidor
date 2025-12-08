@@ -225,12 +225,15 @@ class PeliculaApiController extends Controller
     public function destroy($id)
     {
         $pelicula = Pelicula::find($id);
+        $respuesta = [];
 
         if ($pelicula) {
             $pelicula->delete();
-            return ['message' => 'Película eliminada correctamente'];
+            $respuesta = ['message' => 'Película eliminada correctamente'];
+        } else {
+            $respuesta = ['error' => 'Película no encontrada'];
         }
-
-        return ['error' => 'Película no encontrada'];
+        
+        return $respuesta;
     }
 }
