@@ -153,25 +153,7 @@ export const getPosts = () => API.get('/posts');
 **Explicación:**
 - `baseURL`: Apunta al backend Laravel (`http://127.0.0.1:8000/api`)
 - `API.create()`: Crea una instancia de Axios con configuración predeterminada
-- `getPosts()`: Función de ejemplo (puedes añadir más funciones para el CRUD)
-
-**Funciones que se añadirán posteriormente:**
-```javascript
-// Obtener todas las películas
-export const getMovies = () => API.get('/movies');
-
-// Obtener detalle de una película
-export const getMovie = (id) => API.get(`/movies/${id}`);
-
-// Crear nueva película
-export const createMovie = (data) => API.post('/movies', data);
-
-// Actualizar película
-export const updateMovie = (id, data) => API.put(`/movies/${id}`, data);
-
-// Eliminar película
-export const deleteMovie = (id) => API.delete(`/movies/${id}`);
-```
+- Esta configuración se usará en todos los servicios de la aplicación
 
 ---
 
@@ -257,7 +239,7 @@ npm uninstall nombre-paquete
 
 ---
 
-## 🗂️ Estructura del Proyecto
+## 🗂️ Estructura Inicial del Proyecto
 
 ```
 crud-peliculas-fronted/
@@ -272,9 +254,9 @@ crud-peliculas-fronted/
 │   ├── services/                # Servicios y configuración API
 │   │   └── api.js               # Configuración Axios
 │   │
-│   ├── components/              # Componentes reutilizables (próximamente)
+│   ├── components/              # Componentes reutilizables
 │   │
-│   ├── pages/                   # Páginas de la aplicación (próximamente)
+│   ├── pages/                   # Páginas de la aplicación
 │   │
 │   ├── App.jsx                  # Componente principal
 │   ├── App.css                  # Estilos del componente App
@@ -292,28 +274,9 @@ crud-peliculas-fronted/
 
 ---
 
-## ✅ Resumen de Archivos Modificados/Creados
+## 🎯 Implementación Completa del CRUD
 
-### Configuración
-- `package.json` - Dependencias añadidas: react-router-dom, axios, bootstrap, @popperjs/core
-
-### Servicios
-- `src/services/api.js` - Configuración de Axios con baseURL del backend Laravel
-
-### Punto de entrada
-- `src/main.jsx` - Importaciones de Bootstrap CSS y JS
-
-### Próximos pasos
-- Crear componentes de la aplicación
-- Configurar rutas con React Router
-- Implementar páginas del CRUD
-- Conectar con la API de Laravel
-
----
-
-## 🎯 Implementación del CRUD
-
-### Paso 1: Completar el servicio de películas
+### Paso 1: Crear el servicio de películas
 
 **Archivo:** `src/services/PeliculaService.js`
 
@@ -450,16 +413,13 @@ export default function ListarPeliculas() {
 
 ---
 
-### Paso 4: Configurar rutas en App.jsx
+### Paso 4: Configurar rutas iniciales en App.jsx
 
 **Archivo:** `src/App.jsx`
 
 ```jsx
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import ListarPeliculas from './pages/ListarPeliculas';
-// import CrearPelicula from './pages/CrearPelicula';
-// import EditarPelicula from './pages/EditarPelicula';
-// import DetallePelicula from './pages/DetallePelicula';
 import './App.css'
 
 function App() {
@@ -471,7 +431,6 @@ function App() {
           <Link to="/" className="navbar-brand">CRUD Películas</Link>
           <div className="navbar-nav">
             <Link to="/" className="nav-link">Películas</Link>
-            {/* <Link to="/movies/create" className="nav-link">Crear Película</Link> */}
           </div>
         </div>
       </nav>
@@ -479,9 +438,6 @@ function App() {
       {/* Definición de rutas */}
       <Routes>
         <Route path="/" element={<ListarPeliculas />} />
-        {/* <Route path="/movies/create" element={<CrearPelicula />} />
-        <Route path="/movies/:id" element={<DetallePelicula />} />
-        <Route path="/movies/:id/edit" element={<EditarPelicula />} /> */}
       </Routes>
     </Router>
   );
@@ -490,11 +446,8 @@ function App() {
 export default App;
 ```
 
-**Rutas definidas:**
-- `/`: Lista de películas (implementada)
-- `/movies/create`: Crear película (pendiente)
-- `/movies/:id`: Detalle de película (pendiente)
-- `/movies/:id/edit`: Editar película (pendiente)
+**Ruta inicial:**
+- `/`: Lista de películas
 
 ---
 
@@ -1187,6 +1140,23 @@ crud-peliculas-fronted/
 ├── vite.config.js
 └── GUIA-PROYECTO.md                   # Esta guía
 ```
+
+---
+
+---
+
+## 🔐 Autenticación y Control de Acceso (Opcional)
+
+Si deseas implementar un sistema de autenticación con roles (admin/user), consulta la guía completa:
+
+📄 **[GUIA-AUTENTICACION.md](./GUIA-AUTENTICACION.md)**
+
+Esta guía incluye:
+- Login/Logout con Laravel Sanctum
+- Tokens JWT
+- Protección de rutas según rol
+- Control de acceso basado en roles (RBAC)
+- Implementación paso a paso (backend + frontend)
 
 ---
 

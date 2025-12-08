@@ -6,7 +6,8 @@
       "Bash(php artisan db:table:*)",
       "Bash(findstr:*)",
       "Bash(php artisan migrate:rollback:*)",
-      "Bash(php artisan migrate:*)"
+      "Bash(php artisan migrate:*)",
+      "Bash(php artisan:*)"
     ],
     "deny": [],
     "ask": []
