@@ -57,6 +57,7 @@ export default function CrearPelicula() {
 
     function validarPoster() {
         return movie.poster_url.trim().length > 0;
+        // El método .trim() en JavaScript se utiliza para eliminar los espacios en blanco al inicio y al final de una cadena de texto (string).
     }
 
     function validarTitulo() {
