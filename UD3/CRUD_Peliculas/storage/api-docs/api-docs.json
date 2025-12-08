@@ -1,0 +1,437 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API CRUD Películas",
+        "description": "API REST para gestión de películas con Laravel",
+        "contact": {
+            "email": "admin@crudpeliculas.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Servidor de desarrollo local"
+        }
+    ],
+    "paths": {
+        "/api/movies": {
+            "get": {
+                "tags": [
+                    "Películas"
+                ],
+                "summary": "Listar todas las películas",
+                "description": "Obtiene la lista completa de películas",
+                "operationId": "2705292027e3c355b97edaaaadd3ae5b",
+                "responses": {
+                    "200": {
+                        "description": "Lista de películas obtenida exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "poster_url": {
+                                                "type": "string",
+                                                "example": "https://image.tmdb.org/t/p/w500/poster.jpg"
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "The Matrix"
+                                            },
+                                            "release_year": {
+                                                "type": "integer",
+                                                "example": 1999
+                                            },
+                                            "genres": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": [
+                                                    "Sci-Fi",
+                                                    "Action"
+                                                ]
+                                            },
+                                            "synopsis": {
+                                                "type": "string",
+                                                "example": "Un hacker descubre la verdad sobre su realidad..."
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "datetime"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "datetime"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Películas"
+                ],
+                "summary": "Crear una nueva película",
+                "description": "Crea una nueva película en la base de datos",
+                "operationId": "b2798db0eac99f75344630cd9eade38d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "poster_url",
+                                    "title",
+                                    "release_year",
+                                    "genres",
+                                    "synopsis"
+                                ],
+                                "properties": {
+                                    "poster_url": {
+                                        "type": "string",
+                                        "example": "https://image.tmdb.org/t/p/w500/poster.jpg"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Inception"
+                                    },
+                                    "release_year": {
+                                        "type": "integer",
+                                        "example": 2010
+                                    },
+                                    "genres": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "Sci-Fi",
+                                            "Action"
+                                        ]
+                                    },
+                                    "synopsis": {
+                                        "type": "string",
+                                        "example": "Un ladrón que roba secretos corporativos..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Película creada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 21
+                                        },
+                                        "poster_url": {
+                                            "type": "string"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "release_year": {
+                                            "type": "integer"
+                                        },
+                                        "genres": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "synopsis": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "datetime"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "datetime"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": [
+                                                "The title has already been taken."
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/movies/{id}": {
+            "get": {
+                "tags": [
+                    "Películas"
+                ],
+                "summary": "Obtener detalle de una película",
+                "description": "Obtiene los detalles de una película específica junto con sus comentarios",
+                "operationId": "85192555914f1654a4cc414dbed7c4cb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la película",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Película y comentarios obtenidos exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "poster_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "release_year": {
+                                                        "type": "integer"
+                                                    },
+                                                    "genres": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "synopsis": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Películas"
+                ],
+                "summary": "Actualizar una película",
+                "description": "Actualiza los datos de una película existente",
+                "operationId": "d589c8cbb1cf9688e7304472a30188e0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la película a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 2
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "poster_url",
+                                    "title",
+                                    "release_year",
+                                    "genres",
+                                    "synopsis"
+                                ],
+                                "properties": {
+                                    "poster_url": {
+                                        "type": "string",
+                                        "example": "https://image.tmdb.org/t/p/w500/poster.jpg"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Inception"
+                                    },
+                                    "release_year": {
+                                        "type": "integer",
+                                        "example": 2010
+                                    },
+                                    "genres": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "Sci-Fi",
+                                            "Action",
+                                            "Drama"
+                                        ]
+                                    },
+                                    "synopsis": {
+                                        "type": "string",
+                                        "example": "Sinopsis actualizada..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Película actualizada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "poster_url": {
+                                            "type": "string"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "release_year": {
+                                            "type": "integer"
+                                        },
+                                        "genres": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "synopsis": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "datetime"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "datetime"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Películas"
+                ],
+                "summary": "Eliminar una película",
+                "description": "Elimina una película de la base de datos",
+                "operationId": "286508a17e64d5867564d48eb4a3bfc7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la película a eliminar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operación exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Película eliminada correctamente"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "error": {
+                                                    "type": "string",
+                                                    "example": "Película no encontrada"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Películas",
+            "description": "Operaciones CRUD de películas"
+        }
+    ]
+}

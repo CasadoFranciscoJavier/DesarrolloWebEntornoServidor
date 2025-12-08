@@ -10,8 +10,9 @@
 7. [Controladores](#controladores)
 8. [Rutas](#rutas)
 9. [Configuración CORS](#configuración-cors-para-consumir-la-api-desde-react)
-10. [Vistas](#vistas)
-11. [Lista de Comandos Completa](#lista-de-comandos-completa)
+10. [Documentación API con Swagger](#documentación-api-con-swagger)
+11. [Vistas](#vistas)
+12. [Lista de Comandos Completa](#lista-de-comandos-completa)
 
 ---
 
@@ -794,6 +795,187 @@ http://127.0.0.1:8000/api/movies
 
 ---
 
+## 📖 Documentación API con Swagger
+
+### 1. Instalar L5-Swagger
+
+```bash
+composer require darkaonline/l5-swagger
+```
+
+### 2. Publicar configuración
+
+```bash
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+```
+
+Esto crea:
+- `config/l5-swagger.php` - Configuración de Swagger
+- `resources/views/vendor/l5-swagger/` - Vistas personalizables
+
+### 3. Crear controlador API con anotaciones
+
+**Crear `app/Http/Controllers/Api/PeliculaApiController.php`:**
+
+Este controlador contiene todas las anotaciones OpenAPI (Swagger) que documentan la API:
+
+```php
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\peliculaControlador;
+use App\Models\Pelicula;
+use App\Models\Comentario;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+
+class PeliculaApiController extends Controller
+{
+    /**
+     * @OA\Get(
+     *     path="/api/movies",
+     *     tags={"Películas"},
+     *     summary="Listar todas las películas",
+     *     description="Obtiene la lista completa de películas",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de películas obtenida exitosamente"
+     *     )
+     * )
+     */
+    public function index()
+    {
+        $peliculas = Pelicula::all();
+        return $peliculas;
+    }
+
+    // ... otros métodos con sus anotaciones
+}
+```
+
+### 4. Añadir anotaciones generales en Controller base
+
+**Editar `app/Http/Controllers/Controller.php`:**
+
+```php
+/**
+ * @OA\Info(
+ *     title="API CRUD Películas",
+ *     version="1.0.0",
+ *     description="API REST para gestión de películas con Laravel",
+ *     @OA\Contact(
+ *         email="admin@crudpeliculas.com"
+ *     )
+ * )
+ *
+ * @OA\Server(
+ *     url="http://127.0.0.1:8000",
+ *     description="Servidor de desarrollo local"
+ * )
+ *
+ * @OA\Tag(
+ *     name="Películas",
+ *     description="Operaciones CRUD de películas"
+ * )
+ */
+class Controller extends BaseController
+{
+    use AuthorizesRequests, ValidatesRequests;
+}
+```
+
+### 5. Actualizar rutas API
+
+**Modificar `routes/api.php` para usar el controlador documentado:**
+
+```php
+use App\Http\Controllers\Api\PeliculaApiController;
+
+Route::get('/movies', [PeliculaApiController::class, 'index']);
+Route::get('/movies/{id}', [PeliculaApiController::class, 'show']);
+Route::post('/movies', [PeliculaApiController::class, 'store']);
+Route::put('/movies/{id}', [PeliculaApiController::class, 'update']);
+Route::delete('/movies/{id}', [PeliculaApiController::class, 'destroy']);
+```
+
+### 6. Generar documentación
+
+```bash
+php artisan l5-swagger:generate
+```
+
+### 7. Acceder a Swagger UI
+
+Inicia el servidor:
+```bash
+php artisan serve
+```
+
+Accede a la interfaz Swagger en tu navegador:
+```
+http://127.0.0.1:8000/api/documentation
+```
+
+### Características de Swagger UI
+
+- ✅ **Interfaz interactiva** para probar todos los endpoints
+- ✅ **Documentación automática** generada desde anotaciones
+- ✅ **Ejemplos de request/response** para cada endpoint
+- ✅ **Validaciones documentadas** (tipos, límites, formatos)
+- ✅ **Probador integrado** ("Try it out" button)
+
+### Comandos útiles Swagger
+
+```bash
+# Regenerar documentación después de cambios
+php artisan l5-swagger:generate
+
+# Publicar assets de Swagger UI
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+
+# Ver configuración actual
+cat config/l5-swagger.php
+```
+
+### Estructura de anotaciones
+
+**Ejemplo completo de endpoint documentado:**
+
+```php
+/**
+ * @OA\Post(
+ *     path="/api/movies",
+ *     tags={"Películas"},
+ *     summary="Crear una nueva película",
+ *     description="Crea una nueva película en la base de datos",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"poster_url", "title", "release_year", "genres", "synopsis"},
+ *             @OA\Property(property="poster_url", type="string", example="https://image.tmdb.org/t/p/w500/poster.jpg"),
+ *             @OA\Property(property="title", type="string", example="Inception"),
+ *             @OA\Property(property="release_year", type="integer", example=2010),
+ *             @OA\Property(property="genres", type="array", @OA\Items(type="string"), example={"Sci-Fi", "Action"}),
+ *             @OA\Property(property="synopsis", type="string", example="Un ladrón que roba secretos...")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Película creada exitosamente"
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Error de validación"
+ *     )
+ * )
+ */
+public function store(Request $request) { ... }
+```
+
+---
+
 ## 🎨 Vistas
 
 ### 1. Actualizar navbar en layout
@@ -884,13 +1066,20 @@ php artisan config:publish cors
 # Editar config/cors.php según necesidades
 php artisan config:clear
 
-# 10. Generar hash de contraseña
+# 10. Instalar y configurar Swagger
+composer require darkaonline/l5-swagger
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+# Crear app/Http/Controllers/Api/PeliculaApiController.php con anotaciones
+# Actualizar routes/api.php para usar PeliculaApiController
+php artisan l5-swagger:generate
+
+# 11. Generar hash de contraseña
 php artisan tinker --execute="echo bcrypt('12345678');"
 
-# 11. Verificar migraciones
+# 12. Verificar migraciones
 php artisan migrate:status
 
-# 12. Iniciar servidor
+# 13. Iniciar servidor
 php artisan serve
 ```
 
@@ -899,6 +1088,9 @@ php artisan serve
 ```bash
 # Ver rutas registradas
 php artisan route:list
+
+# Regenerar documentación Swagger
+php artisan l5-swagger:generate
 
 # Limpiar caché
 php artisan config:clear
