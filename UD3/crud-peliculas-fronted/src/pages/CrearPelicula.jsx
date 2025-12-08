@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getPeliculaById, crearPelicula } from "../services/PeliculaService.js";
+import { useNavigate } from "react-router-dom";
+import { crearPelicula } from "../services/PeliculaService.js";
 
 const peliculaVacia = {
     poster_url: '',
@@ -10,7 +10,6 @@ const peliculaVacia = {
     synopsis: ''
 }
 
-
 export default function CrearPelicula() {
 
     const navigate = useNavigate();
@@ -18,6 +17,35 @@ export default function CrearPelicula() {
 
     const GENEROS = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Fantasy', 'Documentary', 'Romance'];
 
+    // Estados para los mensajes de error
+    const [mensajePoster, setMensajePoster] = useState('');
+    const [mensajeTitulo, setMensajeTitulo] = useState('');
+    const [mensajeAno, setMensajeAno] = useState('');
+    const [mensajeGeneros, setMensajeGeneros] = useState('');
+    const [mensajeSinopsis, setMensajeSinopsis] = useState('');
+
+    // useEffect para validar en tiempo real
+    useEffect(() => {
+        setMensajePoster(
+            validarPoster() ? '' : 'La URL del póster debe ser válida y no estar vacía'
+        );
+
+        setMensajeTitulo(
+            validarTitulo() ? '' : 'El título debe tener entre 1 y 100 caracteres'
+        );
+
+        setMensajeAno(
+            validarAno() ? '' : 'El año debe estar entre 1888 (primera película) y el año actual'
+        );
+
+        setMensajeGeneros(
+            validarGeneros() ? '' : 'Debes seleccionar al menos un género'
+        );
+
+        setMensajeSinopsis(
+            validarSinopsis() ? '' : 'La sinopsis debe tener entre 10 y 500 caracteres'
+        );
+    }, [movie]);
 
     function handleChange(input) {
         const { name, value } = input.target;
@@ -25,6 +53,28 @@ export default function CrearPelicula() {
             ...movie,
             [name]: value
         });
+    }
+
+    function validarPoster() {
+        return movie.poster_url.trim().length > 0;
+    }
+
+    function validarTitulo() {
+        return movie.title.trim().length >= 1 && movie.title.trim().length <= 100;
+    }
+
+    function validarAno() {
+        const anoActual = new Date().getFullYear();
+        const ano = parseInt(movie.release_year);
+        return ano >= 1888 && ano <= anoActual;
+    }
+
+    function validarGeneros() {
+        return movie.genres.length >= 1;
+    }
+
+    function validarSinopsis() {
+        return movie.synopsis.trim().length >= 10 && movie.synopsis.trim().length <= 500;
     }
 
     function handleGenreChange(genero) {
@@ -45,9 +95,13 @@ export default function CrearPelicula() {
 
     function handleSubmit(form) {
         form.preventDefault();
-        crearPelicula(movie)
-            .then((response) => navigate(`/movies/${response.data.id}`))
-            .catch((error) => console.error(error));
+
+        // Validar todos los campos antes de enviar
+        if (validarPoster() && validarTitulo() && validarAno() && validarGeneros() && validarSinopsis()) {
+            crearPelicula(movie)
+                .then((response) => navigate(`/movies/${response.data.id}`))
+                .catch((error) => console.error(error));
+        }
     }
 
     return (
@@ -65,6 +119,7 @@ export default function CrearPelicula() {
                         onChange={handleChange}
                         required
                     />
+                    {mensajePoster && <small className="text-danger">{mensajePoster}</small>}
                 </div>
 
                 <div className="mb-3">
@@ -77,6 +132,7 @@ export default function CrearPelicula() {
                         onChange={handleChange}
                         required
                     />
+                    {mensajeTitulo && <small className="text-danger">{mensajeTitulo}</small>}
                 </div>
 
                 <div className="mb-3">
@@ -89,6 +145,7 @@ export default function CrearPelicula() {
                         onChange={handleChange}
                         required
                     />
+                    {mensajeAno && <small className="text-danger">{mensajeAno}</small>}
                 </div>
 
                 <div className="mb-3">
@@ -108,10 +165,11 @@ export default function CrearPelicula() {
                             </div>
                         ))}
                     </div>
+                    {mensajeGeneros && <small className="text-danger">{mensajeGeneros}</small>}
                 </div>
 
                 <div className="mb-3">
-                    <label className="form-label "><strong>Sinopsis: </strong></label>
+                    <label className="form-label"><strong>Sinopsis: </strong></label>
                     <textarea
                         name="synopsis"
                         className="form-control"
@@ -120,6 +178,7 @@ export default function CrearPelicula() {
                         onChange={handleChange}
                         required
                     ></textarea>
+                    {mensajeSinopsis && <small className="text-danger">{mensajeSinopsis}</small>}
                 </div>
 
                 <div className="d-flex gap-2">

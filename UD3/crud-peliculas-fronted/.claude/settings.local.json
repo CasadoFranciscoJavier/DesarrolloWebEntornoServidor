@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(dir \"C:\\Users\\Usuario\\Documents\\GitHub\\2ºDAW\\2DAW-Desarrollo-Web-Entorno-Cliente\\UD3\\Ejemplos\\ejemplo-router-axios\\src\")",
-      "Bash(dir \"C:\\Users\\Usuario\\Documents\\GitHub\\2ºDAW\\2DAW-Desarrollo-Web-Entorno-Cliente\\UD3\\Ejemplos\\ejemplo-router-axios\\src\\pages\")"
+      "Bash(dir \"C:\\Users\\Usuario\\Documents\\GitHub\\2ºDAW\\2DAW-Desarrollo-Web-Entorno-Cliente\\UD3\\Ejemplos\\ejemplo-router-axios\\src\\pages\")",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

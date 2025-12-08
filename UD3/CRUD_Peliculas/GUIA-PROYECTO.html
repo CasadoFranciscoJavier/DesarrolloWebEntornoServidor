@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📽️ GUÍA COMPLETA - CRUD Películas con Laravel</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #10b981;
+            --bg: #ffffff;
+            --code-bg: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background: var(--bg);
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+            color: #0f172a;
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: #334155;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem;
+            color: #475569;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .toc {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .toc h2 {
+            border: none;
+            padding: 0;
+            margin-top: 0;
+        }
+
+        .toc ol {
+            margin-left: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .toc li {
+            margin: 0.5rem 0;
+        }
+
+        .note {
+            background: #dbeafe;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .note strong {
+            color: var(--primary);
+        }
+
+        .important {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .code-block {
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .code-header {
+            background: #334155;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .copy-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .copy-btn.copied {
+            background: #10b981;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 0 0 8px 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .inline-code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+
+        .file-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-link:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .checkmark {
+            color: var(--success);
+            margin-right: 0.5rem;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        .back-to-top.show {
+            display: flex;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        .changes-list {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📽️ GUÍA COMPLETA - CRUD Películas con Laravel</h1>
+
+    <div class="toc">
+        <h2>📋 Índice</h2>
+        <ol>
+            <li><a href="#descripcion">Descripción del Proyecto</a></li>
+            <li><a href="#configuracion-inicial">Configuración Inicial</a></li>
+            <li><a href="#migraciones">Migraciones</a></li>
+            <li><a href="#modelos">Modelos</a></li>
+            <li><a href="#seeders">Seeders (Datos de Prueba)</a></li>
+            <li><a href="#autenticacion">Autenticación y Roles</a></li>
+            <li><a href="#controladores">Controladores</a></li>
+            <li><a href="#rutas">Rutas</a></li>
+            <li><a href="#cors">Configuración CORS</a></li>
+            <li><a href="#swagger">Documentación API con Swagger</a></li>
+            <li><a href="#vistas">Vistas</a></li>
+            <li><a href="#comandos">Lista de Comandos Completa</a></li>
+        </ol>
+    </div>
+
+    <hr>
+
+    <h2 id="descripcion">📝 Descripción del Proyecto</h2>
+    <p>Sistema CRUD de películas con autenticación, roles (admin/user) y comentarios.</p>
+
+    <h3>Funcionalidades:</h3>
+    <ul>
+        <li><span class="checkmark">✅</span> Sistema de autenticación (login/register)</li>
+        <li><span class="checkmark">✅</span> Roles: Admin y Usuario</li>
+        <li><span class="checkmark">✅</span> Lista de películas paginada (10 por página)</li>
+        <li><span class="checkmark">✅</span> Detalle de película con comentarios</li>
+        <li><span class="checkmark">✅</span> Crear/editar/eliminar películas (solo admin)</li>
+        <li><span class="checkmark">✅</span> Crear comentarios (usuarios autenticados)</li>
+        <li><span class="checkmark">✅</span> Eliminar comentarios (solo admin)</li>
+    </ul>
+
+    <hr>
+
+    <h2 id="configuracion-inicial">🚀 Configuración Inicial</h2>
+
+    <h3>1. Crear proyecto Laravel</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <span>Bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>composer create-project laravel/laravel CRUD_Peliculas
+cd CRUD_Peliculas</code></pre>
+    </div>
+
+    <h3>2. Configurar base de datos</h3>
+    <p><strong>Crear base de datos en MySQL:</strong></p>
+    <div class="code-block">
+        <div class="code-header">
+            <span>SQL</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>CREATE DATABASE mi_crud_peliculas;</code></pre>
+    </div>
+
+    <p><strong>Editar archivo <span class="file-link" onclick="openFile('.env')">.env</span>:</strong></p>
+    <div class="code-block">
+        <div class="code-header">
+            <span>ENV</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mi_crud_peliculas
+DB_USERNAME=root
+DB_PASSWORD=1234</code></pre>
+    </div>
+
+    <h3>3. Instalar autenticación Laravel UI</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <span>Bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>composer require laravel/ui</code></pre>
+    </div>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span>Bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>php artisan ui bootstrap --auth</code></pre>
+    </div>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span>Bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>npm install && npm run build</code></pre>
+    </div>
+
+    <hr>
+
+    <h2 id="autenticacion">🔐 Autenticación y Roles</h2>
+
+    <h3>1. Crear middleware de roles</h3>
+
+    <div class="note">
+        <strong>Nota:</strong> Este archivo NO existe inicialmente. Lo creamos con el comando siguiente.
+    </div>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span>Crear middleware</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>php artisan make:middleware RoleMiddleware</code></pre>
+    </div>
+
+    <p><strong>Modificar <span class="file-link" onclick="openFile('app/Http/Middleware/RoleMiddleware.php')">app/Http/Middleware/RoleMiddleware.php</span>:</strong></p>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span>PHP</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>&lt;?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;  // AÑADIR
+
+class RoleMiddleware
+{
+    public function handle(Request $request, Closure $next, string $role): Response
+    {
+        if (Auth::check() && Auth::user()->role === $role) {
+            $salida = $next($request);
+        }else{
+            $salida = redirect('/');
+        }
+
+        return $salida;
+    }
+}</code></pre>
+    </div>
+
+    <div class="changes-list">
+        <h4>Cambios realizados:</h4>
+        <ul>
+            <li><span class="checkmark">✅</span> Añadido <code class="inline-code">use Illuminate\Support\Facades\Auth;</code></li>
+            <li><span class="checkmark">✅</span> Modificado parámetro del método <code class="inline-code">handle()</code> para aceptar <code class="inline-code">string $role</code></li>
+            <li><span class="checkmark">✅</span> Reemplazada lógica simple por verificación de autenticación y rol</li>
+        </ul>
+    </div>
+
+    <hr>
+
+    <h2 id="comandos">📦 Lista de Comandos Completa</h2>
+
+    <h3>Secuencia para crear un proyecto desde cero:</h3>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span>1. Crear proyecto</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>composer create-project laravel/laravel CRUD_Peliculas
+cd CRUD_Peliculas</code></pre>
+    </div>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span>2. Instalar Laravel UI y Bootstrap</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>composer require laravel/ui
+php artisan ui bootstrap --auth
+npm install && npm run build</code></pre>
+    </div>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span>3. Crear migraciones</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>php artisan make:migration add_rol_to_users_table --table=users
+php artisan make:migration create_peliculas_table
+php artisan make:migration create_comentarios_table</code></pre>
+    </div>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span>4. Ejecutar migraciones</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>php artisan migrate</code></pre>
+    </div>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span>10. Instalar y configurar Swagger</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+        </div>
+        <pre><code>composer require darkaonline/l5-swagger
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+php artisan l5-swagger:generate</code></pre>
+    </div>
+
+    <div class="important">
+        <strong>📌 Acceso a Swagger UI:</strong><br>
+        <code class="inline-code">http://127.0.0.1:8000/api/documentation</code>
+    </div>
+
+    <hr>
+
+    <p style="text-align: center; color: #64748b; margin: 2rem 0;">
+        <strong>Última actualización:</strong> 2025-12-06 |
+        <strong>Laravel:</strong> 12.41.1 |
+        <strong>PHP:</strong> 8.2.12
+    </p>
+
+    <div class="back-to-top" onclick="scrollToTop()">↑</div>
+
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = '✅ Copiado';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = '📋 Copiar';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function openFile(filepath) {
+            alert('Para abrir este archivo en VS Code:\n\n1. Presiona Ctrl+P\n2. Escribe: ' + filepath + '\n3. Presiona Enter\n\nO usa Ctrl+Click sobre la ruta en el archivo .md');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Mostrar botón "volver arriba" al hacer scroll
+        window.addEventListener('scroll', () => {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // Smooth scroll para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

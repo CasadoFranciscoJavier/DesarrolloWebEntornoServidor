@@ -1145,6 +1145,118 @@ crud-peliculas-fronted/
 
 ---
 
+## ✅ Validaciones de Formularios
+
+### Implementación de Validaciones en Tiempo Real
+
+Las validaciones se implementan siguiendo el patrón del ejemplo de registro de usuario, con validaciones en tiempo real usando `useEffect`.
+
+#### Reglas de Validación
+
+| Campo | Validación | Mensaje de Error |
+|-------|------------|------------------|
+| **URL Póster** | No puede estar vacío | "La URL del póster debe ser válida y no estar vacía" |
+| **Título** | Entre 1 y 100 caracteres | "El título debe tener entre 1 y 100 caracteres" |
+| **Año** | Entre 1888 y año actual + 5 | "El año debe estar entre 1888 (primera película) y el año actual + 5" |
+| **Géneros** | Al menos 1 género seleccionado | "Debes seleccionar al menos un género" |
+| **Sinopsis** | Entre 10 y 500 caracteres | "La sinopsis debe tener entre 10 y 500 caracteres" |
+
+#### Ejemplo de Implementación (CrearPelicula.jsx)
+
+```javascript
+// Estados para mensajes de error
+const [mensajePoster, setMensajePoster] = useState('');
+const [mensajeTitulo, setMensajeTitulo] = useState('');
+const [mensajeAno, setMensajeAno] = useState('');
+const [mensajeGeneros, setMensajeGeneros] = useState('');
+const [mensajeSinopsis, setMensajeSinopsis] = useState('');
+
+// useEffect para validar en tiempo real
+useEffect(() => {
+    setMensajePoster(
+        validarPoster() ? '' : 'La URL del póster debe ser válida y no estar vacía'
+    );
+
+    setMensajeTitulo(
+        validarTitulo() ? '' : 'El título debe tener entre 1 y 100 caracteres'
+    );
+
+    setMensajeAno(
+        validarAno() ? '' : 'El año debe estar entre 1888 (primera película) y el año actual + 5'
+    );
+
+    setMensajeGeneros(
+        validarGeneros() ? '' : 'Debes seleccionar al menos un género'
+    );
+
+    setMensajeSinopsis(
+        validarSinopsis() ? '' : 'La sinopsis debe tener entre 10 y 500 caracteres'
+    );
+}, [movie]);
+
+// Funciones de validación
+function validarPoster() {
+    return movie.poster_url.trim().length > 0;
+}
+
+function validarTitulo() {
+    return movie.title.trim().length >= 1 && movie.title.trim().length <= 100;
+}
+
+function validarAno() {
+    const anoActual = new Date().getFullYear();
+    const ano = parseInt(movie.release_year);
+    return ano >= 1888 && ano <= anoActual + 5;
+}
+
+function validarGeneros() {
+    return movie.genres.length >= 1;
+}
+
+function validarSinopsis() {
+    return movie.synopsis.trim().length >= 10 && movie.synopsis.trim().length <= 500;
+}
+
+// Validar antes de enviar
+function handleSubmit(form) {
+    form.preventDefault();
+
+    if (validarPoster() && validarTitulo() && validarAno() && validarGeneros() && validarSinopsis()) {
+        crearPelicula(movie)
+            .then((response) => navigate(`/movies/${response.data.id}`))
+            .catch((error) => console.error(error));
+    }
+}
+```
+
+#### Mostrar Mensajes de Error en el Formulario
+
+```jsx
+<div className="mb-3">
+    <label className="form-label"><strong>Título: </strong></label>
+    <input
+        type="text"
+        name="title"
+        className="form-control"
+        value={movie.title}
+        onChange={handleChange}
+        required
+    />
+    {mensajeTitulo && <small className="text-danger">{mensajeTitulo}</small>}
+</div>
+```
+
+#### Características de las Validaciones
+
+- ✅ **Validación en tiempo real:** Los mensajes aparecen mientras el usuario escribe
+- ✅ **Prevención de envío:** El formulario solo se envía si todos los campos son válidos
+- ✅ **Mensajes descriptivos:** Cada error tiene un mensaje claro y específico
+- ✅ **Validación de año:** Verifica que el año esté en un rango realista (desde 1888, primera película de la historia)
+- ✅ **Validación de géneros:** Asegura que al menos un género esté seleccionado
+- ✅ **Validación de longitud:** Título y sinopsis tienen límites mínimos y máximos
+
+---
+
 ## 🔐 Autenticación y Control de Acceso (Opcional)
 
 Si deseas implementar un sistema de autenticación con roles (admin/user), consulta la guía completa:
