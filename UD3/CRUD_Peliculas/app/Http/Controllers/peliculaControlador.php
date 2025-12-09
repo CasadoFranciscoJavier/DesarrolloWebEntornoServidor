@@ -11,10 +11,8 @@ class peliculaControlador extends Controller
 {
     public function ValidarPelicula(Request $request, $id = null)
     {
-        // 1. Convertir el array de géneros permitidos a una cadena separada por comas
         $genresList = implode(',', Pelicula::VALID_GENRES);
 
-        // 2. Definir la regla del título según si es creación o edición
         $titleRule = ['required', 'string', 'min:3', 'max:100'];
 
         if ($id == null) {
@@ -24,23 +22,16 @@ class peliculaControlador extends Controller
             $titleRule[] = Rule::unique('peliculas', 'title')->ignore((int)$id, 'id');
         }
 
-        // 3. Definir todas las reglas de validación
         $rules = [
             'poster_url' => ['required', 'string', 'url', 'max:255'],
             'title' => $titleRule,
             'release_year' => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
-
-            // Regla para el array contenedor (genres)
             'genres' => ['required', 'array', 'min:1', 'distinct'],
-
-            // Regla para cada elemento del array (genres.*)
             'genres.*' => ['required', 'string', 'in:' . $genresList],
-
             'synopsis' => ['required', 'string', 'min:10', 'max:5000'],
         ];
 
-        // 4. Ejecutar la validación. Si falla, Laravel automáticamente redirige
-        //    de vuelta con los errores y los datos de entrada.
+   
 
         $request->validate($rules);
 
