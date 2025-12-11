@@ -30,7 +30,7 @@ Route::post('/movie', function (Request $request) {
         $pelicula = $controlador->RegistrarPelicula($request);
         $respuesta = redirect("/movie/detail/" . $pelicula->id);
     } catch (ValidationException $e) {
-        $respuesta = back()->withErrors($e->errors());
+        $respuesta = back()->withErrors($e->errors())->withInput();
     }
 
     return $respuesta;
