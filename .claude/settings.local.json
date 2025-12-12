@@ -27,7 +27,9 @@
       "Bash(mklink:*)",
       "Bash(copy:*)",
       "Bash(php -S:*)",
-      "Bash(timeout 5 php artisan:*)"
+      "Bash(timeout 5 php artisan:*)",
+      "Bash(git mv:*)",
+      "Bash(move resourcesviewslayoutslayout.blade.php resourcesviewslayoutsapp.blade.php)"
     ],
     "deny": [],
     "ask": []
