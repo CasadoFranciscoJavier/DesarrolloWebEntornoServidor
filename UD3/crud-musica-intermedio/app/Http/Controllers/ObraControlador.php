@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Obra;
 use App\Models\Tipo;
+use Illuminate\Validation\Rule;
 
 class ObraControlador extends Controller
 {
@@ -15,39 +16,32 @@ class ObraControlador extends Controller
             'titulo' => ['required', 'string', 'min:3', 'max:200'],
             'anio' => ['nullable', 'integer', 'min:1000', 'max:' . (date('Y') + 10)],
             'autor_id' => ['required', 'integer', 'exists:autores,id'],
-            'tipos' => ['required', 'array', 'min:1'],
-            'tipos.*' => ['string', 'exists:tipos,nombre'],
+            'tipo' => ['nullable', 'string', Rule::in(Tipo::TIPOS)],
         ];
 
         $request->validate($rules);
     }
 
-    // Obtener IDs de tipos desde sus nombres
-    private function obtenerTiposIDs($tipos)
-    {
-        return Tipo::whereIn('nombre', $tipos)->pluck('id');
-    }
-
-    // Registrar una nueva obra con sus tipos
+    // Registrar una nueva obra
     public function RegistrarObra(Request $request)
     {
         $this->ValidarObra($request);
 
         $data = $request->all();
 
-        // Crear la obra
-        $obra = Obra::create([
+        // Obtener el tipo_id a partir del nombre del tipo
+        $tipo_id = null;
+        if (!empty($data['tipo'])) {
+            $tipo = Tipo::where('nombre', $data['tipo'])->first();
+            $tipo_id = $tipo?->id;
+        }
+
+        $obraNueva = Obra::create([
             'titulo' => $data['titulo'],
             'anio' => $data['anio'],
             'autor_id' => $data['autor_id'],
+            'tipo_id' => $tipo_id,
         ]);
-
-        // ATTACH: Vincular los tipos a la obra
-        $tiposIDs = $this->obtenerTiposIDs($data['tipos']);
-        $obra->tipos()->attach($tiposIDs);
-
-        // Cargar las relaciones
-        $obra->load('tipos');
 
         return redirect('/autor/detalle/' . $data['autor_id'])->with('success', 'Obra creada exitosamente');
     }

@@ -24,20 +24,13 @@ class AutorControlador extends Controller
             'nombre' => $nombreRule,
             'pais' => ['nullable', 'string', 'max:100'],
             'foto_url' => ['nullable', 'string', 'url', 'max:500'],
-            'periodos' => ['required', 'array', 'min:1'],
-            'periodos.*' => ['string', 'exists:periodos,nombre'],
+            'periodo' => ['nullable', 'string', Rule::in(Periodo::PERIODOS)],
         ];
 
         $request->validate($rules);
     }
 
-    // Obtener IDs de periodos desde sus nombres
-    private function obtenerPeriodosIDs($periodos)
-    {
-        return Periodo::whereIn('nombre', $periodos)->pluck('id');
-    }
-
-    // Registrar un nuevo autor con sus periodos
+    // Registrar un nuevo autor
     public function RegistrarAutor(Request $request)
     {
         $this->ValidarAutor($request);
@@ -50,19 +43,19 @@ class AutorControlador extends Controller
             $data['foto_url'] = "https://ui-avatars.com/api/?name={$nombreEncoded}&background=random&size=256";
         }
 
-        // Crear el autor
-        $autor = Autor::create([
+        // Obtener el periodo_id a partir del nombre del periodo
+        $periodo_id = null;
+        if (!empty($data['periodo'])) {
+            $periodo = Periodo::where('nombre', $data['periodo'])->first();
+            $periodo_id = $periodo?->id;
+        }
+
+        $autorNuevo = Autor::create([
             'nombre' => $data['nombre'],
             'pais' => $data['pais'],
             'foto_url' => $data['foto_url'],
+            'periodo_id' => $periodo_id,
         ]);
-
-        // ATTACH: Vincular los periodos al autor
-        $periodosIDs = $this->obtenerPeriodosIDs($data['periodos']);
-        $autor->periodos()->attach($periodosIDs);
-
-        // Cargar las relaciones
-        $autor->load('periodos');
 
         return redirect('/')->with('success', 'Autor creado exitosamente');
     }
@@ -81,18 +74,18 @@ class AutorControlador extends Controller
             $data['foto_url'] = "https://ui-avatars.com/api/?name={$nombreEncoded}&background=random&size=256";
         }
 
-        // Actualizar el autor
+        // Obtener el periodo_id a partir del nombre del periodo
+        $periodo_id = null;
+        if (!empty($data['periodo'])) {
+            $periodo = Periodo::where('nombre', $data['periodo'])->first();
+            $periodo_id = $periodo?->id;
+        }
+
         $autor->nombre = $data['nombre'];
         $autor->pais = $data['pais'];
         $autor->foto_url = $data['foto_url'];
+        $autor->periodo_id = $periodo_id;
         $autor->save();
-
-        // SYNC: Reemplazar completamente los periodos
-        $periodosIDs = $this->obtenerPeriodosIDs($data['periodos']);
-        $autor->periodos()->sync($periodosIDs);
-
-        // Recargar las relaciones
-        $autor->load('periodos');
 
         return redirect('/autor/detalle/' . $id)->with('success', 'Autor actualizado exitosamente');
     }
