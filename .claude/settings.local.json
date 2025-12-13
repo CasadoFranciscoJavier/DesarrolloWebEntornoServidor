@@ -29,7 +29,10 @@
       "Bash(php -S:*)",
       "Bash(timeout 5 php artisan:*)",
       "Bash(git mv:*)",
-      "Bash(move resourcesviewslayoutslayout.blade.php resourcesviewslayoutsapp.blade.php)"
+      "Bash(move resourcesviewslayoutslayout.blade.php resourcesviewslayoutsapp.blade.php)",
+      "Bash(laravel new:*)",
+      "Bash(composer create-project:*)",
+      "Bash(powershell -Command:*)"
     ],
     "deny": [],
     "ask": []

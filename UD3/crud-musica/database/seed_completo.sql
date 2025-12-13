@@ -1,7 +1,7 @@
 -- Seed completo para la base de datos de autores y obras
 -- Ejecutar este SQL en MySQL Workbench para tener datos de prueba completos
-
-USE crud_musica;
+CREATE DATABASE crud_musica_avanzado;
+USE crud_musica_avanzado;
 
 -- Limpiar las tablas antes de insertar (en orden correcto por las foreign keys)
 SET FOREIGN_KEY_CHECKS = 0;
