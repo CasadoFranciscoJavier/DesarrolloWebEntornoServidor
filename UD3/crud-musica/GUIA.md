@@ -135,17 +135,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class Autor extends Model
 {
+    protected $table = 'autores';
+
     protected $fillable = [
         'nombre',
         'pais',
         'periodo',
-        'foto_url'
+        'foto_url',
     ];
 
     public function obras()
     {
         return $this->hasMany(Obra::class);
     }
+
+    // Constante con valores válidos para validación
+    public const VALID_PERIODOS = [
+        'Renacimiento',
+        'Renacimiento tardío',
+        'Barroco temprano',
+        'Barroco',
+        'Clasicismo',
+        'Romanticismo'
+    ];
 }
 ```
 
@@ -163,13 +175,34 @@ class Obra extends Model
         'titulo',
         'tipo',
         'anio',
-        'autor_id'
+        'autor_id',
     ];
 
     public function autor()
     {
         return $this->belongsTo(Autor::class);
     }
+
+    // Constante con valores válidos para validación
+    public const VALID_TIPOS = [
+        'Misa',
+        'Motete',
+        'Pasión',
+        'Magnificat',
+        'Oficio de difuntos',
+        'Responsorios',
+        'Anthem',
+        'Lamentaciones',
+        'Madrigal espiritual',
+        'Vísperas',
+        'Colección sacra',
+        'Salmo',
+        'Oratorio',
+        'Gloria',
+        'Stabat Mater',
+        'Requiem',
+        'Himno'
+    ];
 }
 ```
 
@@ -195,7 +228,7 @@ php artisan make:controller AutorControlador
 php artisan make:controller ObraControlador
 ```
 
-### Paso 4.2: Editar controladores
+### Paso 4.2: Editar controladores con validaciones centralizadas
 
 **Ejemplo AutorControlador.php:**
 ```php
@@ -205,73 +238,125 @@ namespace App\Http\Controllers;
 
 use App\Models\Autor;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AutorControlador extends Controller
 {
-    // Listar todos los autores
-    public function index()
+    // Método centralizado de validación (evita duplicación)
+    private function ValidarAutor(Request $request, $id = null)
     {
-        $autores = Autor::all();
-        return view('autores.index', compact('autores'));
+        $periodosList = implode(',', Autor::VALID_PERIODOS);
+
+        $nombreRule = ['required', 'string', 'min:3', 'max:100'];
+
+        // Validación unique excepto para el registro actual
+        if ($id == null) {
+            $nombreRule[] = 'unique:autores,nombre';
+        } else {
+            $nombreRule[] = Rule::unique('autores', 'nombre')->ignore((int)$id, 'id');
+        }
+
+        $rules = [
+            'nombre' => $nombreRule,
+            'pais' => ['nullable', 'string', 'max:100'],
+            'periodo' => ['nullable', 'string', 'in:' . $periodosList],
+            'foto_url' => ['nullable', 'string', 'url', 'max:255'],
+        ];
+
+        $request->validate($rules);
     }
 
-    // Mostrar formulario de crear
-    public function create()
+    // Registrar nuevo autor
+    public function RegistrarAutor(Request $request)
     {
-        return view('autores.create');
-    }
+        $this->ValidarAutor($request);
 
-    // Guardar nuevo autor
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'pais' => 'nullable|string|max:255',
-            'periodo' => 'nullable|in:Renacimiento,Renacimiento tardio,Barroco temprano,Barroco,Clasicismo,Romanticismo',
-            'foto_url' => 'nullable|url'
+        $data = $request->all();
+
+        // Generar foto por defecto si no se proporciona
+        if (empty($data['foto_url'])) {
+            $nombreEncoded = urlencode($data['nombre']);
+            $data['foto_url'] = "https://ui-avatars.com/api/?name={$nombreEncoded}&background=random&size=256";
+        }
+
+        $autorNuevo = Autor::create([
+            'foto_url' => $data['foto_url'],
+            'nombre' => $data['nombre'],
+            'pais' => $data['pais'],
+            'periodo' => $data['periodo'],
         ]);
 
-        Autor::create($request->all());
-
-        return redirect()->route('autores.index')
-            ->with('success', 'Autor creado exitosamente');
+        return $autorNuevo;
     }
 
-    // Mostrar un autor especifico
-    public function show(Autor $autor)
+    // Editar autor existente
+    public function editarAutor($id, Request $request)
     {
-        return view('autores.show', compact('autor'));
+        $this->ValidarAutor($request, $id);
+
+        $data = $request->all();
+        $autor = Autor::find($id);
+
+        if (empty($data['foto_url'])) {
+            $nombreEncoded = urlencode($data['nombre']);
+            $data['foto_url'] = "https://ui-avatars.com/api/?name={$nombreEncoded}&background=random&size=256";
+        }
+
+        if ($autor) {
+            $autor->foto_url = $data['foto_url'];
+            $autor->nombre = $data['nombre'];
+            $autor->pais = $data['pais'];
+            $autor->periodo = $data['periodo'];
+
+            $autor->save();
+        }
+
+        return $autor;
+    }
+}
+```
+
+**Ejemplo ObraControlador.php:**
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Obra;
+use Illuminate\Http\Request;
+
+class ObraControlador extends Controller
+{
+    // Método centralizado de validación
+    private function ValidarObra(Request $request)
+    {
+        $tiposList = implode(',', Obra::VALID_TIPOS);
+
+        $rules = [
+            'titulo' => ['required', 'string', 'min:3', 'max:200'],
+            'tipo' => ['nullable', 'string', 'in:' . $tiposList],
+            'anio' => ['nullable', 'integer', 'min:1000', 'max:' . (date('Y') + 10)],
+            'autor_id' => ['required', 'integer', 'exists:autores,id'],
+        ];
+
+        $request->validate($rules);
     }
 
-    // Mostrar formulario de editar
-    public function edit(Autor $autor)
+    // Registrar nueva obra
+    public function RegistrarObra(Request $request)
     {
-        return view('autores.edit', compact('autor'));
-    }
+        $this->ValidarObra($request);
 
-    // Actualizar autor
-    public function update(Request $request, Autor $autor)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'pais' => 'nullable|string|max:255',
-            'periodo' => 'nullable|in:Renacimiento,Renacimiento tardio,Barroco temprano,Barroco,Clasicismo,Romanticismo',
-            'foto_url' => 'nullable|url'
+        $data = $request->all();
+
+        $obraNueva = Obra::create([
+            'titulo' => $data['titulo'],
+            'tipo' => $data['tipo'],
+            'anio' => $data['anio'],
+            'autor_id' => $data['autor_id'],
         ]);
 
-        $autor->update($request->all());
-
-        return redirect()->route('autores.index')
-            ->with('success', 'Autor actualizado exitosamente');
-    }
-
-    // Eliminar autor
-    public function destroy(Autor $autor)
-    {
-        $autor->delete();
-
-        return redirect()->route('autores.index')
-            ->with('success', 'Autor eliminado exitosamente');
+        return $obraNueva;
     }
 }
 ```
@@ -282,33 +367,130 @@ class AutorControlador extends Controller
 
 ### Paso 5.1: Editar `routes/web.php`
 
+**Importante:** Las rutas usan closures (funciones anónimas) en lugar de controladores resource. Esto da más flexibilidad.
+
 ```php
 <?php
 
+use App\Models\Autor;
+use App\Models\Obra;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\AutorControlador;
 use App\Http\Controllers\ObraControlador;
+use Illuminate\Validation\ValidationException;
 
-// Ruta principal (home) - listado de obras
-Route::get('/', [ObraControlador::class, 'index'])->name('home');
+// Ruta principal (home) - listado de autores
+Route::get('/', function () {
+    $autores = Autor::all();
+    return view('home', ['autores' => $autores]);
+});
 
-// Rutas resource para Autores (CRUD completo)
-Route::resource('autores', AutorControlador::class);
+// Ver detalles de un autor
+Route::get('/autor/detalle/{id}', function ($id) {
+    $autor = Autor::find($id);
+    $obras = Obra::where('autor_id', $id)->orderBy('created_at', 'desc')->get();
+    return view('detallesAutor', ['autor' => $autor, 'obras' => $obras]);
+});
 
-// Rutas para Obras
-Route::get('/autores/{autor}/obras/create', [ObraControlador::class, 'create'])->name('obras.create');
-Route::post('/autores/{autor}/obras', [ObraControlador::class, 'store'])->name('obras.store');
-Route::delete('/obras/{obra}', [ObraControlador::class, 'destroy'])->name('obras.destroy');
+// Formulario crear autor
+Route::get('/autor/create', function () {
+    return view('crearAutor', [
+        'periodos' => Autor::VALID_PERIODOS
+    ]);
+});
+
+// Procesar formulario crear autor
+Route::post('/autor', function (Request $request) {
+    $controlador = new AutorControlador();
+
+    try {
+        $autor = $controlador->RegistrarAutor($request);
+        $respuesta = redirect("/autor/detalle/" . $autor->id);
+    } catch (ValidationException $e) {
+        $respuesta = back()->withErrors($e->errors())->withInput();
+    }
+
+    return $respuesta;
+});
+
+// Formulario editar autor
+Route::get('/autor/edit/{id}', function ($id) {
+    $autor = Autor::find($id);
+    return view('editarAutor', ['autor' => $autor], [
+        'periodos' => Autor::VALID_PERIODOS
+    ]);
+});
+
+// Procesar formulario editar autor
+Route::post('/autor/edit/{id}', function ($id, Request $request) {
+    $controlador = new AutorControlador();
+
+    try {
+        $autor = $controlador->editarAutor($id, $request);
+        $respuesta = redirect("/autor/detalle/" . $autor->id);
+    } catch (ValidationException $e) {
+        $respuesta = back()->withErrors($e->errors());
+    }
+
+    return $respuesta;
+});
+
+// Eliminar autor
+Route::get('/autor/delete/{id}', function ($id) {
+    $autor = Autor::find($id);
+
+    if ($autor != null) {
+        $autor->delete();
+    }
+
+    return redirect('/');
+});
+
+// Formulario crear obra
+Route::get('/obra/create/{autor_id}', function ($autor_id) {
+    $autor = Autor::find($autor_id);
+    return view('crearObra', [
+        'autor' => $autor,
+        'tipos' => Obra::VALID_TIPOS
+    ]);
+});
+
+// Procesar formulario crear obra
+Route::post('/obra', function (Request $request) {
+    $controlador = new ObraControlador();
+
+    try {
+        $obra = $controlador->RegistrarObra($request);
+        $respuesta = redirect("/autor/detalle/" . $obra->autor_id);
+    } catch (ValidationException $e) {
+        $respuesta = back()->withErrors($e->errors())->withInput();
+    }
+
+    return $respuesta;
+});
+
+// Eliminar obra (UN SOLO RETURN)
+Route::get('/obra/delete/{id}', function ($id) {
+    $obra = Obra::find($id);
+    $ruta = '/';
+
+    if ($obra != null) {
+        $autorId = $obra->autor_id;
+        $obra->delete();
+        $ruta = '/autor/detalle/' . $autorId;
+    }
+
+    return redirect($ruta);
+});
 ```
 
-**Nota:** `Route::resource()` crea automaticamente todas estas rutas:
-- GET `/autores` → index
-- GET `/autores/create` → create
-- POST `/autores` → store
-- GET `/autores/{id}` → show
-- GET `/autores/{id}/edit` → edit
-- PUT/PATCH `/autores/{id}` → update
-- DELETE `/autores/{id}` → destroy
+**Ventajas de este enfoque:**
+- ✅ Control total sobre cada ruta
+- ✅ UN SOLO `return` por función (buena práctica)
+- ✅ Manejo de excepciones con try-catch
+- ✅ Redirecciones personalizadas
+- ✅ Paso de datos específicos a las vistas
 
 ---
 
@@ -584,66 +766,92 @@ Crear: `resources/views/autores/edit.blade.php`
 @endsection
 ```
 
-### Paso 7.5: Vista SHOW (Ver detalle de autor)
+### Paso 7.5: Vista SHOW (Ver detalle de autor con obras)
 
-Crear: `resources/views/autores/show.blade.php`
+Crear: `resources/views/detallesAutor.blade.php`
+
+**Mejoras aplicadas:**
+- ✅ Operadores ternarios `?:` y null coalescing `??` (código más limpio)
+- ✅ Lista de obras con diseño moderno usando `list-group`
+- ✅ Botones de acción alineados a la derecha
+- ✅ Confirmación JavaScript al eliminar
 
 ```blade
 @extends('layouts.app')
 
-@section('title', 'Detalle del Autor')
+@section('title', 'Detalle - {{ $autor->nombre }}')
 
 @section('content')
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1>{{ $autor->nombre }}</h1>
-            <div>
-                <a href="{{ route('autores.edit', $autor) }}" class="btn btn-warning">Editar</a>
-                <a href="{{ route('autores.index') }}" class="btn btn-secondary">Volver</a>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <p><strong>Pais:</strong> {{ $autor->pais ?? 'N/A' }}</p>
-                <p><strong>Periodo:</strong> {{ $autor->periodo ?? 'N/A' }}</p>
-                @if($autor->foto_url)
-                    <p><strong>Foto:</strong></p>
-                    <img src="{{ $autor->foto_url }}" alt="{{ $autor->nombre }}" class="img-fluid" style="max-width: 300px;">
-                @endif
-            </div>
-        </div>
-
-        <h3>Obras de este autor</h3>
-        <a href="{{ route('obras.create', $autor) }}" class="btn btn-primary mb-3">Agregar Obra</a>
-
-        @if($autor->obras->count() > 0)
-            <ul class="list-group">
-                @foreach($autor->obras as $obra)
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>{{ $obra->titulo }}</strong>
-                            @if($obra->tipo)
-                                <span class="badge bg-secondary">{{ $obra->tipo }}</span>
-                            @endif
-                            @if($obra->anio)
-                                <span class="text-muted">({{ $obra->anio }})</span>
-                            @endif
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="card shadow">
+                    <div class="row g-0">
+                        <!-- Imagen a la izquierda -->
+                        <div class="col-md-4">
+                            <img src="{{ $autor->foto_url }}" class="img-fluid w-100 h-100" style="object-fit: cover;"
+                                alt="{{ $autor->nombre }}">
                         </div>
-                        <form action="{{ route('obras.destroy', $obra) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Seguro?')">Eliminar</button>
-                        </form>
-                    </li>
-                @endforeach
-            </ul>
-        @else
-            <p class="text-muted">Este autor aun no tiene obras registradas.</p>
-        @endif
+
+                        <!-- Contenido a la derecha -->
+                        <div class="col-md-8 d-flex flex-column">
+                            <div class="card-body p-4 flex-grow-1">
+                                <h2 class="card-title text-primary mb-3">{{ $autor->nombre }}</h2>
+
+                                <p class="mb-2"><strong>Pais:</strong> {{ $autor->pais ?? 'N/A' }}</p>
+                                <p class="mb-3">
+                                    <strong>Periodo:</strong>
+                                    <span class="badge bg-success">{{ $autor->periodo ?? 'N/A' }}</span>
+                                </p>
+
+                                <hr>
+
+                                <h5 class="mt-3 mb-3"><strong>Obras ({{ $autor->obras->count() }})</strong></h5>
+                                @if($autor->obras->count() > 0)
+                                    <div class="list-group">
+                                        @foreach ($autor->obras as $obra)
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>{{ $obra->titulo }}</strong>
+                                                    <span class="text-muted ms-2">{{ $obra->anio ? '(' . $obra->anio . ')' : '' }}</span>
+                                                    <span class="badge bg-secondary ms-2">{{ $obra->tipo ?? '' }}</span>
+                                                </div>
+                                                <a href="/obra/delete/{{ $obra->id }}"
+                                                   class="btn btn-danger btn-sm"
+                                                   onclick="return confirm('¿Seguro que quieres borrar {{ $obra->titulo }}?')">
+                                                    <i class="bi bi-trash"></i> Borrar
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p class="text-muted">No hay obras registradas</p>
+                                @endif
+
+                                <div class="d-flex gap-2">
+                                    <a href="/obra/create/{{ $autor->id }}" class="btn btn-outline-info btn-sm mt-3">Añadir Obra</a>
+                                </div>
+                            </div>
+
+                            <!-- Botones de accion -->
+                            <div class="card-footer bg-light border-top">
+                                <div class="d-flex gap-2 justify-content-between">
+                                    <a href="/" class="btn btn-secondary btn-sm">Volver</a>
+                                    <div class="d-flex gap-2">
+                                        <a href="/autor/edit/{{ $autor->id }}" class="btn btn-warning btn-sm">Editar</a>
+                                        <a href="/autor/delete/{{ $autor->id }}" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('¿Seguro que quieres borrar a {{ $autor->nombre }}?')">
+                                            Eliminar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 @endsection
 ```
 
@@ -703,13 +911,98 @@ php artisan migrate:fresh
 
 ## NOTAS IMPORTANTES
 
+### Buenas prácticas aplicadas en este proyecto:
+
+#### 1. **UN SOLO RETURN por función**
+```php
+// ❌ MAL - Múltiples returns
+function ejemplo($id) {
+    if ($condicion) {
+        return redirect('/ruta1');
+    }
+    return redirect('/ruta2');
+}
+
+// ✅ BIEN - Un solo return
+function ejemplo($id) {
+    $ruta = '/ruta2';
+
+    if ($condicion) {
+        $ruta = '/ruta1';
+    }
+
+    return redirect($ruta);
+}
+```
+
+#### 2. **Constantes en Modelos para validación**
+- Definir valores válidos (ENUM) como constantes en el modelo
+- Usar `implode()` para convertirlas en reglas de validación
+- Ejemplo: `Autor::VALID_PERIODOS`, `Obra::VALID_TIPOS`
+
+#### 3. **Validaciones centralizadas**
+- Crear método privado `ValidarAutor()` o `ValidarObra()`
+- Reutilizar validaciones en crear/editar
+- Evitar duplicación de código
+
+#### 4. **Operadores ternarios y null coalescing en Blade**
+```blade
+{{-- ❌ MAL - Demasiado verboso --}}
+@if($obra->anio)
+    <span>({{ $obra->anio }})</span>
+@endif
+
+{{-- ✅ BIEN - Más limpio --}}
+<span>{{ $obra->anio ? '(' . $obra->anio . ')' : '' }}</span>
+<span>{{ $obra->tipo ?? 'Sin tipo' }}</span>
+```
+
+#### 5. **Guardar datos antes de eliminar**
+```php
+// ✅ IMPORTANTE: Guardar autor_id ANTES de delete()
+$autorId = $obra->autor_id;
+$obra->delete();
+return redirect('/autor/detalle/' . $autorId);
+```
+
+#### 6. **Validación unique con excepción**
+```php
+// Para editar sin que falle el unique en el mismo registro
+Rule::unique('autores', 'nombre')->ignore((int)$id, 'id')
+```
+
+#### 7. **Confirmaciones JavaScript**
+```blade
+<a href="/delete/{{ $id }}"
+   onclick="return confirm('¿Seguro?')">
+   Eliminar
+</a>
+```
+
+### Recordatorios generales:
+
 - **Siempre** estar en la carpeta del proyecto al ejecutar comandos `php artisan`
 - **Bootstrap** se carga desde CDN (no requiere npm ni compilacion)
-- **Validaciones** se hacen en el controlador con `$request->validate()`
+- **Validaciones** centralizadas en métodos privados del controlador
 - **Relaciones** se definen en los modelos (hasMany, belongsTo)
-- **Route::resource** crea automaticamente 7 rutas CRUD
 - **@csrf** es obligatorio en todos los formularios
-- **@method('PUT')** o **@method('DELETE')** para editar/eliminar
+- **try-catch** para manejar ValidationException en rutas
+
+---
+
+## ERRORES COMUNES Y SOLUCIONES
+
+### Error: "Attempt to read property on null"
+**Causa:** Intentar acceder a propiedades de un objeto después de eliminarlo
+**Solución:** Guardar datos necesarios ANTES de `delete()`
+
+### Error: URL mal formada en redirect
+**Causa:** Comillas incorrectas o concatenación mal hecha
+**Solución:** Usar comillas dobles y operador `.` para concatenar
+
+### Error: Badge vacío se muestra
+**Causa:** Usar `{{ $var ?? '' }}` en un `<span>` siempre visible
+**Solución:** Usar operador ternario completo o `@if`
 
 ---
 

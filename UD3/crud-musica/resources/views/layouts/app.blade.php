@@ -19,7 +19,7 @@
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
          
                 <a class="navbar-brand fw-bold" href="{{ url('/') }}">
@@ -38,7 +38,7 @@
                             <a class="nav-link" href="{{ url('/') }}">Autores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/autores/create') }}">Crear Autor</a>
+                            <a class="nav-link" href="{{ url('/autor/create') }}">Crear Autor</a>
                         </li>
                     </ul>
                 </div>

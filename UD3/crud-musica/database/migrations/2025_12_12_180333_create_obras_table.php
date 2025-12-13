@@ -13,11 +13,22 @@ return new class extends Migration
             $table->string('titulo'); 
             $table->enum('tipo', [
                 'Misa',
-                'Motete, Pasión',
-                'Magnificat, Responsorios',
+                'Motete',
+                'Pasión',
+                'Magnificat',
+                'Oficio de difuntos',
+                'Responsorios',
                 'Anthem',
                 'Lamentaciones',
-                'Vísperas'
+                'Madrigal espiritual',
+                'Vísperas',
+                'Colección sacra',
+                'Salmo',
+                'Oratorio',
+                'Gloria',
+                'Stabat Mater',
+                'Requiem',
+                'Himno'
             ])->nullable(); 
             
             $table->integer('anio')->nullable(); 

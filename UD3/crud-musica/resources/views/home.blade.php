@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Autores - CRUD Música')
 @section('content')
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 ">
     <h1 class="text-center mb-4">Listado de Autores</h1>
 
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">

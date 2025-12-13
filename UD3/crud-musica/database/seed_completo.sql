@@ -29,24 +29,24 @@ INSERT INTO autores (nombre, pais, periodo, foto_url, created_at, updated_at) VA
 -- ============================================
 INSERT INTO obras (titulo, tipo, anio, autor_id, created_at, updated_at) VALUES
 ('Misa en si menor', 'Misa', 1749, 1, NOW(), NOW()),
-('El clave bien temperado', 'Magnificat, Responsorios', 1722, 1, NOW(), NOW()),
-('Réquiem', 'Misa', 1791, 2, NOW(), NOW()),
-('Sinfonía n.º 40', 'Motete, Pasión', 1788, 2, NOW(), NOW()),
-('Sinfonía n.º 5', 'Motete, Pasión', 1808, 3, NOW(), NOW()),
+('El clave bien temperado', 'Magnificat', 1722, 1, NOW(), NOW()),
+('Réquiem', 'Requiem', 1791, 2, NOW(), NOW()),
+('Sinfonía n.º 40', 'Oratorio', 1788, 2, NOW(), NOW()),
+('Sinfonía n.º 5', 'Oratorio', 1808, 3, NOW(), NOW()),
 ('Para Elisa', NULL, 1810, 3, NOW(), NOW()),
 ('Nocturnos', NULL, 1830, 4, NOW(), NOW()),
 ('Concierto para piano n.º 1', NULL, 1831, 4, NOW(), NOW()),
 ('Las cuatro estaciones', NULL, 1725, 5, NOW(), NOW()),
-('Gloria', NULL, 1715, 5, NOW(), NOW()),
+('Gloria', 'Gloria', 1715, 5, NOW(), NOW()),
 ('La Traviata', 'Anthem', 1853, 6, NOW(), NOW()),
 ('Aida', 'Anthem', 1871, 6, NOW(), NOW()),
-('L’Orfeo', 'Motete, Pasión', 1607, 7, NOW(), NOW()),
+('L''Orfeo', 'Motete', 1607, 7, NOW(), NOW()),
 ('Vespro della Beata Vergine', 'Vísperas', 1610, 7, NOW(), NOW()),
-('Messiah', 'Anthem', 1741, 8, NOW(), NOW()),
+('Messiah', 'Oratorio', 1741, 8, NOW(), NOW()),
 ('Water Music', NULL, 1717, 8, NOW(), NOW()),
 ('Sinfonía n.º 94 "Sorpresa"', NULL, 1791, 9, NOW(), NOW()),
 ('Misa en do mayor', 'Misa', 1796, 9, NOW(), NOW()),
-('Ave Maria', NULL, 1825, 10, NOW(), NOW()),
+('Ave Maria', 'Himno', 1825, 10, NOW(), NOW()),
 ('Sinfonía n.º 8 "Incompleta"', NULL, 1822, 10, NOW(), NOW());
 
 -- ============================================

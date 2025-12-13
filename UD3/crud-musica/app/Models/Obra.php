@@ -22,11 +22,22 @@ class Obra extends Model
 
    public const VALID_TIPOS = [
         'Misa',
-        'Motete, Pasión',
-        'Magnificat, Responsorios',
+        'Motete',
+        'Pasión',
+        'Magnificat',
+        'Oficio de difuntos',
+        'Responsorios',
         'Anthem',
         'Lamentaciones',
-        'Vísperas'
+        'Madrigal espiritual',
+        'Vísperas',
+        'Colección sacra',
+        'Salmo',
+        'Oratorio',
+        'Gloria',
+        'Stabat Mater',
+        'Requiem',
+        'Himno'
     ];
 }
 
