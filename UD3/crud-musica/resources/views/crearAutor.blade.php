@@ -42,7 +42,7 @@
         <div class="mb-3">
             <label for="periodo" class="form-label">Periodo:</label>
             <select class="form-select" id="periodo" name="periodo">
-                <!-- le pasamos periodos desde la ruta -->
+          
                 <option value="">-- Selecciona un periodo --</option>
                 @foreach($periodos as $periodo)
                     <option value="{{ $periodo }}" {{ old('periodo') == $periodo ? 'selected' : '' }}>
